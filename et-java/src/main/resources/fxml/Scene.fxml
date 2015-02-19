@@ -9,4 +9,4 @@
 <?import com.panemu.tiwulfx.table.*?>
 <?import com.panemu.tiwulfx.form.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="500" prefWidth="900" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.mycompany.et.java.FXMLController" />
+<AnchorPane id="AnchorPane" prefHeight="600" prefWidth="900" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.mycompany.et.java.FXMLController" />
