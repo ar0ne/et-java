@@ -1,5 +1,9 @@
-package com.mycompany.et.java;
+package com.company.et.main;
 
+
+import com.company.et.domain.Professor;
+import com.company.et.domain.Task;
+import com.company.et.service.ProfessorService;
 
 public class MainApp {
 
@@ -14,7 +18,10 @@ public class MainApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println("Hello World");
+        Professor professor = new Professor();
+        //test example
+        ProfessorService.addTaskToProfessor(professor, new Task("dfsdfadfad"));
+        System.out.println(professor.getProfessorTasks().get(0));
     }
 
 }

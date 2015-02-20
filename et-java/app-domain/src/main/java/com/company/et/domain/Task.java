@@ -1,4 +1,4 @@
-package com.company.domain;
+package com.company.et.domain;
 
 /**
  * Created by denis on 20.2.15.

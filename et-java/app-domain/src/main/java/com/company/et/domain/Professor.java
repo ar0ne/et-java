@@ -1,4 +1,4 @@
-package com.company.domain;
+package com.company.et.domain;
 
 import java.util.ArrayList;
 
@@ -6,22 +6,24 @@ import java.util.ArrayList;
  */
 public class Professor {
     private String FIO;
-    private ArrayList<Task> tasks;
+    private ArrayList<Task> professorTasks;
     private ArrayList<ArrayList<Integer>> tableOfHoursAndTasksFirstSem;
     private ArrayList<ArrayList<Integer>> tableOfHoursAndTasksSecondSem;
+    public final int COUNT_OF_MONTH_IN_FIRST_SEM=5;
+    public final int COUNT_OF_MONTH_IN_SECOND_SEM=7;
 
-    public Professor(String FIO, ArrayList<Task> tasks, ArrayList<ArrayList<Integer>> tableOfHoursAndTasksFirstSem, ArrayList<ArrayList<Integer>> tableOfHoursAndTasksSecondSem) {
+    public Professor(String FIO, ArrayList<Task> professorTasks, ArrayList<ArrayList<Integer>> tableOfHoursAndTasksFirstSem, ArrayList<ArrayList<Integer>> tableOfHoursAndTasksSecondSem) {
         this.FIO = FIO;
-        this.tasks = tasks;
+        this.professorTasks = professorTasks;
         this.tableOfHoursAndTasksFirstSem = tableOfHoursAndTasksFirstSem;
         this.tableOfHoursAndTasksSecondSem = tableOfHoursAndTasksSecondSem;
     }
 
     public Professor() {
         FIO="";
-        tasks = new ArrayList<Task>();
-        tableOfHoursAndTasksFirstSem = new ArrayList<ArrayList<Integer>>(tasks.size());
-        tableOfHoursAndTasksSecondSem = new ArrayList<ArrayList<Integer>>(tasks.size());
+        professorTasks = new ArrayList<Task>();
+        tableOfHoursAndTasksFirstSem = new ArrayList<ArrayList<Integer>>(professorTasks.size());
+        tableOfHoursAndTasksSecondSem = new ArrayList<ArrayList<Integer>>(professorTasks.size());
     }
 
     public String getFIO() {
@@ -32,12 +34,12 @@ public class Professor {
         this.FIO = FIO;
     }
 
-    public ArrayList<Task> getTasks() {
-        return tasks;
+    public ArrayList<Task> getProfessorTasks() {
+        return professorTasks;
     }
 
-    public void setTasks(ArrayList<Task> tasks) {
-        this.tasks = tasks;
+    public void setProfessorTasks(ArrayList<Task> professorTasks) {
+        this.professorTasks = professorTasks;
     }
 
     public ArrayList<ArrayList<Integer>> getTableOfHoursAndTasksFirstSem() {
