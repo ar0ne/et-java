@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="695.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.et.gui.MainSceneController">
+   <children>
+       
+      <MenuBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="1368.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      
+      <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="1368.0">
+        <items>
+            <ComboBox fx:id="professorsList" prefWidth="150.0" />
+          <Button fx:id="newProfessor" mnemonicParsing="false" onAction="#newProfessorHandler" prefHeight="25.0" prefWidth="34.0" text="+" />
+            <Button fx:id="removeProfessor" mnemonicParsing="false" onAction="#removeProfessorHandler" prefHeight="25.0" prefWidth="34.0" text="-" />
+            <Label text="ставка:">
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="rate" prefHeight="25.0" prefWidth="54.0" />
+        </items>
+      </ToolBar>
+      
+            <TableView editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="1300.0" VBox.vgrow="ALWAYS">
+        <columns>
+          <TableColumn id="taskClmn" fx:id="taskClmn" prefWidth="180.0" sortable="false" text="Работа преподавателя" />
+          <TableColumn id="periodClmn" fx:id="periodClmn" minWidth="0.0" prefWidth="47.0" sortable="false" text="Срок" />
+            <TableColumn id="volumeClmn" fx:id="volumeClmn" prefWidth="61.0" sortable="false" text="Объем" />
+            <TableColumn id="septemberClmn" fx:id="septemberClmn" prefWidth="77.0" sortable="false" text="Сентябрь" />
+            <TableColumn id="octoberClmn" fx:id="octoberClmn" prefWidth="69.0" sortable="false" text="Октябрь" />
+            <TableColumn id="novemberClmn" fx:id="novemberClmn" prefWidth="66.0" sortable="false" text="Ноябрь" />
+            <TableColumn id="decemberClmn" fx:id="decemberClmn" prefWidth="72.0" sortable="false" text="Декабрь" />
+            <TableColumn id="januaryClmn" fx:id="januaryClmn" prefWidth="60.0" sortable="false" text="Январь" />
+            <TableColumn id="firstSemClmn" fx:id="firstSemClmn" prefWidth="53.0" sortable="false" text="1 сем" />
+            <TableColumn id="februaryClmn" fx:id="februaryClmn" prefWidth="75.0" sortable="false" text="Февраль" />
+            <TableColumn id="marchClmn" fx:id="marchClmn" prefWidth="48.0" sortable="false" text="Март" />
+            <TableColumn id="aprilClmn" fx:id="aprilClmn" prefWidth="61.0" sortable="false" text="Апрель" />
+            <TableColumn id="mayClmn" fx:id="mayClmn" prefWidth="38.0" sortable="false" text="Май" />
+            <TableColumn id="juneClmn" fx:id="juneClmn" prefWidth="51.0" sortable="false" text="Июнь" />
+            <TableColumn id="julyClmn" fx:id="julyClmn" prefWidth="50.0" sortable="false" text="Июль" />
+            <TableColumn id="secondSemClmn" fx:id="secondSemClmn" prefWidth="52.0" sortable="false" text="2 сем" />
+            <TableColumn id="allYearClmn" fx:id="allYearClmn" prefWidth="77.0" sortable="false" text="Весь год" />
+            <TableColumn id="checkClmn" fx:id="checkClmn" prefWidth="87.0" sortable="false" text="Проверка" />
+            <TableColumn id="markClmn" fx:id="markClmn" prefWidth="75.0" sortable="false" text="Отметка" />
+        </columns>
+        
+            </TableView>
+      
+   </children>
+</VBox>

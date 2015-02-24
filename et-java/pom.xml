@@ -12,7 +12,8 @@
         <module>app-main</module>
         <module>app-domain</module>
         <module>app-service</module>
-    </modules>
+        <module>app-gui</module>
+  </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>main.java.MainApp</mainClass>
@@ -27,7 +28,7 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-                    <compilerArgument></compilerArgument>
+                    <compilerArgument/>
                 </configuration>
             </plugin>
         </plugins>
