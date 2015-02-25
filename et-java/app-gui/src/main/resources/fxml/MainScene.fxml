@@ -15,7 +15,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem fx:id="menuBarFileOpen" mnemonicParsing="false" onAction="#fileOpen" text="Open" />
+              <MenuItem fx:id="menuBarFileExit" mnemonicParsing="false" onAction="#fileExit" text="Exit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -45,27 +46,27 @@
         </items>
       </ToolBar>
       
-            <TableView editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="1300.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tableOfTasks" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="1300.0" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn id="taskClmn" fx:id="taskClmn" prefWidth="180.0" sortable="false" text="Работа преподавателя" />
-          <TableColumn id="periodClmn" fx:id="periodClmn" minWidth="0.0" prefWidth="47.0" sortable="false" text="Срок" />
-            <TableColumn id="volumeClmn" fx:id="volumeClmn" prefWidth="61.0" sortable="false" text="Объем" />
-            <TableColumn id="septemberClmn" fx:id="septemberClmn" prefWidth="77.0" sortable="false" text="Сентябрь" />
+          <TableColumn id="periodClmn" fx:id="periodClmn" minWidth="0.0" prefWidth="44.0" sortable="false" text="Срок" />
+            <TableColumn id="volumeClmn" fx:id="volumeClmn" prefWidth="58.0" sortable="false" text="Объем" />
+            <TableColumn id="septemberClmn" fx:id="septemberClmn" prefWidth="76.0" sortable="false" text="Сентябрь" />
             <TableColumn id="octoberClmn" fx:id="octoberClmn" prefWidth="69.0" sortable="false" text="Октябрь" />
-            <TableColumn id="novemberClmn" fx:id="novemberClmn" prefWidth="66.0" sortable="false" text="Ноябрь" />
-            <TableColumn id="decemberClmn" fx:id="decemberClmn" prefWidth="72.0" sortable="false" text="Декабрь" />
-            <TableColumn id="januaryClmn" fx:id="januaryClmn" prefWidth="60.0" sortable="false" text="Январь" />
-            <TableColumn id="firstSemClmn" fx:id="firstSemClmn" prefWidth="53.0" sortable="false" text="1 сем" />
-            <TableColumn id="februaryClmn" fx:id="februaryClmn" prefWidth="75.0" sortable="false" text="Февраль" />
-            <TableColumn id="marchClmn" fx:id="marchClmn" prefWidth="48.0" sortable="false" text="Март" />
-            <TableColumn id="aprilClmn" fx:id="aprilClmn" prefWidth="61.0" sortable="false" text="Апрель" />
-            <TableColumn id="mayClmn" fx:id="mayClmn" prefWidth="38.0" sortable="false" text="Май" />
-            <TableColumn id="juneClmn" fx:id="juneClmn" prefWidth="51.0" sortable="false" text="Июнь" />
-            <TableColumn id="julyClmn" fx:id="julyClmn" prefWidth="50.0" sortable="false" text="Июль" />
-            <TableColumn id="secondSemClmn" fx:id="secondSemClmn" prefWidth="52.0" sortable="false" text="2 сем" />
-            <TableColumn id="allYearClmn" fx:id="allYearClmn" prefWidth="77.0" sortable="false" text="Весь год" />
-            <TableColumn id="checkClmn" fx:id="checkClmn" prefWidth="87.0" sortable="false" text="Проверка" />
-            <TableColumn id="markClmn" fx:id="markClmn" prefWidth="75.0" sortable="false" text="Отметка" />
+            <TableColumn id="novemberClmn" fx:id="novemberClmn" prefWidth="65.0" sortable="false" text="Ноябрь" />
+            <TableColumn id="decemberClmn" fx:id="decemberClmn" prefWidth="73.0" sortable="false" text="Декабрь" />
+            <TableColumn id="januaryClmn" fx:id="januaryClmn" prefWidth="66.0" sortable="false" text="Январь" />
+            <TableColumn id="firstSemClmn" fx:id="firstSemClmn" prefWidth="47.0" sortable="false" text="1 сем" />
+            <TableColumn id="februaryClmn" fx:id="februaryClmn" prefWidth="74.0" sortable="false" text="Февраль" />
+            <TableColumn id="marchClmn" fx:id="marchClmn" prefWidth="47.0" sortable="false" text="Март" />
+            <TableColumn id="aprilClmn" fx:id="aprilClmn" prefWidth="62.0" sortable="false" text="Апрель" />
+            <TableColumn id="mayClmn" fx:id="mayClmn" prefWidth="39.0" sortable="false" text="Май" />
+            <TableColumn id="juneClmn" fx:id="juneClmn" prefWidth="50.0" sortable="false" text="Июнь" />
+            <TableColumn id="julyClmn" fx:id="julyClmn" prefWidth="49.0" sortable="false" text="Июль" />
+            <TableColumn id="secondSemClmn" fx:id="secondSemClmn" prefWidth="47.0" sortable="false" text="2 сем" />
+            <TableColumn id="allYearClmn" fx:id="allYearClmn" prefWidth="72.0" sortable="false" text="Весь год" />
+            <TableColumn id="checkClmn" fx:id="checkClmn" prefWidth="83.0" sortable="false" text="Проверка" />
+            <TableColumn id="markClmn" fx:id="markClmn" prefWidth="82.0" sortable="false" text="Отметка" />
         </columns>
         
             </TableView>
