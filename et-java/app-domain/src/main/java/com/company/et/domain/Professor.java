@@ -5,58 +5,33 @@ import java.util.ArrayList;
 /**
  */
 public class Professor {
-    private String FIO;
-    private ArrayList<Task> professorTasks;
-    private ArrayList<ArrayList<Integer>> tableOfHoursAndTasksFirstSem;
-    private ArrayList<ArrayList<Integer>> tableOfHoursAndTasksSecondSem;
-    public final int COUNT_OF_MONTH_IN_FIRST_SEM=5;
-    public final int COUNT_OF_MONTH_IN_SECOND_SEM=7;
-
-    public Professor(String FIO, ArrayList<Task> professorTasks, ArrayList<ArrayList<Integer>> tableOfHoursAndTasksFirstSem, ArrayList<ArrayList<Integer>> tableOfHoursAndTasksSecondSem) {
-        this.FIO = FIO;
-        this.professorTasks = professorTasks;
-        this.tableOfHoursAndTasksFirstSem = tableOfHoursAndTasksFirstSem;
-        this.tableOfHoursAndTasksSecondSem = tableOfHoursAndTasksSecondSem;
-    }
-
+    String fio;
+    ArrayList<Task> tasks;
+    
     public Professor() {
-        FIO="";
-        professorTasks = new ArrayList<Task>();
-        tableOfHoursAndTasksFirstSem = new ArrayList<ArrayList<Integer>>(professorTasks.size());
-        tableOfHoursAndTasksSecondSem = new ArrayList<ArrayList<Integer>>(professorTasks.size());
+        tasks=new ArrayList<Task>();
+        fio="Example";
     }
 
-    public String getFIO() {
-        return FIO;
+    public Professor(String fio, ArrayList<Task> tasks) {
+        this.fio = fio;
+        this.tasks = tasks;
     }
 
-    public void setFIO(String FIO) {
-        this.FIO = FIO;
+    public String getFio() {
+        return fio;
     }
 
-    public ArrayList<Task> getProfessorTasks() {
-        return professorTasks;
+    public void setFio(String fio) {
+        this.fio = fio;
     }
 
-    public void setProfessorTasks(ArrayList<Task> professorTasks) {
-        this.professorTasks = professorTasks;
+    public ArrayList<Task> getTasks() {
+        return tasks;
     }
 
-    public ArrayList<ArrayList<Integer>> getTableOfHoursAndTasksFirstSem() {
-        return tableOfHoursAndTasksFirstSem;
+    public void setTasks(ArrayList<Task> tasks) {
+        this.tasks = tasks;
     }
-
-    public void setTableOfHoursAndTasksFirstSem(ArrayList<ArrayList<Integer>> tableOfHoursAndTasksFirstSem) {
-        this.tableOfHoursAndTasksFirstSem = tableOfHoursAndTasksFirstSem;
-    }
-
-    public ArrayList<ArrayList<Integer>> getTableOfHoursAndTasksSecondSem() {
-
-        return tableOfHoursAndTasksSecondSem;
-    }
-
-    public void setTableOfHoursAndTasksSecondSem(ArrayList<ArrayList<Integer>> tableOfHoursAndTasksSecondSem) {
-        this.tableOfHoursAndTasksSecondSem = tableOfHoursAndTasksSecondSem;
-    }
-
+    
 }

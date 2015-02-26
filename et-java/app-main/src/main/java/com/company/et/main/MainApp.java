@@ -32,6 +32,8 @@ package com.company.et.main;
 //}
 
 
+import com.company.et.domain.Professor;
+import java.util.HashSet;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -50,7 +52,7 @@ public class MainApp extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         
-        stage.setTitle("Шишак Пальчука");
+        stage.setTitle("Работа преподавателей");
         stage.setScene(scene);
         stage.show();
     }

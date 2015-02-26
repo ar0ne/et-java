@@ -26,16 +26,12 @@ public class ProfessorService {
     }
 
     public static void addTaskToProfessor(Professor professor, Task task) {
-        professor.getProfessorTasks().add(task);
-        professor.getTableOfHoursAndTasksFirstSem().add(new ArrayList<Integer>(professor.COUNT_OF_MONTH_IN_FIRST_SEM));
-        professor.getTableOfHoursAndTasksSecondSem().add(new ArrayList<Integer>(professor.COUNT_OF_MONTH_IN_SECOND_SEM));
+        professor.getTasks().add(task);
     }
 
     public static void removeTaskFromProfessor(Professor professor, Integer id) {
-        if (id >= 0 && id < professor.getProfessorTasks().size()) {
-            professor.getProfessorTasks().remove(id);
-            professor.getTableOfHoursAndTasksFirstSem().remove(id);
-            professor.getTableOfHoursAndTasksSecondSem().remove(id);
+        if (id >= 0 && id < professor.getTasks().size()) {
+            professor.getTasks().remove(id);
         }
     }
 }
