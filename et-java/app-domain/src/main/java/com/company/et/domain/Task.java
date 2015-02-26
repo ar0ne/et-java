@@ -4,53 +4,53 @@ package com.company.et.domain;
  * Created by denis on 20.2.15.
  */
 public class Task {
-    Work professorsWork;
-    Integer countOfHours;
-    Integer capacity;
-    Integer septemberCapacity;
-    Integer octoberCapacity;
-    Integer novemberCapacity;
-    Integer decemberCapacity;
-    Integer januaryCapacity;
-    Integer firstSemester;
-    Integer februaryCapacity;
-    Integer marchCapacity;
-    Integer aprilCapacity;
-    Integer mayCapacity;
-    Integer juneCapacity;
-    Integer julyCapacity;
-    Integer augustCapacity;
-    Integer secondSemester;
-    Integer allYear;
+    String professorsWork;
+    String period;
+    Double capacity;
+    Double septemberCapacity;
+    Double octoberCapacity;
+    Double novemberCapacity;
+    Double decemberCapacity;
+    Double januaryCapacity;
+    Double firstSemester;
+    Double februaryCapacity;
+    Double marchCapacity;
+    Double aprilCapacity;
+    Double mayCapacity;
+    Double juneCapacity;
+    Double julyCapacity;
+    Double augustCapacity;
+    Double secondSemester;
+    Double allYear;
     Boolean completeWork;
-    Integer mark;
+    Double mark;
 
     public Task() {
-        professorsWork = new Work("Example");
-        countOfHours = 0;
-        capacity=0;
-        septemberCapacity=0;
-        octoberCapacity=0;
-        novemberCapacity=0;
-        decemberCapacity=0;
-        januaryCapacity=0;
-        firstSemester=0;
-        februaryCapacity=0;
-        marchCapacity=0;
-        aprilCapacity=0;
-        mayCapacity=0;
-        juneCapacity=0;
-        julyCapacity=0;
-        augustCapacity=0;
-        secondSemester=0;
-        allYear=0;
+        professorsWork = "someWork";
+        period = "";
+        capacity=0.0;
+        septemberCapacity=0.0;
+        octoberCapacity=0.0;
+        novemberCapacity=0.0;
+        decemberCapacity=0.0;
+        januaryCapacity=0.0;
+        firstSemester=0.0;
+        februaryCapacity=0.0;
+        marchCapacity=0.0;
+        aprilCapacity=0.0;
+        mayCapacity=0.0;
+        juneCapacity=0.0;
+        julyCapacity=0.0;
+        augustCapacity=0.0;
+        secondSemester=0.0;
+        allYear=0.0;
         completeWork=false;
-        mark=0;
+        mark=0.0;
     }
 
-    public Task(Work professorsWork, Integer countOfHours, Integer capacity, Integer septemberCapacity, Integer octoberCapacity, Integer novemberCapacity, Integer decemberCapacity, Integer januaryCapacity, Integer firstSemester, Integer februaryCapacity, Integer marchCapacity, Integer aprilCapacity, Integer mayCapacity, Integer juneCapacity, Integer julyCapacity, Integer augustCapacity, Integer secondSemester, Integer allYear, Boolean completeWork, Integer mark) {
+    public Task(String professorsWork, String period, Double capacity, Double septemberCapacity, Double octoberCapacity, Double novemberCapacity, Double decemberCapacity, Double januaryCapacity, Double firstSemester, Double februaryCapacity, Double marchCapacity, Double aprilCapacity, Double mayCapacity, Double juneCapacity, Double julyCapacity, Double augustCapacity, Double secondSemester, Double allYear, Boolean completeWork, Double mark) {
         this.professorsWork = professorsWork;
-        this.countOfHours = countOfHours;
+        this.period = period;
         this.capacity = capacity;
         this.septemberCapacity = septemberCapacity;
         this.octoberCapacity = octoberCapacity;
@@ -71,152 +71,152 @@ public class Task {
         this.mark = mark;
     }
 
-    public Work getProfessorsWork() {
+    public String getProfessorsWork() {
         return professorsWork;
     }
 
-    public void setProfessorsWork(Work professorsWork) {
+    public void setProfessorsWork(String professorsWork) {
         this.professorsWork = professorsWork;
     }
 
-    public Integer getCountOfHours() {
-        return countOfHours;
+    public String getPeriod() {
+        return period;
     }
 
-    public void setCountOfHours(Integer countOfHours) {
-        this.countOfHours = countOfHours;
+    public void setPeriod(String period) {
+        this.period = period;
     }
 
-    public Integer getCapacity() {
+    public Double getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(Integer capacity) {
+    public void setCapacity(Double capacity) {
         this.capacity = capacity;
     }
 
-    public Integer getSeptemberCapacity() {
+    public Double getSeptemberCapacity() {
         return septemberCapacity;
     }
 
-    public void setSeptemberCapacity(Integer septemberCapacity) {
+    public void setSeptemberCapacity(Double septemberCapacity) {
         this.septemberCapacity = septemberCapacity;
     }
 
-    public Integer getOctoberCapacity() {
+    public Double getOctoberCapacity() {
         return octoberCapacity;
     }
 
-    public void setOctoberCapacity(Integer octoberCapacity) {
+    public void setOctoberCapacity(Double octoberCapacity) {
         this.octoberCapacity = octoberCapacity;
     }
 
     @Override
     public String toString() {
-        return "Task{" + "professorsWork=" + professorsWork + ", countOfHours=" + countOfHours + ", capacity=" + capacity + ", septemberCapacity=" + septemberCapacity + ", octoberCapacity=" + octoberCapacity + ", novemberCapacity=" + novemberCapacity + ", decemberCapacity=" + decemberCapacity + ", januaryCapacity=" + januaryCapacity + ", firstSemester=" + firstSemester + ", februaryCapacity=" + februaryCapacity + ", marchCapacity=" + marchCapacity + ", aprilCapacity=" + aprilCapacity + ", mayCapacity=" + mayCapacity + ", juneCapacity=" + juneCapacity + ", julyCapacity=" + julyCapacity + ", augustCapacity=" + augustCapacity + ", secondSemester=" + secondSemester + ", allYear=" + allYear + ", completeWork=" + completeWork + ", mark=" + mark + '}';
+        return "Task{" + "professorsWork=" + professorsWork + ", period=" + period + ", capacity=" + capacity + ", septemberCapacity=" + septemberCapacity + ", octoberCapacity=" + octoberCapacity + ", novemberCapacity=" + novemberCapacity + ", decemberCapacity=" + decemberCapacity + ", januaryCapacity=" + januaryCapacity + ", firstSemester=" + firstSemester + ", februaryCapacity=" + februaryCapacity + ", marchCapacity=" + marchCapacity + ", aprilCapacity=" + aprilCapacity + ", mayCapacity=" + mayCapacity + ", juneCapacity=" + juneCapacity + ", julyCapacity=" + julyCapacity + ", augustCapacity=" + augustCapacity + ", secondSemester=" + secondSemester + ", allYear=" + allYear + ", completeWork=" + completeWork + ", mark=" + mark + '}';
     }
 
-    public Integer getNovemberCapacity() {
+    public Double getNovemberCapacity() {
         return novemberCapacity;
     }
 
-    public void setNovemberCapacity(Integer novemberCapacity) {
+    public void setNovemberCapacity(Double novemberCapacity) {
         this.novemberCapacity = novemberCapacity;
     }
 
-    public Integer getDecemberCapacity() {
+    public Double getDecemberCapacity() {
         return decemberCapacity;
     }
 
-    public void setDecemberCapacity(Integer decemberCapacity) {
+    public void setDecemberCapacity(Double decemberCapacity) {
         this.decemberCapacity = decemberCapacity;
     }
 
-    public Integer getJanuaryCapacity() {
+    public Double getJanuaryCapacity() {
         return januaryCapacity;
     }
 
-    public void setJanuaryCapacity(Integer januaryCapacity) {
+    public void setJanuaryCapacity(Double januaryCapacity) {
         this.januaryCapacity = januaryCapacity;
     }
 
-    public Integer getFirstSemester() {
+    public Double getFirstSemester() {
         return firstSemester;
     }
 
-    public void setFirstSemester(Integer firstSemester) {
+    public void setFirstSemester(Double firstSemester) {
         this.firstSemester = firstSemester;
     }
 
-    public Integer getFebruaryCapacity() {
+    public Double getFebruaryCapacity() {
         return februaryCapacity;
     }
 
-    public void setFebruaryCapacity(Integer februaryCapacity) {
+    public void setFebruaryCapacity(Double februaryCapacity) {
         this.februaryCapacity = februaryCapacity;
     }
 
-    public Integer getMarchCapacity() {
+    public Double getMarchCapacity() {
         return marchCapacity;
     }
 
-    public void setMarchCapacity(Integer marchCapacity) {
+    public void setMarchCapacity(Double marchCapacity) {
         this.marchCapacity = marchCapacity;
     }
 
-    public Integer getAprilCapacity() {
+    public Double getAprilCapacity() {
         return aprilCapacity;
     }
 
-    public void setAprilCapacity(Integer aprilCapacity) {
+    public void setAprilCapacity(Double aprilCapacity) {
         this.aprilCapacity = aprilCapacity;
     }
 
-    public Integer getMayCapacity() {
+    public Double getMayCapacity() {
         return mayCapacity;
     }
 
-    public void setMayCapacity(Integer mayCapacity) {
+    public void setMayCapacity(Double mayCapacity) {
         this.mayCapacity = mayCapacity;
     }
 
-    public Integer getJuneCapacity() {
+    public Double getJuneCapacity() {
         return juneCapacity;
     }
 
-    public void setJuneCapacity(Integer juneCapacity) {
+    public void setJuneCapacity(Double juneCapacity) {
         this.juneCapacity = juneCapacity;
     }
 
-    public Integer getJulyCapacity() {
+    public Double getJulyCapacity() {
         return julyCapacity;
     }
 
-    public void setJulyCapacity(Integer julyCapacity) {
+    public void setJulyCapacity(Double julyCapacity) {
         this.julyCapacity = julyCapacity;
     }
 
-    public Integer getAugustCapacity() {
+    public Double getAugustCapacity() {
         return augustCapacity;
     }
 
-    public void setAugustCapacity(Integer augustCapacity) {
+    public void setAugustCapacity(Double augustCapacity) {
         this.augustCapacity = augustCapacity;
     }
 
-    public Integer getSecondSemester() {
+    public Double getSecondSemester() {
         return secondSemester;
     }
 
-    public void setSecondSemester(Integer secondSemester) {
+    public void setSecondSemester(Double secondSemester) {
         this.secondSemester = secondSemester;
     }
 
-    public Integer getAllYear() {
+    public Double getAllYear() {
         return allYear;
     }
 
-    public void setAllYear(Integer allYear) {
+    public void setAllYear(Double allYear) {
         this.allYear = allYear;
     }
 
@@ -228,11 +228,11 @@ public class Task {
         this.completeWork = completeWork;
     }
 
-    public Integer getMark() {
+    public Double getMark() {
         return mark;
     }
 
-    public void setMark(Integer mark) {
+    public void setMark(Double mark) {
         this.mark = mark;
     }
     
