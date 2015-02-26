@@ -9,6 +9,12 @@ import javafx.scene.control.Label;
 
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
+import com.company.et.domain.Work;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
@@ -95,7 +101,13 @@ public class MainSceneController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        
+        Professor professor = new Professor();
+        ArrayList<Task> tasks=new ArrayList<>();
+        tasks.add(new Task(new Work("one"),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,false,0));
+        tasks.add(new Task(new Work("two"),20,20,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,true,0));
+        professor.setTasks(tasks);
+        ObservableList<Task> newTasks=FXCollections.observableArrayList();
+        newTasks.addAll(tasks);
+        tableOfTasks.setItems(newTasks);     
     }    
 }
