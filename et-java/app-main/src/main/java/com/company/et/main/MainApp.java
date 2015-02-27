@@ -33,9 +33,14 @@ package com.company.et.main;
 
 
 import com.company.et.domain.Professor;
+import com.company.et.domain.Task;
+import com.company.et.domain.Work;
+import java.util.ArrayList;
 import java.util.HashSet;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -66,6 +71,7 @@ public class MainApp extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+               
         launch(args);
     }
 

@@ -1,9 +1,10 @@
 package com.company.et.domain;
 
-/**
- * Created by denis on 20.2.15.
- */
+
+
+
 public class Task {
+
     String professorsWork;
     String period;
     Double capacity;
@@ -24,6 +25,7 @@ public class Task {
     Double allYear;
     Boolean completeWork;
     Double mark;
+
 
     public Task() {
         professorsWork = "someWork";
@@ -46,9 +48,12 @@ public class Task {
         allYear=0.0;
         completeWork=false;
         mark=0.0;
+
     }
 
+
     public Task(String professorsWork, String period, Double capacity, Double septemberCapacity, Double octoberCapacity, Double novemberCapacity, Double decemberCapacity, Double januaryCapacity, Double firstSemester, Double februaryCapacity, Double marchCapacity, Double aprilCapacity, Double mayCapacity, Double juneCapacity, Double julyCapacity, Double augustCapacity, Double secondSemester, Double allYear, Boolean completeWork, Double mark) {
+
         this.professorsWork = professorsWork;
         this.period = period;
         this.capacity = capacity;
@@ -69,6 +74,7 @@ public class Task {
         this.allYear = allYear;
         this.completeWork = completeWork;
         this.mark = mark;
+
     }
 
     public String getProfessorsWork() {
@@ -83,9 +89,11 @@ public class Task {
         return period;
     }
 
+
     public void setPeriod(String period) {
         this.period = period;
     }
+
 
     public Double getCapacity() {
         return capacity;
@@ -93,15 +101,20 @@ public class Task {
 
     public void setCapacity(Double capacity) {
         this.capacity = capacity;
+
     }
+
 
     public Double getSeptemberCapacity() {
         return septemberCapacity;
     }
 
+
     public void setSeptemberCapacity(Double septemberCapacity) {
         this.septemberCapacity = septemberCapacity;
+
     }
+
 
     public Double getOctoberCapacity() {
         return octoberCapacity;
@@ -111,10 +124,16 @@ public class Task {
         this.octoberCapacity = octoberCapacity;
     }
 
+
+
+    
+    
+    
     @Override
     public String toString() {
         return "Task{" + "professorsWork=" + professorsWork + ", period=" + period + ", capacity=" + capacity + ", septemberCapacity=" + septemberCapacity + ", octoberCapacity=" + octoberCapacity + ", novemberCapacity=" + novemberCapacity + ", decemberCapacity=" + decemberCapacity + ", januaryCapacity=" + januaryCapacity + ", firstSemester=" + firstSemester + ", februaryCapacity=" + februaryCapacity + ", marchCapacity=" + marchCapacity + ", aprilCapacity=" + aprilCapacity + ", mayCapacity=" + mayCapacity + ", juneCapacity=" + juneCapacity + ", julyCapacity=" + julyCapacity + ", augustCapacity=" + augustCapacity + ", secondSemester=" + secondSemester + ", allYear=" + allYear + ", completeWork=" + completeWork + ", mark=" + mark + '}';
     }
+
 
     public Double getNovemberCapacity() {
         return novemberCapacity;

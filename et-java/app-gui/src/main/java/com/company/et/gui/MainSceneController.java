@@ -5,15 +5,21 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
+
 
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
-import com.company.et.domain.Work;
+
 import java.util.ArrayList;
+
+
+
+import javafx.event.EventHandler;
+
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
@@ -119,6 +125,7 @@ public class MainSceneController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         // TODO
         
         initData();
@@ -187,7 +194,7 @@ public class MainSceneController implements Initializable {
         
         //TODO доделать для остальных колонок
     }
-}
+
 
 
 
@@ -259,3 +266,4 @@ class EditingCell extends TableCell<Task, Double> { // класс для изм�
             return getItem() == null ? "" : getItem().toString();
         }
     }
+}
