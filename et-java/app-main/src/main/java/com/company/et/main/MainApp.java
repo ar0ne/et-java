@@ -34,7 +34,6 @@ package com.company.et.main;
 
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
-import com.company.et.domain.Work;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javafx.application.Application;

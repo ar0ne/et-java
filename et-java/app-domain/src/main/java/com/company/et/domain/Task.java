@@ -30,7 +30,7 @@ public class Task {
     public Task() {
         professorsWork = "someWork";
         period = "";
-        capacity=0.0;
+        capacity=null;
         septemberCapacity=0.0;
         octoberCapacity=0.0;
         novemberCapacity=0.0;

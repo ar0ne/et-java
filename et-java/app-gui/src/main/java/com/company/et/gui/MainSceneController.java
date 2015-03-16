@@ -19,10 +19,13 @@ import javafx.event.EventHandler;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventType;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -40,17 +43,19 @@ import javafx.util.Callback;
 
 public class MainSceneController implements Initializable {
     
-    Professor professor = new Professor();
-    ObservableList<Task> tasks = FXCollections.observableArrayList();
+    private Professor currentProfessor = new Professor();
+    
+    private ObservableList<Professor> professorsList = FXCollections.observableArrayList();
+    
     
     @FXML 
-    TableView<Task> tableOfTasks;
+    private TableView<Task> tableOfTasks;
     @FXML
     private MenuItem menuBarFileOpen;
     @FXML
     private MenuItem menuBarFileExit;
     @FXML
-    private ComboBox<?> professorsList;
+    private ComboBox<Professor> comboBoxProfessorsList;
     @FXML
     private Button newProfessor;
     @FXML
@@ -96,6 +101,9 @@ public class MainSceneController implements Initializable {
     @FXML
     private TableColumn<?, ?> markClmn;
     
+    public MainSceneController() {
+    }
+    
     //MenuBar
     @FXML
     private void fileExit(ActionEvent event) {
@@ -110,8 +118,11 @@ public class MainSceneController implements Initializable {
     @FXML
     private void newProfessorHandler(ActionEvent event) {
         ObservableList<Task> t = FXCollections.observableArrayList();
-        t = professor.getTasks();
-        System.out.println(t.get(0).toString());       //нынешний функционал не имеет отношения к кнопке,
+        t = currentProfessor.getTasks();
+        
+        System.out.println(currentProfessor.toString());
+//        for(int i=0;i<t.size();i++) 
+//        System.out.println(t.get(0).toString());       //нынешний функционал не имеет отношения к кнопке,
                                                        //при нажатии на кнопку "+" можно убедиться, что при изменении 
                                                        //значения в ячейке изменяется и сам объект
                                                        //на примере первой строки(вывод в консоли)
@@ -125,52 +136,68 @@ public class MainSceneController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        // TODO
-        
         initData();
-        setEditableCells();
-        taskClmn.setCellValueFactory(new PropertyValueFactory<Task, String>("professorsWork"));
-        periodClmn.setCellValueFactory(new PropertyValueFactory<Task, String>("period"));
-        volumeClmn.setCellValueFactory(new PropertyValueFactory<Task, Double>("capacity"));
+        comboBoxInitialize();
+        tableColumnInitialize();
         
-        tableOfTasks.setItems(professor.getTasks());
         
-    } 
+        
+    }
     
     public void initData() { // для примера
-        professor.setFio("Головко");               
-        tasks.add(new Task());
-        tasks.add(new Task());
-        tasks.add(new Task());
-        professor.setTasks(tasks);
+        ObservableList<Task> tasksList = FXCollections.observableArrayList();
+        Task task= new Task();
+        task.setCapacity(20.02);
+        tasksList.add(task);
+        tasksList.add(new Task());
+        tasksList.add(new Task());
+        currentProfessor = new Professor("Профессор1",tasksList,0.5);           
+        professorsList.add(currentProfessor);
+        ObservableList<Task> taskList2 = FXCollections.observableArrayList();
+        taskList2.add(new Task());
+        Professor secondProfessor = new Professor("Профессор2",taskList2,1.0);
+        professorsList.add(secondProfessor);
     }
+    
+    public void comboBoxInitialize() {
+        comboBoxProfessorsList.setItems(professorsList);
+        comboBoxProfessorsList.getSelectionModel().selectFirst();
+        comboBoxProfessorsList.setButtonCell(new ProfessorsListCell());
+        comboBoxProfessorsList.setCellFactory((ListView<Professor> p) -> new ProfessorsListCell());
+        
+        // Handle CheckBox event.
+       comboBoxProfessorsList.setOnAction((event) -> {
+        Professor selectedProfessor = comboBoxProfessorsList.getSelectionModel().getSelectedItem();
+        this.currentProfessor = selectedProfessor;
+        tableColumnInitialize();
+       });
+    }
+    
+    public void tableColumnInitialize() {
+        setEditableCells();
+        taskClmn.setCellValueFactory(new PropertyValueFactory<>("professorsWork"));
+        periodClmn.setCellValueFactory(new PropertyValueFactory<>("period"));
+        volumeClmn.setCellValueFactory(new PropertyValueFactory<>("capacity"));
+        tableOfTasks.setItems(currentProfessor.getTasks());
+    }
+    
+    
    
     public void setEditableCells() { //метод по обработке изменения в ячейке
         
         taskClmn.setCellFactory(TextFieldTableCell.forTableColumn());
-        taskClmn.setOnEditCommit(
-            new EventHandler<CellEditEvent<Task, String>>() {
-                @Override
-                public void handle(CellEditEvent<Task, String> t) {
-                    ((Task) t.getTableView().getItems().get(
-                        t.getTablePosition().getRow())
-                        ).setProfessorsWork(t.getNewValue());
-                }
-            }
-        );
+        taskClmn.setOnEditCommit((CellEditEvent<Task, String> t) -> {
+            ((Task) t.getTableView().getItems().get(
+                    t.getTablePosition().getRow())
+                    ).setProfessorsWork(t.getNewValue());
+        });
         
         periodClmn.setCellFactory(TextFieldTableCell.forTableColumn());
-        periodClmn.setOnEditCommit(
-            new EventHandler<CellEditEvent<Task, String>>() {
-                @Override
-                public void handle(CellEditEvent<Task, String> t) {
-                    ((Task) t.getTableView().getItems().get(
-                        t.getTablePosition().getRow())
-                        ).setPeriod(t.getNewValue());
-                }
-            }
-        );
+        periodClmn.setOnEditCommit((CellEditEvent<Task, String> t) -> {
+            ((Task) t.getTableView().getItems().get(
+                    t.getTablePosition().getRow())
+                    ).setPeriod(t.getNewValue());
+        });
         
         Callback<TableColumn<Task,Double>, TableCell<Task,Double>> cellFactory =
                 new Callback<TableColumn<Task,Double>, TableCell<Task,Double>>() {
@@ -179,26 +206,22 @@ public class MainSceneController implements Initializable {
                           public TableCell call(TableColumn p) {
                               return new EditingCell();
                           }
-                      };
+                };
         
         volumeClmn.setCellFactory(cellFactory);
-        volumeClmn.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<Task, Double>>() {
-                     
-                    @Override 
-                    public void handle(TableColumn.CellEditEvent<Task, Double> t) {
-                        ((Task)t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())).setCapacity(t.getNewValue());
-                    }
-                });
+        volumeClmn.setOnEditCommit((TableColumn.CellEditEvent<Task, Double> t) -> {
+            ((Task)t.getTableView().getItems().get(
+                    t.getTablePosition().getRow())).setCapacity(t.getNewValue());
+        });
         
         //TODO доделать для остальных колонок
     }
+    
+    
 
 
 
-
-class EditingCell extends TableCell<Task, Double> { // класс для изменения ячейки типа Double
+    private class EditingCell extends TableCell<Task, Double> { // класс для изменения ячейки типа Double
         private TextField textField;                // по дефолту можно только стринговые изменять
          
         public EditingCell() {}
@@ -266,4 +289,21 @@ class EditingCell extends TableCell<Task, Double> { // класс для изм�
             return getItem() == null ? "" : getItem().toString();
         }
     }
+
+    
+    
+    private class ProfessorsListCell extends ListCell<Professor> {
+        @Override
+        protected void updateItem(Professor professor, boolean empty) {
+            super.updateItem(professor, empty);
+            
+            if (professor != null)
+                setText(professor.getFio());
+            else 
+                setText(null);
+        }
+        
+    }
+    
 }
+

@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 /**
  */
 public class Professor {
+
+    
     String fio;
     ObservableList<Task> tasks;
     private Double rate; // ставка
@@ -46,5 +48,8 @@ public class Professor {
     public void setRate(Double rate) {
         this.rate = rate;
     }
-    
+    @Override
+    public String toString() {
+        return "Professor{" + "fio=" + fio + ", tasks=" + tasks + ", rate=" + rate + '}';
+    }
 }

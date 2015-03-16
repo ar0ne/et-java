@@ -11,8 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import com.company.et.domain.Professor;
-import com.company.et.domain.Work;
-import com.company.et.domain.StdWorks;
 import com.company.et.domain.Task;
 
 import java.io.BufferedReader;
@@ -67,22 +65,6 @@ public class JsonService {
         return obj;
     }
     
-    public static Work jsonToObjectWork(String json) throws IOException, ParseException {
-
-        ObjectMapper mapper = new ObjectMapper();
-        Work obj = mapper.readValue(json, Work.class);
-
-        return obj;
-    }
-    
-    public static StdWorks jsonToObjectStdWorks(String json) throws IOException, ParseException {
-
-        ObjectMapper mapper = new ObjectMapper();
-        StdWorks obj = mapper.readValue(json, StdWorks.class);
-
-        return obj;
-    }
-
     /**
      *
      * @param json String what we write to file
