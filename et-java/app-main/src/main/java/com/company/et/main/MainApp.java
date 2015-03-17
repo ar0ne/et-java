@@ -34,6 +34,8 @@ package com.company.et.main;
 
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javafx.application.Application;
@@ -43,12 +45,15 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
 
 public class MainApp extends Application {
-
+    
+ 
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainScene.fxml"));
@@ -73,5 +78,7 @@ public class MainApp extends Application {
                
         launch(args);
     }
+    
+    
 
 }

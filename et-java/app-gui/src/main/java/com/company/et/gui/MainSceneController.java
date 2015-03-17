@@ -10,16 +10,14 @@ import javafx.fxml.Initializable;
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
 
-import java.util.ArrayList;
-
-
-
+import java.io.IOException;
 import javafx.event.EventHandler;
 
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventType;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -36,6 +34,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 
@@ -46,6 +47,8 @@ public class MainSceneController implements Initializable {
     private Professor currentProfessor = new Professor();
     
     private ObservableList<Professor> professorsList = FXCollections.observableArrayList();
+    
+    ObservableList<Task> tasksList = FXCollections.observableArrayList();
     
     
     @FXML 
@@ -101,34 +104,37 @@ public class MainSceneController implements Initializable {
     @FXML
     private TableColumn<?, ?> markClmn;
     
-    public MainSceneController() {
+    { //блок инициализации списка задач
+        Task task= new Task();
+        task.setCapacity(20.02);
+        tasksList.add(task);
+        tasksList.add(new Task());
+        tasksList.add(new Task());        
     }
     
+     
     //MenuBar
     @FXML
     private void fileExit(ActionEvent event) {
         
     }
     
-    @FXML private void fileOpen(ActionEvent event) {
+    @FXML 
+    private void fileOpen(ActionEvent event) {
         
     }
     
     //Buttons
     @FXML
     private void newProfessorHandler(ActionEvent event) {
-        ObservableList<Task> t = FXCollections.observableArrayList();
-        t = currentProfessor.getTasks();
-        
-        System.out.println(currentProfessor.toString());
-//        for(int i=0;i<t.size();i++) 
-//        System.out.println(t.get(0).toString());       //нынешний функционал не имеет отношения к кнопке,
-                                                       //при нажатии на кнопку "+" можно убедиться, что при изменении 
-                                                       //значения в ячейке изменяется и сам объект
-                                                       //на примере первой строки(вывод в консоли)
-                                                       //потом функционал поменяется
-        
+        Professor tempProfessor = new Professor();
+        tempProfessor.setTasks(tasksList);
+        boolean okClicked = showNewProfessorDialog(tempProfessor);
+            if (okClicked) {
+                professorsList.add(tempProfessor);
+            }       
     }
+    
     @FXML
     private void removeProfessorHandler(ActionEvent event) {
         
@@ -145,12 +151,8 @@ public class MainSceneController implements Initializable {
     }
     
     public void initData() { // для примера
-        ObservableList<Task> tasksList = FXCollections.observableArrayList();
-        Task task= new Task();
-        task.setCapacity(20.02);
-        tasksList.add(task);
-        tasksList.add(new Task());
-        tasksList.add(new Task());
+        
+        
         currentProfessor = new Professor("Профессор1",tasksList,0.5);           
         professorsList.add(currentProfessor);
         ObservableList<Task> taskList2 = FXCollections.observableArrayList();
@@ -303,6 +305,33 @@ public class MainSceneController implements Initializable {
                 setText(null);
         }
         
+    }
+    
+    
+    public boolean showNewProfessorDialog(Professor professor) { //метод для прорисовки диалогового окна добавления препода
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fxml/NewProfessor.fxml"));
+            GridPane page = (GridPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Добавление преподавателя");
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            
+            NewProfessorController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setProfessor(professor);
+            
+            dialogStage.showAndWait();
+            
+            return controller.isOkClicked();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
     
 }

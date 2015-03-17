@@ -21,11 +21,11 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         
-        <dependency>
+<!--        <dependency>
             <groupId>com.company.et.gui</groupId>
             <artifactId>app-gui</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
