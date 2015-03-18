@@ -1,24 +1,22 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.company.et.gui;
-
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-
 
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
-
-import java.io.IOException;
-import javafx.event.EventHandler;
-
-
+import java.net.URL;
+import java.util.HashSet;
+import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
@@ -26,33 +24,31 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableColumn.CellEditEvent;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.control.cell.TextFieldTreeTableCell;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
-
-
-
+/**
+ * FXML Controller class
+ *
+ * @author Пальчук
+ */
 public class MainSceneController implements Initializable {
-    
     private Professor currentProfessor = new Professor();
     
-    private ObservableList<Professor> professorsList = FXCollections.observableArrayList();
+    private final ObservableList<Professor> professorsList = FXCollections.observableArrayList();
     
     ObservableList<Task> tasksList = FXCollections.observableArrayList();
     
-    
-    @FXML 
-    private TableView<Task> tableOfTasks;
     @FXML
     private MenuItem menuBarFileOpen;
     @FXML
@@ -66,44 +62,46 @@ public class MainSceneController implements Initializable {
     @FXML
     private TextField rate;
     @FXML
-    private TableColumn<Task, String> taskClmn;
+    private TreeTableColumn<Task, String>taskClmn;
     @FXML
-    private TableColumn<Task, String> periodClmn;
+    private TreeTableColumn<Task, String> periodClmn;
     @FXML
-    private TableColumn<Task, Double> volumeClmn;
+    private TreeTableColumn<Task, Double> volumeClmn;
     @FXML
-    private TableColumn<Task, Double>septemberClmn;
+    private TreeTableColumn<Task, Double> septemberClmn;
     @FXML
-    private TableColumn<Task, Double> octoberClmn;
+    private TreeTableColumn<Task, Double> octoberClmn;
     @FXML
-    private TableColumn<Task, Double> novemberClmn;
+    private TreeTableColumn<Task, Double> novemberClmn;
     @FXML
-    private TableColumn<Task, Double> decemberClmn;
+    private TreeTableColumn<Task, Double> decemberClmn;
     @FXML
-    private TableColumn<Task, Double> januaryClmn;
+    private TreeTableColumn<Task, Double> januaryClmn;
     @FXML
-    private TableColumn<Task, Double> firstSemClmn;
+    private TreeTableColumn<Task, Double> firstSemClmn;
     @FXML
-    private TableColumn<Task, Double> februaryClmn;
+    private TreeTableColumn<Task, Double> februaryClmn;
     @FXML
-    private TableColumn<Task, Double> marchClmn;
+    private TreeTableColumn<Task, Double> marchClmn;
     @FXML
-    private TableColumn<Task, Double> aprilClmn;
+    private TreeTableColumn<Task, Double> aprilClmn;
     @FXML
-    private TableColumn<Task, Double> mayClmn;
+    private TreeTableColumn<Task, Double> mayClmn;
     @FXML
-    private TableColumn<Task, Double> juneClmn;
+    private TreeTableColumn<Task, Double> juneClmn;
     @FXML
-    private TableColumn<Task, Double> julyClmn;
+    private TreeTableColumn<Task, Double> julyClmn;
     @FXML
-    private TableColumn<Task, Double> augustClmn;
+    private TreeTableColumn<Task, Double> augustClmn;
     @FXML
-    private TableColumn<Task, Double> secondSemClmn;
+    private TreeTableColumn<Task, Double> secondSemClmn;
     @FXML
-    private TableColumn<Task, Double> allYearClmn;
+    private TreeTableColumn<Task, Double> allYearClmn;
     @FXML
-    private TableColumn<Task, Boolean> checkClmn;
-    
+    private TreeTableColumn<Task, Double> checkClmn;
+    @FXML
+    private TreeTableView<Task> treeTableView;
+
     { //блок инициализации списка задач
         Task task= new Task();
         task.setCapacity(20.02);
@@ -111,46 +109,13 @@ public class MainSceneController implements Initializable {
         tasksList.add(new Task());
         tasksList.add(new Task());        
     }
-    
-     
-    //MenuBar
-    @FXML
-    private void fileExit(ActionEvent event) {
-        
-    }
-    
-    @FXML 
-    private void fileOpen(ActionEvent event) {
-        
-    }
-    
-    //Buttons
-    @FXML
-    private void newProfessorHandler(ActionEvent event) {
-        Professor tempProfessor = new Professor();
-        tempProfessor.setTasks(tasksList);
-        boolean okClicked = showNewProfessorDialog(tempProfessor);
-            if (okClicked) {
-                professorsList.add(tempProfessor);
-            }       
-    }
-    
-    @FXML
-    private void removeProfessorHandler(ActionEvent event) {
-        
-    }
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initData();
         comboBoxInitialize();
         tableColumnInitialize();
-        
-        
-        
-    }
-    
-    public void initData() { // для примера
+    }    
+public void initData() { // для примера
         
         
         currentProfessor = new Professor("Профессор1",tasksList,0.5);           
@@ -174,56 +139,79 @@ public class MainSceneController implements Initializable {
         tableColumnInitialize();
        });
     }
-    
     public void tableColumnInitialize() {
+        Task task = new Task();
+        task.setProfessorsWork("Общие");
+        task.setCapacity(20.0);
+        Task childTask = new Task();
+        childTask.setProfessorsWork("Дочерний");
+        childTask.setCapacity(10.1);
+        TreeItem<Task> root = new TreeItem<>(task);
+        TreeItem<Task> child = new TreeItem<>(childTask);
+        root.getChildren().add(child);
         setEditableCells();
-        taskClmn.setCellValueFactory(new PropertyValueFactory<>("professorsWork"));
-        periodClmn.setCellValueFactory(new PropertyValueFactory<>("period"));
-        volumeClmn.setCellValueFactory(new PropertyValueFactory<>("capacity"));
-        tableOfTasks.setItems(currentProfessor.getTasks());
+        taskClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("professorsWork"));
+        periodClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("period"));
+        volumeClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("capacity"));
+        treeTableView.setRoot(root);
     }
     
     
    
     public void setEditableCells() { //метод по обработке изменения в ячейке
         
-        taskClmn.setCellFactory(TextFieldTableCell.forTableColumn());
+        taskClmn.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
         taskClmn.setOnEditCommit((CellEditEvent<Task, String> t) -> {
-            ((Task) t.getTableView().getItems().get(
-                    t.getTablePosition().getRow())
-                    ).setProfessorsWork(t.getNewValue());
+            Task task = t.getRowValue().getValue();
+            task.setProfessorsWork(t.getNewValue());
         });
-        
-        periodClmn.setCellFactory(TextFieldTableCell.forTableColumn());
-        periodClmn.setOnEditCommit((CellEditEvent<Task, String> t) -> {
-            ((Task) t.getTableView().getItems().get(
-                    t.getTablePosition().getRow())
-                    ).setPeriod(t.getNewValue());
-        });
-        
-        Callback<TableColumn<Task,Double>, TableCell<Task,Double>> cellFactory =
-                new Callback<TableColumn<Task,Double>, TableCell<Task,Double>>() {
+        Callback<TreeTableColumn<Task,Double>, TreeTableCell<Task,Double>> cellFactory =
+                new Callback<TreeTableColumn<Task,Double>, TreeTableCell<Task,Double>>() {
                            
                           @Override
-                          public TableCell call(TableColumn p) {
+                          public TreeTableCell call(TreeTableColumn p) {
                               return new EditingCell();
                           }
                 };
         
         volumeClmn.setCellFactory(cellFactory);
-        volumeClmn.setOnEditCommit((TableColumn.CellEditEvent<Task, Double> t) -> {
-            ((Task)t.getTableView().getItems().get(
-                    t.getTablePosition().getRow())).setCapacity(t.getNewValue());
+        volumeClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setCapacity(t.getNewValue());
         });
         
+      
         //TODO доделать для остальных колонок
     }
+    @FXML
+    private void fileOpen(ActionEvent event) {
+    }
+
+    @FXML
+    private void fileExit(ActionEvent event) {
+    }
+
+    @FXML
+    private void newProfessorHandler(ActionEvent event) {
+    }
+
+    @FXML
+    private void removeProfessorHandler(ActionEvent event) {
+    }
+    private class ProfessorsListCell extends ListCell<Professor> {
+        @Override
+        protected void updateItem(Professor professor, boolean empty) {
+            super.updateItem(professor, empty);
+            
+            if (professor != null)
+                setText(professor.getFio());
+            else 
+                setText(null);
+        }
+        
+    }
     
-    
-
-
-
-    private class EditingCell extends TableCell<Task, Double> { // класс для изменения ячейки типа Double
+    private class EditingCell extends TreeTableCell<Task, Double> { // класс для изменения ячейки типа Double
         private TextField textField;                // по дефолту можно только стринговые изменять
          
         public EditingCell() {}
@@ -291,48 +279,4 @@ public class MainSceneController implements Initializable {
             return getItem() == null ? "" : getItem().toString();
         }
     }
-
-    
-    
-    private class ProfessorsListCell extends ListCell<Professor> {
-        @Override
-        protected void updateItem(Professor professor, boolean empty) {
-            super.updateItem(professor, empty);
-            
-            if (professor != null)
-                setText(professor.getFio());
-            else 
-                setText(null);
-        }
-        
-    }
-    
-    
-    public boolean showNewProfessorDialog(Professor professor) { //метод для прорисовки диалогового окна добавления препода
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/fxml/NewProfessor.fxml"));
-            GridPane page = (GridPane) loader.load();
-
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle("Добавление преподавателя");
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-            Scene scene = new Scene(page);
-            dialogStage.setScene(scene);
-            
-            NewProfessorController controller = loader.getController();
-            controller.setDialogStage(dialogStage);
-            controller.setProfessor(professor);
-            
-            dialogStage.showAndWait();
-            
-            return controller.isOkClicked();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-    
 }
-
