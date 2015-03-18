@@ -72,37 +72,37 @@ public class MainSceneController implements Initializable {
     @FXML
     private TableColumn<Task, Double> volumeClmn;
     @FXML
-    private TableColumn<?, ?> septemberClmn;
+    private TableColumn<Task, Double>septemberClmn;
     @FXML
-    private TableColumn<?, ?> octoberClmn;
+    private TableColumn<Task, Double> octoberClmn;
     @FXML
-    private TableColumn<?, ?> novemberClmn;
+    private TableColumn<Task, Double> novemberClmn;
     @FXML
-    private TableColumn<?, ?> decemberClmn;
+    private TableColumn<Task, Double> decemberClmn;
     @FXML
-    private TableColumn<?, ?> januaryClmn;
+    private TableColumn<Task, Double> januaryClmn;
     @FXML
-    private TableColumn<?, ?> firstSemClmn;
+    private TableColumn<Task, Double> firstSemClmn;
     @FXML
-    private TableColumn<?, ?> februaryClmn;
+    private TableColumn<Task, Double> februaryClmn;
     @FXML
-    private TableColumn<?, ?> marchClmn;
+    private TableColumn<Task, Double> marchClmn;
     @FXML
-    private TableColumn<?, ?> aprilClmn;
+    private TableColumn<Task, Double> aprilClmn;
     @FXML
-    private TableColumn<?, ?> mayClmn;
+    private TableColumn<Task, Double> mayClmn;
     @FXML
-    private TableColumn<?, ?> juneClmn;
+    private TableColumn<Task, Double> juneClmn;
     @FXML
-    private TableColumn<?, ?> julyClmn;
+    private TableColumn<Task, Double> julyClmn;
     @FXML
-    private TableColumn<?, ?> secondSemClmn;
+    private TableColumn<Task, Double> augustClmn;
     @FXML
-    private TableColumn<?, ?> allYearClmn;
+    private TableColumn<Task, Double> secondSemClmn;
     @FXML
-    private TableColumn<?, ?> checkClmn;
+    private TableColumn<Task, Double> allYearClmn;
     @FXML
-    private TableColumn<?, ?> markClmn;
+    private TableColumn<Task, Boolean> checkClmn;
     
     { //блок инициализации списка задач
         Task task= new Task();

@@ -24,7 +24,6 @@ public class Task {
     Double secondSemester;
     Double allYear;
     Boolean completeWork;
-    Double mark;
 
 
     public Task() {
@@ -47,7 +46,6 @@ public class Task {
         secondSemester=0.0;
         allYear=0.0;
         completeWork=false;
-        mark=0.0;
 
     }
 
@@ -73,7 +71,7 @@ public class Task {
         this.secondSemester = secondSemester;
         this.allYear = allYear;
         this.completeWork = completeWork;
-        this.mark = mark;
+
 
     }
 
@@ -131,7 +129,7 @@ public class Task {
     
     @Override
     public String toString() {
-        return "Task{" + "professorsWork=" + professorsWork + ", period=" + period + ", capacity=" + capacity + ", septemberCapacity=" + septemberCapacity + ", octoberCapacity=" + octoberCapacity + ", novemberCapacity=" + novemberCapacity + ", decemberCapacity=" + decemberCapacity + ", januaryCapacity=" + januaryCapacity + ", firstSemester=" + firstSemester + ", februaryCapacity=" + februaryCapacity + ", marchCapacity=" + marchCapacity + ", aprilCapacity=" + aprilCapacity + ", mayCapacity=" + mayCapacity + ", juneCapacity=" + juneCapacity + ", julyCapacity=" + julyCapacity + ", augustCapacity=" + augustCapacity + ", secondSemester=" + secondSemester + ", allYear=" + allYear + ", completeWork=" + completeWork + ", mark=" + mark + '}';
+        return "Task{" + "professorsWork=" + professorsWork + ", period=" + period + ", capacity=" + capacity + ", septemberCapacity=" + septemberCapacity + ", octoberCapacity=" + octoberCapacity + ", novemberCapacity=" + novemberCapacity + ", decemberCapacity=" + decemberCapacity + ", januaryCapacity=" + januaryCapacity + ", firstSemester=" + firstSemester + ", februaryCapacity=" + februaryCapacity + ", marchCapacity=" + marchCapacity + ", aprilCapacity=" + aprilCapacity + ", mayCapacity=" + mayCapacity + ", juneCapacity=" + juneCapacity + ", julyCapacity=" + julyCapacity + ", augustCapacity=" + augustCapacity + ", secondSemester=" + secondSemester + ", allYear=" + allYear + ", completeWork=" + completeWork + '}';
     }
 
 
@@ -246,14 +244,6 @@ public class Task {
     public void setCompleteWork(Boolean completeWork) {
         this.completeWork = completeWork;
     }
-
-    public Double getMark() {
-        return mark;
-    }
-
-    public void setMark(Double mark) {
-        this.mark = mark;
-    }
-    
+ 
     
 }
