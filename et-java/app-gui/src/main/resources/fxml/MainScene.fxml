@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="695.0" prefWidth="1420.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.et.gui.MainSceneController">
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="635.0" prefWidth="1420.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.et.gui.MainSceneController">
    <children>
        
       <MenuBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="1368.0">
@@ -45,31 +45,29 @@
             <TextField fx:id="rate" prefHeight="25.0" prefWidth="54.0" />
         </items>
       </ToolBar>
-      
-            <TableView fx:id="tableOfTasks" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="1310.0" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+      <TreeTableView fx:id="treeTableView" editable="true">
         <columns>
-          <TableColumn id="taskClmn" fx:id="taskClmn" prefWidth="180.0" sortable="false" text="Работа преподавателя" />
-          <TableColumn id="periodClmn" fx:id="periodClmn" minWidth="0.0" prefWidth="156.0" sortable="false" text="Срок" />
-            <TableColumn id="volumeClmn" fx:id="volumeClmn" prefWidth="58.0" sortable="false" text="Объем" />
-            <TableColumn id="septemberClmn" fx:id="septemberClmn" prefWidth="78.0" sortable="false" text="Сентябрь" />
-            <TableColumn id="octoberClmn" fx:id="octoberClmn" prefWidth="69.0" sortable="false" text="Октябрь" />
-            <TableColumn id="novemberClmn" fx:id="novemberClmn" prefWidth="61.0" sortable="false" text="Ноябрь" />
-            <TableColumn id="decemberClmn" fx:id="decemberClmn" prefWidth="75.0" sortable="false" text="Декабрь" />
-            <TableColumn id="januaryClmn" fx:id="januaryClmn" prefWidth="60.0" sortable="false" text="Январь" />
-            <TableColumn id="firstSemClmn" fx:id="firstSemClmn" prefWidth="48.0" sortable="false" text="1 сем" />
-            <TableColumn id="februaryClmn" fx:id="februaryClmn" prefWidth="72.0" sortable="false" text="Февраль" />
-            <TableColumn id="marchClmn" fx:id="marchClmn" prefWidth="48.0" sortable="false" text="Март" />
-            <TableColumn id="aprilClmn" fx:id="aprilClmn" prefWidth="63.0" sortable="false" text="Апрель" />
-            <TableColumn id="mayClmn" fx:id="mayClmn" prefWidth="46.0" sortable="false" text="Май" />
-            <TableColumn id="juneClmn" fx:id="juneClmn" prefWidth="55.0" sortable="false" text="Июнь" />
-            <TableColumn id="julyClmn" fx:id="julyClmn" prefWidth="55.0" sortable="false" text="Июль" />
-            <TableColumn id="augustClmn" fx:id="augustClmn" prefWidth="59.0" sortable="false" text="Август" />
-            <TableColumn id="secondSemClmn" fx:id="secondSemClmn" prefWidth="47.0" sortable="false" text="2 сем" />
-            <TableColumn id="allYearClmn" fx:id="allYearClmn" prefWidth="76.0" sortable="false" text="Весь год" />
-            <TableColumn id="checkClmn" fx:id="checkClmn" prefWidth="84.0" sortable="false" text="Проверка" />
+          <TreeTableColumn id="taskClmn" fx:id="taskClmn" prefWidth="180.0" sortable="false" text="Работа преподавателя" />
+          <TreeTableColumn id="periodClmn" fx:id="periodClmn" minWidth="0.0" prefWidth="156.0" sortable="false" text="Срок" />
+            <TreeTableColumn id="volumeClmn" fx:id="volumeClmn" prefWidth="58.0" sortable="false" text="Объем" />
+            <TreeTableColumn id="septemberClmn" fx:id="septemberClmn" prefWidth="78.0" sortable="false" text="Сентябрь" />
+            <TreeTableColumn id="octoberClmn" fx:id="octoberClmn" prefWidth="69.0" sortable="false" text="Октябрь" />
+            <TreeTableColumn id="novemberClmn" fx:id="novemberClmn" prefWidth="61.0" sortable="false" text="Ноябрь" />
+            <TreeTableColumn id="decemberClmn" fx:id="decemberClmn" prefWidth="75.0" sortable="false" text="Декабрь" />
+            <TreeTableColumn id="januaryClmn" fx:id="januaryClmn" prefWidth="60.0" sortable="false" text="Январь" />
+            <TreeTableColumn id="firstSemClmn" fx:id="firstSemClmn" prefWidth="48.0" sortable="false" text="1 сем" />
+            <TreeTableColumn id="februaryClmn" fx:id="februaryClmn" prefWidth="72.0" sortable="false" text="Февраль" />
+            <TreeTableColumn id="marchClmn" fx:id="marchClmn" prefWidth="48.0" sortable="false" text="Март" />
+            <TreeTableColumn id="aprilClmn" fx:id="aprilClmn" prefWidth="63.0" sortable="false" text="Апрель" />
+            <TreeTableColumn id="mayClmn" fx:id="mayClmn" prefWidth="46.0" sortable="false" text="Май" />
+            <TreeTableColumn id="juneClmn" fx:id="juneClmn" prefWidth="55.0" sortable="false" text="Июнь" />
+            <TreeTableColumn id="julyClmn" fx:id="julyClmn" prefWidth="55.0" sortable="false" text="Июль" />
+            <TreeTableColumn id="augustClmn" fx:id="augustClmn" prefWidth="59.0" sortable="false" text="Август" />
+            <TreeTableColumn id="secondSemClmn" fx:id="secondSemClmn" prefWidth="47.0" sortable="false" text="2 сем" />
+            <TreeTableColumn id="allYearClmn" fx:id="allYearClmn" prefWidth="76.0" sortable="false" text="Весь год" />
+            <TreeTableColumn id="checkClmn" fx:id="checkClmn" prefWidth="84.0" sortable="false" text="Проверка" />
         </columns>
-        
-            </TableView>
+      </TreeTableView>
       
    </children>
 </VBox>

@@ -7,6 +7,7 @@ package com.company.et.gui;
 
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -16,7 +17,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
@@ -35,6 +38,9 @@ import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -98,10 +104,32 @@ public class MainSceneController implements Initializable {
     @FXML
     private TreeTableColumn<Task, Double> allYearClmn;
     @FXML
-    private TreeTableColumn<Task, Double> checkClmn;
+    private TreeTableColumn<Task, Boolean> checkClmn;
     @FXML
     private TreeTableView<Task> treeTableView;
+    
+    @FXML
+    private void fileOpen(ActionEvent event) {
+    }
 
+    @FXML
+    private void fileExit(ActionEvent event) {
+    }
+
+    @FXML
+    private void removeProfessorHandler(ActionEvent event) {
+    }
+    
+    @FXML
+    private void newProfessorHandler(ActionEvent event) {
+        Professor tempProfessor = new Professor();
+        tempProfessor.setTasks(tasksList);
+        boolean okClicked = showNewProfessorDialog(tempProfessor);
+            if (okClicked) {
+                professorsList.add(tempProfessor);
+            }       
+    }
+    
     { //блок инициализации списка задач
         Task task= new Task();
         task.setCapacity(20.02);
@@ -109,12 +137,15 @@ public class MainSceneController implements Initializable {
         tasksList.add(new Task());
         tasksList.add(new Task());        
     }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initData();
         comboBoxInitialize();
         tableColumnInitialize();
     }    
+    
+    
 public void initData() { // для примера
         
         
@@ -140,15 +171,35 @@ public void initData() { // для примера
        });
     }
     public void tableColumnInitialize() {
+        Task all = new Task();
+        all.setProfessorsWork("Общее");
+        
         Task task = new Task();
-        task.setProfessorsWork("Общие");
-        task.setCapacity(20.0);
+        task.setProfessorsWork("Учебно-методическая");
+        task.setCapacity(10.0);
+        
         Task childTask = new Task();
-        childTask.setProfessorsWork("Дочерний");
+        childTask.setProfessorsWork("Учёба");
         childTask.setCapacity(10.1);
-        TreeItem<Task> root = new TreeItem<>(task);
-        TreeItem<Task> child = new TreeItem<>(childTask);
-        root.getChildren().add(child);
+        
+        
+        Task task2 = new Task();
+        task2.setProfessorsWork("Научная");
+        task2.setCapacity(11.0);
+        
+        Task childTask2 = new Task();
+        childTask2.setCapacity(2.0);
+        childTask2.setProfessorsWork("Дочерний2");
+        
+        TreeItem<Task> root = new TreeItem<>(all);
+        TreeItem<Task> part1 = new TreeItem<>(task);
+        TreeItem<Task> part2 = new TreeItem<>(task2);
+        TreeItem<Task> task1_1 = new TreeItem<>(childTask);
+        TreeItem<Task> task2_1 = new TreeItem<>(childTask2);
+        root.getChildren().add(part1);
+        root.getChildren().add(part2);
+        part1.getChildren().add(task1_1);
+        part2.getChildren().add(task2_1);
         setEditableCells();
         taskClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("professorsWork"));
         periodClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("period"));
@@ -165,6 +216,13 @@ public void initData() { // для примера
             Task task = t.getRowValue().getValue();
             task.setProfessorsWork(t.getNewValue());
         });
+        periodClmn.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
+        periodClmn.setOnEditCommit((CellEditEvent<Task, String> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setPeriod(t.getNewValue());
+        });
+        
+        
         Callback<TreeTableColumn<Task,Double>, TreeTableCell<Task,Double>> cellFactory =
                 new Callback<TreeTableColumn<Task,Double>, TreeTableCell<Task,Double>>() {
                            
@@ -180,24 +238,113 @@ public void initData() { // для примера
             task.setCapacity(t.getNewValue());
         });
         
-      
-        //TODO доделать для остальных колонок
-    }
-    @FXML
-    private void fileOpen(ActionEvent event) {
+        septemberClmn.setCellFactory(cellFactory);
+        septemberClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setSeptemberCapacity(t.getNewValue());
+        });
+        
+        octoberClmn.setCellFactory(cellFactory);
+        octoberClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setOctoberCapacity(t.getNewValue());
+        });
+        
+        novemberClmn.setCellFactory(cellFactory);
+        novemberClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setNovemberCapacity(t.getNewValue());
+        });
+        
+        decemberClmn.setCellFactory(cellFactory);
+        decemberClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setDecemberCapacity(t.getNewValue());
+        });
+        
+        januaryClmn.setCellFactory(cellFactory);
+        januaryClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setJanuaryCapacity(t.getNewValue());
+        });
+        
+        firstSemClmn.setCellFactory(cellFactory);
+        firstSemClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setFirstSemester(t.getNewValue());
+        });
+        
+        februaryClmn.setCellFactory(cellFactory);
+        februaryClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setFebruaryCapacity(t.getNewValue());
+        });
+        
+        marchClmn.setCellFactory(cellFactory);
+        marchClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setMarchCapacity(t.getNewValue());
+        });
+        
+        aprilClmn.setCellFactory(cellFactory);
+        aprilClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setAprilCapacity(t.getNewValue());
+        });
+        
+        mayClmn.setCellFactory(cellFactory);
+        juneClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setMayCapacity(t.getNewValue());
+        });
+        
+        juneClmn.setCellFactory(cellFactory);
+        juneClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setJuneCapacity(t.getNewValue());
+        });
+        
+        julyClmn.setCellFactory(cellFactory);
+        julyClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setJulyCapacity(t.getNewValue());
+        });
+        
+        augustClmn.setCellFactory(cellFactory);
+        augustClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setAugustCapacity(t.getNewValue());
+        });
+        
+        secondSemClmn.setCellFactory(cellFactory);
+        secondSemClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setSecondSemester(t.getNewValue());
+        });
+        
+        allYearClmn.setCellFactory(cellFactory);
+        allYearClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setAllYear(t.getNewValue());
+        });
+
+        Callback<TreeTableColumn<Task,Boolean>, TreeTableCell<Task,Boolean>> cellBoolFactory =
+                new Callback<TreeTableColumn<Task,Boolean>, TreeTableCell<Task,Boolean>>() {
+                           
+                          @Override
+                          public TreeTableCell call(TreeTableColumn p) {
+                              return new EditingCell();
+                          }
+                };
+        checkClmn.setCellFactory(cellBoolFactory);
+        checkClmn.setOnEditCommit((CellEditEvent<Task, Boolean> t) -> {
+            Task task = t.getRowValue().getValue();
+            task.setCompleteWork(t.getNewValue());
+        });
     }
 
-    @FXML
-    private void fileExit(ActionEvent event) {
-    }
+    
 
-    @FXML
-    private void newProfessorHandler(ActionEvent event) {
-    }
-
-    @FXML
-    private void removeProfessorHandler(ActionEvent event) {
-    }
     private class ProfessorsListCell extends ListCell<Professor> {
         @Override
         protected void updateItem(Professor professor, boolean empty) {
@@ -262,21 +409,43 @@ public void initData() { // для примера
         private void createTextField() {
             textField = new TextField(getString());
             textField.setMinWidth(this.getWidth() - this.getGraphicTextGap()*2);
-            textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
-              
-                @Override
-                public void handle(KeyEvent t) {
-                    if (t.getCode() == KeyCode.ENTER) {
-                        commitEdit(Double.parseDouble(textField.getText()));
-                    } else if (t.getCode() == KeyCode.ESCAPE) {
-                        cancelEdit();
-                    }
+            textField.setOnKeyPressed((KeyEvent t) -> {
+                if (t.getCode() == KeyCode.ENTER) {
+                    commitEdit(Double.parseDouble(textField.getText()));
+                } else if (t.getCode() == KeyCode.ESCAPE) {
+                    cancelEdit();
                 }
             });
         }
       
         private String getString() {
             return getItem() == null ? "" : getItem().toString();
+        }
+    }
+    
+    public boolean showNewProfessorDialog(Professor professor) { //метод для прорисовки диалогового окна добавления препода
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fxml/NewProfessor.fxml"));
+            GridPane page = (GridPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Добавление преподавателя");
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            
+            NewProfessorController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setProfessor(professor);
+            
+            dialogStage.showAndWait();
+            
+            return controller.isOkClicked();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }
