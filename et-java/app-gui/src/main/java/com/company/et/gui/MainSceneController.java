@@ -110,6 +110,7 @@ public class MainSceneController implements Initializable {
     
     @FXML
     private void fileOpen(ActionEvent event) {
+        
     }
 
     @FXML
@@ -170,36 +171,67 @@ public void initData() { // для примера
         tableColumnInitialize();
        });
     }
-    public void tableColumnInitialize() {
-        Task all = new Task();
+    
+    
+    
+    //--------------------------------------------------------------------------------------
+    ObservableList<TreeItem<Task>> child1Task = FXCollections.observableArrayList();
+    Task all = new Task();
+    Task task = new Task();
+    Task childTask = new Task();
+    Task task2 = new Task();
+    Task childTask2 = new Task();
+    TreeItem<Task> root = new TreeItem<>();
+    
+    
+    {
+        
         all.setProfessorsWork("Общее");
         
-        Task task = new Task();
+        
         task.setProfessorsWork("Учебно-методическая");
         task.setCapacity(10.0);
         
-        Task childTask = new Task();
+        
         childTask.setProfessorsWork("Учёба");
         childTask.setCapacity(10.1);
         
         
-        Task task2 = new Task();
+        
         task2.setProfessorsWork("Научная");
         task2.setCapacity(11.0);
         
-        Task childTask2 = new Task();
-        childTask2.setCapacity(2.0);
-        childTask2.setProfessorsWork("Дочерний2");
         
-        TreeItem<Task> root = new TreeItem<>(all);
+        childTask2.setCapacity(2.0);
+        childTask2.setProfessorsWork("Дочерний2");  
+        
+        
+        root.setValue(all);
         TreeItem<Task> part1 = new TreeItem<>(task);
         TreeItem<Task> part2 = new TreeItem<>(task2);
         TreeItem<Task> task1_1 = new TreeItem<>(childTask);
         TreeItem<Task> task2_1 = new TreeItem<>(childTask2);
-        root.getChildren().add(part1);
-        root.getChildren().add(part2);
+        
+        child1Task.add(part1);
+        child1Task.add(part2);
+        
+        root.setExpanded(true);
+        
+//        root.getChildren().add(part1);
+//        root.getChildren().add(part2);
+        root.getChildren().addAll(child1Task);
         part1.getChildren().add(task1_1);
         part2.getChildren().add(task2_1);
+        
+    }
+    
+    //--------------------------------------------------------------------------------------
+    
+    public void tableColumnInitialize() {
+        
+
+        
+        
         setEditableCells();
         taskClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("professorsWork"));
         periodClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("period"));
