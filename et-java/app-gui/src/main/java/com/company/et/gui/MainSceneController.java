@@ -35,6 +35,7 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -112,7 +113,8 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void fileOpen(ActionEvent event) {
-
+         FileChooser fc = new FileChooser();
+         fc.setTitle("Выберите файл");
     }
 
     @FXML
@@ -192,6 +194,8 @@ public class MainSceneController implements Initializable {
         for (int i = 0; i < currentProfessor.getTasksPublic().size(); i++) {
             part3.getChildren().add(new TreeItem<>(currentProfessor.getTasksPublic().get(i)));
         }
+        
+        
     }
 
     public void comboBoxInitialize() {
@@ -390,8 +394,10 @@ public class MainSceneController implements Initializable {
         @Override
         public void cancelEdit() {
             super.cancelEdit();
-
-            setText(String.valueOf(getItem()));
+            if(String.valueOf(getItem()).equals("null"))
+                setText(" ");
+            else
+                setText(String.valueOf(getItem()));
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }
 
@@ -422,7 +428,12 @@ public class MainSceneController implements Initializable {
             textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
             textField.setOnKeyPressed((KeyEvent t) -> {
                 if (t.getCode() == KeyCode.ENTER) {
-                    commitEdit(Double.parseDouble(textField.getText()));
+                    try {
+                        commitEdit(Double.parseDouble(textField.getText()));
+                    } catch (NumberFormatException e) {
+                        cancelEdit();
+                    }
+                    
                 } else if (t.getCode() == KeyCode.ESCAPE) {
                     cancelEdit();
                 }
@@ -441,7 +452,7 @@ public class MainSceneController implements Initializable {
             GridPane page = (GridPane) loader.load();
 
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Р”РѕР±Р°РІР»РµРЅРёРµ РїСЂРµРїРѕРґР°РІР°С‚РµР»СЏ");
+            dialogStage.setTitle("Добавление нового преподавателя");
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);

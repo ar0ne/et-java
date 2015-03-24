@@ -25,13 +25,13 @@ public class ProfessorService {
         return new Professor();
     }
 
-    public static void addTaskToProfessor(Professor professor, Task task) {
-        professor.getTasks().add(task);
-    }
-
-    public static void removeTaskFromProfessor(Professor professor, Integer id) {
-        if (id >= 0 && id < professor.getTasks().size()) {
-            professor.getTasks().remove(id);
-        }
-    }
+//    public static void addTaskToProfessor(Professor professor, Task task) {
+//        professor.getTasks().add(task);
+//    }
+//
+//    public static void removeTaskFromProfessor(Professor professor, Integer id) {
+//        if (id >= 0 && id < professor.getTasks().size()) {
+//            professor.getTasks().remove(id);
+//        }
+//    }
 }
