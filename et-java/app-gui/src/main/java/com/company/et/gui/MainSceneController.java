@@ -7,12 +7,16 @@ package com.company.et.gui;
 
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -29,6 +34,7 @@ import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
@@ -46,7 +52,9 @@ import javafx.util.Callback;
  * @author РџР°Р»СЊС‡СѓРє
  */
 public class MainSceneController implements Initializable {
-
+    public static String UCHEBNO_METOD = "Учебно-методическая";
+    public static String NAUCHNAYA = "Научная";
+    public static String OBSHESTVENNAYA = "Общественная";
     private Professor currentProfessor = new Professor();
 
     private final ObservableList<Professor> professorsList = FXCollections.observableArrayList();
@@ -167,15 +175,15 @@ public class MainSceneController implements Initializable {
         all.setProfessorsWork("Общее");
 
         Task task = new Task();
-        task.setProfessorsWork("Учебно-методическая");
+        task.setProfessorsWork(UCHEBNO_METOD);
         task.setCapacity(10.0);
 
         Task task2 = new Task();
-        task2.setProfessorsWork("Научная");
+        task2.setProfessorsWork(NAUCHNAYA);
         task2.setCapacity(11.0);
 
         Task task3 = new Task();
-        task3.setProfessorsWork("Общественная");
+        task3.setProfessorsWork(OBSHESTVENNAYA);
         task3.setCapacity(11.0);
 
         root = new TreeItem<>(all);
@@ -372,10 +380,29 @@ public class MainSceneController implements Initializable {
     }
 
     private class EditingCell extends TreeTableCell<Task, Double> { // РєР»Р°СЃСЃ РґР»СЏ РёР·РјРµРЅРµРЅРёСЏ СЏС‡РµР№РєРё С‚РёРїР° Double
-
+        private ContextMenu addMenu = new ContextMenu();
         private TextField textField;                // РїРѕ РґРµС„РѕР»С‚Сѓ РјРѕР¶РЅРѕ С‚РѕР»СЊРєРѕ СЃС‚СЂРёРЅРіРѕРІС‹Рµ РёР·РјРµРЅСЏС‚СЊ
 
         public EditingCell() {
+            MenuItem addMenuItem = new MenuItem("Add Employee");
+            addMenu.getItems().add(addMenuItem);
+            addMenuItem.setOnAction(new EventHandler() {
+                 @Override
+                 public void handle(Event event) {
+                    TreeItem<Task> newEmployee =  new TreeItem<Task>(new Task());
+                    getTreeTableRow().getTreeItem().getChildren().add(newEmployee);
+                    
+//                    if (getTreeTableRow().getTreeItem().getParent()
+//                             .getValue().getProfessorsWork().equals(UCHEBNO_METOD))
+//                        currentProfessor.getTasksWorkMethod().add(newEmployee.getValue());
+//                    
+//                    else if (getTreeTableRow().getTreeItem().getParent()
+//                             .getValue().getProfessorsWork().equals(NAUCHNAYA))
+//                        currentProfessor.getTasksScince().add(newEmployee.getValue());
+//                    
+//                    else currentProfessor.getTasksPublic().add(newEmployee.getValue());
+        }
+            });
         }
 
         @Override
@@ -419,6 +446,9 @@ public class MainSceneController implements Initializable {
                 } else {
                     setText(getString());
                     setContentDisplay(ContentDisplay.TEXT_ONLY);
+                    if (!getTreeTableRow().getTreeItem().isLeaf() && 
+                            getTreeTableRow().getTreeItem().expandedProperty().getValue())
+                        setContextMenu(addMenu);
                 }
             }
         }
