@@ -10,19 +10,51 @@ public class Professor {
 
     
     String fio;
-    ObservableList<Task> tasks;
+    ObservableList<Task> tasksWorkMethod;
+    ObservableList<Task> tasksScince;
+    ObservableList<Task> tasksPublic;
+
+    public Professor(String fio, ObservableList<Task> tasksWorkMethod, ObservableList<Task> tasksScince, ObservableList<Task> tasksPublic, Double rate) {
+        this.fio = fio;
+        this.tasksWorkMethod = tasksWorkMethod;
+        this.tasksScince = tasksScince;
+        this.tasksPublic = tasksPublic;
+        this.rate = rate;
+    }
+    
+    public ObservableList<Task> getTasksWorkMethod() {
+        return tasksWorkMethod;
+    }
+
+    public void setTasksWorkMethod(ObservableList<Task> tasksWorkMethod) {
+        this.tasksWorkMethod = tasksWorkMethod;
+    }
+
+    
+
+    public ObservableList<Task> getTasksScince() {
+        return tasksScince;
+    }
+
+    public void setTasksScince(ObservableList<Task> tasksScince) {
+        this.tasksScince = tasksScince;
+    }
+
+    public ObservableList<Task> getTasksPublic() {
+        return tasksPublic;
+    }
+
+    public void setTasksPublic(ObservableList<Task> tasksPublic) {
+        this.tasksPublic = tasksPublic;
+    }
     private Double rate; // ставка
     
     public Professor() {
-        tasks=FXCollections.observableArrayList();
+        tasksWorkMethod=FXCollections.observableArrayList();
+        tasksScince=FXCollections.observableArrayList();
+        tasksPublic=FXCollections.observableArrayList();
         fio="Example";
         rate = 1.0;
-    }
-
-    public Professor(String fio, ObservableList<Task> tasks,  Double rate) {
-        this.fio = fio;
-        this.tasks = tasks;
-        this.rate = rate;
     }
 
     public String getFio() {
@@ -31,14 +63,6 @@ public class Professor {
 
     public void setFio(String fio) {
         this.fio = fio;
-    }
-
-    public ObservableList<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(ObservableList<Task> tasks) {
-        this.tasks = tasks;
     }
 
     public Double getRate() {
@@ -50,6 +74,6 @@ public class Professor {
     }
     @Override
     public String toString() {
-        return "Professor{" + "fio=" + fio + ", tasks=" + tasks + ", rate=" + rate + '}';
+        return "Professor{" + "fio=" + fio + ", tasks=" + tasksWorkMethod + ", rate=" + rate + '}';
     }
 }
