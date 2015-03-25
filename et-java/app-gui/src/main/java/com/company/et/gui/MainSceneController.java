@@ -8,6 +8,7 @@ package com.company.et.gui;
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -125,6 +126,7 @@ public class MainSceneController implements Initializable {
     private void fileOpen(ActionEvent event) {
         FileChooser fc = new FileChooser();
         fc.setTitle("Выберите файл");
+        File f = fc.showOpenDialog(null);
     }
 
     @FXML
@@ -153,9 +155,8 @@ public class MainSceneController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initData();
         comboBoxInitialize();
-
-        tableColumnInitialize();
         recountWork();
+        
     }
 
     public void initData() {
@@ -183,20 +184,22 @@ public class MainSceneController implements Initializable {
 
         Task task = new Task();
         task.setProfessorsWork(UCHEBNO_METOD);
-        task.setCapacity(10.0);
 
         Task task2 = new Task();
         task2.setProfessorsWork(NAUCHNAYA);
-        task2.setCapacity(11.0);
 
         Task task3 = new Task();
         task3.setProfessorsWork(OBSHESTVENNAYA);
-        task3.setCapacity(11.0);
 
         root = new TreeItem<>(all);
         part1 = new TreeItem<>(task);
         part2 = new TreeItem<>(task2);
         part3 = new TreeItem<>(task3);
+        
+        root.setExpanded(true);
+        part1.setExpanded(true);
+        part2.setExpanded(true);
+        part3.setExpanded(true);
         root.getChildren().add(part1);
         root.getChildren().add(part2);
         root.getChildren().add(part3);
@@ -213,25 +216,29 @@ public class MainSceneController implements Initializable {
     }
 
     public void recountWork() {
+        double capacity = 0.0;
         for (int i = 0; i < part1.getChildren().size(); i++) {
             part1.getValue().nullCapacities();
-            part1.getValue().setCapacity(part1.getChildren().get(i).getValue().getCapacity() + part1.getValue().getCapacity());
-            part1.getValue().setSeptemberCapacity(part1.getChildren().get(i).getValue().getSeptemberCapacity() + part1.getValue().getSeptemberCapacity());
-            part1.getValue().setOctoberCapacity(part1.getChildren().get(i).getValue().getOctoberCapacity() + part1.getValue().getOctoberCapacity());
-            part1.getValue().setNovemberCapacity(part1.getChildren().get(i).getValue().getNovemberCapacity() + part1.getValue().getNovemberCapacity());
-            part1.getValue().setDecemberCapacity(part1.getChildren().get(i).getValue().getDecemberCapacity() + part1.getValue().getDecemberCapacity());
-            part1.getValue().setJanuaryCapacity(part1.getChildren().get(i).getValue().getJanuaryCapacity() + part1.getValue().getJanuaryCapacity());
-            part1.getValue().setFirstSemester(part1.getChildren().get(i).getValue().getFirstSemester()+ part1.getValue().getFirstSemester());
-            part1.getValue().setFebruaryCapacity(part1.getChildren().get(i).getValue().getFebruaryCapacity()+ part1.getValue().getFebruaryCapacity());
-            part1.getValue().setMarchCapacity(part1.getChildren().get(i).getValue().getMarchCapacity()+ part1.getValue().getMarchCapacity());
-            part1.getValue().setAprilCapacity(part1.getChildren().get(i).getValue().getAprilCapacity()+ part1.getValue().getAprilCapacity());
-            part1.getValue().setMayCapacity(part1.getChildren().get(i).getValue().getMayCapacity()+ part1.getValue().getMayCapacity());
-            part1.getValue().setJuneCapacity(part1.getChildren().get(i).getValue().getJuneCapacity()+ part1.getValue().getJuneCapacity());
-            part1.getValue().setJulyCapacity(part1.getChildren().get(i).getValue().getJulyCapacity()+ part1.getValue().getJulyCapacity());
-            part1.getValue().setAugustCapacity(part1.getChildren().get(i).getValue().getAugustCapacity()+ part1.getValue().getAugustCapacity());
-            part1.getValue().setSecondSemester(part1.getChildren().get(i).getValue().getSecondSemester()+ part1.getValue().getSecondSemester());
-            part1.getValue().setAllYear(part1.getChildren().get(i).getValue().getAllYear()+ part1.getValue().getAllYear());
+            capacity+=part1.getChildren().get(i).getValue().getCapacity();
+            //part1.getValue().setCapacity(part1.getChildren().get(i).getValue().getCapacity() + part1.getValue().getCapacity());
+//            part1.getValue().setSeptemberCapacity(part1.getChildren().get(i).getValue().getSeptemberCapacity() + part1.getValue().getSeptemberCapacity());
+//            part1.getValue().setOctoberCapacity(part1.getChildren().get(i).getValue().getOctoberCapacity() + part1.getValue().getOctoberCapacity());
+//            part1.getValue().setNovemberCapacity(part1.getChildren().get(i).getValue().getNovemberCapacity() + part1.getValue().getNovemberCapacity());
+//            part1.getValue().setDecemberCapacity(part1.getChildren().get(i).getValue().getDecemberCapacity() + part1.getValue().getDecemberCapacity());
+//            part1.getValue().setJanuaryCapacity(part1.getChildren().get(i).getValue().getJanuaryCapacity() + part1.getValue().getJanuaryCapacity());
+//            part1.getValue().setFirstSemester(part1.getChildren().get(i).getValue().getFirstSemester()+ part1.getValue().getFirstSemester());
+//            part1.getValue().setFebruaryCapacity(part1.getChildren().get(i).getValue().getFebruaryCapacity()+ part1.getValue().getFebruaryCapacity());
+//            part1.getValue().setMarchCapacity(part1.getChildren().get(i).getValue().getMarchCapacity()+ part1.getValue().getMarchCapacity());
+//            part1.getValue().setAprilCapacity(part1.getChildren().get(i).getValue().getAprilCapacity()+ part1.getValue().getAprilCapacity());
+//            part1.getValue().setMayCapacity(part1.getChildren().get(i).getValue().getMayCapacity()+ part1.getValue().getMayCapacity());
+//            part1.getValue().setJuneCapacity(part1.getChildren().get(i).getValue().getJuneCapacity()+ part1.getValue().getJuneCapacity());
+//            part1.getValue().setJulyCapacity(part1.getChildren().get(i).getValue().getJulyCapacity()+ part1.getValue().getJulyCapacity());
+//            part1.getValue().setAugustCapacity(part1.getChildren().get(i).getValue().getAugustCapacity()+ part1.getValue().getAugustCapacity());
+//            part1.getValue().setSecondSemester(part1.getChildren().get(i).getValue().getSecondSemester()+ part1.getValue().getSecondSemester());
+//            part1.getValue().setAllYear(part1.getChildren().get(i).getValue().getAllYear()+ part1.getValue().getAllYear());
         }
+        part1.getValue().setCapacity(capacity);
+        tableColumnInitialize();
     }
 
     public void comboBoxInitialize() {
@@ -245,7 +252,7 @@ public class MainSceneController implements Initializable {
             Professor selectedProfessor = comboBoxProfessorsList.getSelectionModel().getSelectedItem();
             this.currentProfessor = selectedProfessor;
             initTableData();
-            tableColumnInitialize();
+            recountWork();
         });
     }
 
@@ -454,7 +461,7 @@ public class MainSceneController implements Initializable {
                                 .message("В разделе " + getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork()
                                         + " должно быть хоть одна работа")
                                 .showError();
-                    }
+                    } 
                 }
             });
         }
@@ -475,12 +482,13 @@ public class MainSceneController implements Initializable {
         @Override
         public void cancelEdit() {
             super.cancelEdit();
-            if (String.valueOf(getItem()).equals("null")) {
+            if (String.valueOf(getItem()).equals("null") || String.valueOf(getItem()).equals("0.0")) {
                 setText(" ");
             } else {
                 setText(String.valueOf(getItem()));
             }
             setContentDisplay(ContentDisplay.TEXT_ONLY);
+            
         }
 
         @Override
@@ -518,7 +526,7 @@ public class MainSceneController implements Initializable {
                 if (t.getCode() == KeyCode.ENTER) {
                     try {
                         commitEdit(Double.parseDouble(textField.getText()));
-                        recountWork();
+                        recountWork();                        
                     } catch (NumberFormatException e) {
                         cancelEdit();
                     }
