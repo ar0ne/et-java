@@ -45,6 +45,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.controlsfx.dialog.Dialogs;
 
 /**
  * FXML Controller class
@@ -52,6 +53,7 @@ import javafx.util.Callback;
  * @author РџР°Р»СЊС‡СѓРє
  */
 public class MainSceneController implements Initializable {
+
     public static String UCHEBNO_METOD = "Учебно-методическая";
     public static String NAUCHNAYA = "Научная";
     public static String OBSHESTVENNAYA = "Общественная";
@@ -83,7 +85,7 @@ public class MainSceneController implements Initializable {
     @FXML
     private TreeTableColumn<Task, String> periodClmn;
     @FXML
-    private TreeTableColumn<Task, Double> volumeClmn;
+    private TreeTableColumn<Task, Double> capacityClmn;
     @FXML
     private TreeTableColumn<Task, Double> septemberClmn;
     @FXML
@@ -121,8 +123,8 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void fileOpen(ActionEvent event) {
-         FileChooser fc = new FileChooser();
-         fc.setTitle("Выберите файл");
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Выберите файл");
     }
 
     @FXML
@@ -148,7 +150,7 @@ public class MainSceneController implements Initializable {
         comboBoxInitialize();
 
         tableColumnInitialize();
-
+        recountWork();
     }
 
     public void initData() {
@@ -202,8 +204,29 @@ public class MainSceneController implements Initializable {
         for (int i = 0; i < currentProfessor.getTasksPublic().size(); i++) {
             part3.getChildren().add(new TreeItem<>(currentProfessor.getTasksPublic().get(i)));
         }
-        
-        
+
+    }
+
+    public void recountWork() {
+        for (int i = 0; i < part1.getChildren().size(); i++) {
+            part1.getValue().nullCapacities();
+            part1.getValue().setCapacity(part1.getChildren().get(i).getValue().getCapacity() + part1.getValue().getCapacity());
+            part1.getValue().setSeptemberCapacity(part1.getChildren().get(i).getValue().getSeptemberCapacity() + part1.getValue().getSeptemberCapacity());
+            part1.getValue().setOctoberCapacity(part1.getChildren().get(i).getValue().getOctoberCapacity() + part1.getValue().getOctoberCapacity());
+            part1.getValue().setNovemberCapacity(part1.getChildren().get(i).getValue().getNovemberCapacity() + part1.getValue().getNovemberCapacity());
+            part1.getValue().setDecemberCapacity(part1.getChildren().get(i).getValue().getDecemberCapacity() + part1.getValue().getDecemberCapacity());
+            part1.getValue().setJanuaryCapacity(part1.getChildren().get(i).getValue().getJanuaryCapacity() + part1.getValue().getJanuaryCapacity());
+            part1.getValue().setFirstSemester(part1.getChildren().get(i).getValue().getFirstSemester()+ part1.getValue().getFirstSemester());
+            part1.getValue().setFebruaryCapacity(part1.getChildren().get(i).getValue().getFebruaryCapacity()+ part1.getValue().getFebruaryCapacity());
+            part1.getValue().setMarchCapacity(part1.getChildren().get(i).getValue().getMarchCapacity()+ part1.getValue().getMarchCapacity());
+            part1.getValue().setAprilCapacity(part1.getChildren().get(i).getValue().getAprilCapacity()+ part1.getValue().getAprilCapacity());
+            part1.getValue().setMayCapacity(part1.getChildren().get(i).getValue().getMayCapacity()+ part1.getValue().getMayCapacity());
+            part1.getValue().setJuneCapacity(part1.getChildren().get(i).getValue().getJuneCapacity()+ part1.getValue().getJuneCapacity());
+            part1.getValue().setJulyCapacity(part1.getChildren().get(i).getValue().getJulyCapacity()+ part1.getValue().getJulyCapacity());
+            part1.getValue().setAugustCapacity(part1.getChildren().get(i).getValue().getAugustCapacity()+ part1.getValue().getAugustCapacity());
+            part1.getValue().setSecondSemester(part1.getChildren().get(i).getValue().getSecondSemester()+ part1.getValue().getSecondSemester());
+            part1.getValue().setAllYear(part1.getChildren().get(i).getValue().getAllYear()+ part1.getValue().getAllYear());
+        }
     }
 
     public void comboBoxInitialize() {
@@ -227,7 +250,7 @@ public class MainSceneController implements Initializable {
         setEditableCells();
         taskClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("professorsWork"));
         periodClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("period"));
-        volumeClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("capacity"));
+        capacityClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("capacity"));
         treeTableView.setRoot(root);
     }
 
@@ -253,8 +276,8 @@ public class MainSceneController implements Initializable {
                     }
                 };
 
-        volumeClmn.setCellFactory(cellFactory);
-        volumeClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
+        capacityClmn.setCellFactory(cellFactory);
+        capacityClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
             Task task = t.getRowValue().getValue();
             task.setCapacity(t.getNewValue());
         });
@@ -379,29 +402,55 @@ public class MainSceneController implements Initializable {
 
     }
 
-    private class EditingCell extends TreeTableCell<Task, Double> { // РєР»Р°СЃСЃ РґР»СЏ РёР·РјРµРЅРµРЅРёСЏ СЏС‡РµР№РєРё С‚РёРїР° Double
+    private class EditingCell extends TreeTableCell<Task, Double> {
+
         private ContextMenu addMenu = new ContextMenu();
-        private TextField textField;                // РїРѕ РґРµС„РѕР»С‚Сѓ РјРѕР¶РЅРѕ С‚РѕР»СЊРєРѕ СЃС‚СЂРёРЅРіРѕРІС‹Рµ РёР·РјРµРЅСЏС‚СЊ
+        private ContextMenu deleteMenu = new ContextMenu();
+        private TextField textField;
 
         public EditingCell() {
-            MenuItem addMenuItem = new MenuItem("Add Employee");
+            MenuItem addMenuItem = new MenuItem("Добавить работу");
+            MenuItem deleteMenuItem = new MenuItem("Удалить работу");
             addMenu.getItems().add(addMenuItem);
             addMenuItem.setOnAction(new EventHandler() {
-                 @Override
-                 public void handle(Event event) {
-                    TreeItem<Task> newEmployee =  new TreeItem<Task>(new Task());
+                @Override
+                public void handle(Event event) {
+                    TreeItem<Task> newEmployee = new TreeItem<Task>(new Task());
                     getTreeTableRow().getTreeItem().getChildren().add(newEmployee);
-                    
-//                    if (getTreeTableRow().getTreeItem().getParent()
-//                             .getValue().getProfessorsWork().equals(UCHEBNO_METOD))
-//                        currentProfessor.getTasksWorkMethod().add(newEmployee.getValue());
-//                    
-//                    else if (getTreeTableRow().getTreeItem().getParent()
-//                             .getValue().getProfessorsWork().equals(NAUCHNAYA))
-//                        currentProfessor.getTasksScince().add(newEmployee.getValue());
-//                    
-//                    else currentProfessor.getTasksPublic().add(newEmployee.getValue());
-        }
+
+                    if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(UCHEBNO_METOD)) {
+                        currentProfessor.getTasksWorkMethod().add(newEmployee.getValue());
+                    } else if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
+                        currentProfessor.getTasksScince().add(newEmployee.getValue());
+                    } else {
+                        currentProfessor.getTasksPublic().add(newEmployee.getValue());
+                    }
+                }
+            });
+
+            deleteMenu.getItems().add(deleteMenuItem);
+            deleteMenu.setOnAction(new EventHandler() {
+                @Override
+                public void handle(Event event) {
+                    TreeItem<Task> deletedTask = getTreeTableRow().getTreeItem();
+                    if (getTreeTableRow().getTreeItem().getParent().getChildren().size() > 1) {
+                        getTreeTableRow().getTreeItem().getParent().getChildren().remove(deletedTask);
+                        if (getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork().equals(UCHEBNO_METOD)) {
+                            currentProfessor.getTasksWorkMethod().remove(deletedTask.getValue());
+                        } else if (getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
+                            currentProfessor.getTasksScince().remove(deletedTask.getValue());
+                        } else {
+                            currentProfessor.getTasksPublic().remove(deletedTask.getValue());
+                        }
+                    } else {
+                        Dialogs.create()
+                                .title("Ошибка")
+                                .masthead("Невозможно удалить работу")
+                                .message("В разделе " + getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork()
+                                        + " должно быть хоть одна работа")
+                                .showError();
+                    }
+                }
             });
         }
 
@@ -421,10 +470,11 @@ public class MainSceneController implements Initializable {
         @Override
         public void cancelEdit() {
             super.cancelEdit();
-            if(String.valueOf(getItem()).equals("null"))
+            if (String.valueOf(getItem()).equals("null")) {
                 setText(" ");
-            else
+            } else {
                 setText(String.valueOf(getItem()));
+            }
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }
 
@@ -446,9 +496,12 @@ public class MainSceneController implements Initializable {
                 } else {
                     setText(getString());
                     setContentDisplay(ContentDisplay.TEXT_ONLY);
-                    if (!getTreeTableRow().getTreeItem().isLeaf() && 
-                            getTreeTableRow().getTreeItem().expandedProperty().getValue())
+                    if (!getTreeTableRow().getTreeItem().isLeaf()
+                            && !getTreeTableRow().getTreeItem().equals(root)) {
                         setContextMenu(addMenu);
+                    } else if (getTreeTableRow().getTreeItem().isLeaf()) {
+                        setContextMenu(deleteMenu);
+                    }
                 }
             }
         }
@@ -460,10 +513,11 @@ public class MainSceneController implements Initializable {
                 if (t.getCode() == KeyCode.ENTER) {
                     try {
                         commitEdit(Double.parseDouble(textField.getText()));
+                        recountWork();
                     } catch (NumberFormatException e) {
                         cancelEdit();
                     }
-                    
+
                 } else if (t.getCode() == KeyCode.ESCAPE) {
                     cancelEdit();
                 }
