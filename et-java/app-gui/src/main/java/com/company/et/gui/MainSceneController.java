@@ -133,11 +133,16 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void removeProfessorHandler(ActionEvent event) {
+        professorsList.remove(currentProfessor);
+        currentProfessor = professorsList.get(0);
     }
 
     @FXML
     private void newProfessorHandler(ActionEvent event) {
         Professor tempProfessor = new Professor();
+        tempProfessor.getTasksPublic().add(new Task());
+        tempProfessor.getTasksScince().add(new Task());
+        tempProfessor.getTasksWorkMethod().add(new Task());
         boolean okClicked = showNewProfessorDialog(tempProfessor);
         if (okClicked) {
             professorsList.add(tempProfessor);
