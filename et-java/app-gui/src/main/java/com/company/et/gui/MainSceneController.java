@@ -7,10 +7,15 @@ package com.company.et.gui;
 
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
+import com.company.et.service.JsonService;
+
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -120,6 +125,7 @@ public class MainSceneController implements Initializable {
     private TreeTableColumn<Task, Boolean> checkClmn;
     @FXML
     private TreeTableView<Task> treeTableView;
+    private Object JsonService;
 
     @FXML
     private void fileOpen(ActionEvent event) {
@@ -146,28 +152,52 @@ public class MainSceneController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        initData();
+        try {
+            initData();
+        } catch (IOException ex) {
+            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         comboBoxInitialize();
 
         tableColumnInitialize();
         recountWork();
     }
 
-    public void initData() {
+    public void initData() throws IOException, ParseException {
 
-        currentProfessor = new Professor("Профессор1", FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(), FXCollections.observableArrayList(), 0.5);
-        currentProfessor.getTasksPublic().add(new Task());
-        currentProfessor.getTasksScince().add(new Task());
-        currentProfessor.getTasksWorkMethod().add(new Task());
-        professorsList.add(currentProfessor);
-        ObservableList<Task> taskList2 = FXCollections.observableArrayList();
-        Professor secondProfessor = new Professor("Профессор2", FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(), FXCollections.observableArrayList(), 1.0);
-        secondProfessor.getTasksPublic().add(new Task());
-        secondProfessor.getTasksScince().add(new Task());
-        secondProfessor.getTasksWorkMethod().add(new Task());
-        professorsList.add(secondProfessor);
+//        currentProfessor = new Professor("Профессор1", FXCollections.observableArrayList(),
+//                FXCollections.observableArrayList(), FXCollections.observableArrayList(), 0.5);
+//        currentProfessor.getTasksPublic().add(new Task());
+//        currentProfessor.getTasksScince().add(new Task());
+//        currentProfessor.getTasksWorkMethod().add(new Task());
+//        professorsList.add(currentProfessor);
+//        ObservableList<Task> taskList2 = FXCollections.observableArrayList();
+//        Professor secondProfessor = new Professor("Профессор2", FXCollections.observableArrayList(),
+//                FXCollections.observableArrayList(), FXCollections.observableArrayList(), 1.0);
+//        secondProfessor.getTasksPublic().add(new Task());
+//        secondProfessor.getTasksScince().add(new Task());
+//        secondProfessor.getTasksWorkMethod().add(new Task());
+//        professorsList.add(secondProfessor);
+        
+        
+        // честное слово я в ахуе ??? Какого чёрта я не могу обратиться к статическому методу
+        // почему он не видит их вообще ??
+        //String json  = JsonService.readFromFile();
+        //Professor [] profs = JsonService.jsonToObjectProfessorArray(json);
+        
+        JsonService js = new JsonService();
+        String json  = js.readFromFile();
+        Professor [] profs = js.jsonToObjectProfessorArray(json);
+        
+        for (Professor prof : profs) {
+            professorsList.add(prof);
+        }
+        
+        // выставляю текущим первый объект с json'a
+        currentProfessor = profs[0];
+        
         initTableData();
 
     }

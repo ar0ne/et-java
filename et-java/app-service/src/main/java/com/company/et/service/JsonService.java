@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -19,6 +20,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.ParseException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  *
@@ -56,6 +60,22 @@ public class JsonService {
 
         return obj;
     }
+    
+    public static Professor [] jsonToObjectProfessorArray(String json) throws IOException, ParseException {
+               
+        ObjectMapper mapper = new ObjectMapper();
+        List <String> json_list = split(json);
+        
+        Professor [] profs = new Professor[json_list.size()];
+        
+        for(int i = 0; i < json_list.size(); i++){
+            //System.out.println(json_list.get(i));
+            profs[i] = mapper.readValue(json_list.get(i), Professor.class);
+        }
+        
+        return profs;
+    }
+    
 
     public static Task jsonToObjectTask(String json) throws IOException, ParseException {
 
@@ -116,5 +136,19 @@ public class JsonService {
 
         return str;
     }
+    
+    /**
+     * Разбивает массив объектом Json'a на отдельные строки-json'ы
+     * @param jsonArray
+     * @return список из строк Json
+     * @throws IOException 
+     */  
+    public static List<String> split(final String jsonArray) throws IOException {
+        final JsonNode jsonNode = new ObjectMapper().readTree(jsonArray);
+            return StreamSupport.stream(jsonNode.spliterator(), false) 
+                .map(JsonNode::toString) 
+                .collect(Collectors.toList()); 
+    }
 
 }
+

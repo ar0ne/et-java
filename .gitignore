@@ -25,3 +25,7 @@ nb-configuration.xml
 *.iml
 *.iws
 
+/et-java/app-domain/target/
+/et-java/app-service/target/
+/et-java/app-main/target/
+/et-java/app-gui/target/
