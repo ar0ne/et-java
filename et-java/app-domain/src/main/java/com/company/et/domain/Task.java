@@ -5,25 +5,26 @@ package com.company.et.domain;
 
 public class Task {
 
-    String professorsWork;
-    String period;
-    Double capacity;
-    Double septemberCapacity;
-    Double octoberCapacity;
-    Double novemberCapacity;
-    Double decemberCapacity;
-    Double januaryCapacity;
-    Double firstSemester;
-    Double februaryCapacity;
-    Double marchCapacity;
-    Double aprilCapacity;
-    Double mayCapacity;
-    Double juneCapacity;
-    Double julyCapacity;
-    Double augustCapacity;
-    Double secondSemester;
-    Double allYear;
-    Boolean completeWork;
+    
+    private String professorsWork;
+    private String period;
+    private Double capacity;
+    private Double septemberCapacity;
+    private Double octoberCapacity;
+    private Double novemberCapacity;
+    private Double decemberCapacity;
+    private Double januaryCapacity;
+    private Double firstSemester;
+    private Double februaryCapacity;
+    private Double marchCapacity;
+    private Double aprilCapacity;
+    private Double mayCapacity;
+    private Double juneCapacity;
+    private Double julyCapacity;
+    private Double augustCapacity;
+    private Double secondSemester;
+    private Double allYear;
+    private Boolean completeWork;
 
 
     public Task() {

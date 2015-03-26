@@ -1,18 +1,19 @@
 package com.company.et.domain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/**
- */
+
 public class Professor {
 
     
-    String fio;
-    ObservableList<Task> tasksWorkMethod;
-    ObservableList<Task> tasksScince;
-    ObservableList<Task> tasksPublic;
+    private String fio;
+    private ObservableList<Task> tasksWorkMethod;
+    private ObservableList<Task> tasksScince;
+    private ObservableList<Task> tasksPublic;
+    private Double rate; // ставка
 
     public Professor(String fio, ObservableList<Task> tasksWorkMethod, ObservableList<Task> tasksScince, ObservableList<Task> tasksPublic, Double rate) {
         this.fio = fio;
@@ -47,7 +48,6 @@ public class Professor {
     public void setTasksPublic(ObservableList<Task> tasksPublic) {
         this.tasksPublic = tasksPublic;
     }
-    private Double rate; // ставка
     
     public Professor() {
         tasksWorkMethod=FXCollections.observableArrayList();

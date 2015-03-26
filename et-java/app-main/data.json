@@ -3,11 +3,11 @@
   "tasksWorkMethod" : [ {
     "professorsWork" : "someWork",
     "period" : "",
-    "capacity" : 0.0,
-    "septemberCapacity" : 0.0,
+    "capacity" : 5.0,
+    "septemberCapacity" : 5.0,
     "octoberCapacity" : 0.0,
     "novemberCapacity" : 0.0,
-    "decemberCapacity" : 0.0,
+    "decemberCapacity" : 5.0,
     "januaryCapacity" : 0.0,
     "firstSemester" : 0.0,
     "februaryCapacity" : 0.0,
@@ -24,7 +24,7 @@
   "tasksScince" : [ {
     "professorsWork" : "someWork",
     "period" : "",
-    "capacity" : 0.0,
+    "capacity" : 4.0,
     "septemberCapacity" : 0.0,
     "octoberCapacity" : 0.0,
     "novemberCapacity" : 0.0,

@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -126,7 +127,7 @@ public class MainSceneController implements Initializable {
     private TreeTableColumn<Task, Boolean> checkClmn;
     @FXML
     private TreeTableView<Task> treeTableView;
-    private Object JsonService;
+   
 
     @FXML
     private void fileOpen(ActionEvent event) {
@@ -188,18 +189,11 @@ public class MainSceneController implements Initializable {
 //        professorsList.add(secondProfessor);
         
         
-        // честное слово я в ахуе ??? Какого чёрта я не могу обратиться к статическому методу
-        // почему он не видит их вообще ??
-        //String json  = JsonService.readFromFile();
-        //Professor [] profs = JsonService.jsonToObjectProfessorArray(json);
-        
-        JsonService js = new JsonService();
-        String json  = js.readFromFile();
-        Professor [] profs = js.jsonToObjectProfessorArray(json);
-        
-        for (Professor prof : profs) {
-            professorsList.add(prof);
-        }
+        // гружу из data.json и добавляю профессоров в professorsList
+        String json  = JsonService.readFromFile();
+        Professor [] profs = JsonService.jsonToObjectProfessorArray(json);
+                       
+        professorsList.addAll(Arrays.asList(profs));
         
         // выставляю текущим первый объект с json'a
         currentProfessor = profs[0];

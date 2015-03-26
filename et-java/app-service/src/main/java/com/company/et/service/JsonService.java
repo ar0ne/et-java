@@ -11,8 +11,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import com.company.et.domain.Professor;
+import com.company.et.domain.ProfessorDeserializer;
 import com.company.et.domain.Task;
+import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -23,6 +26,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import javafx.collections.FXCollections;
 
 /**
  *
@@ -56,6 +60,13 @@ public class JsonService {
     public static Professor jsonToObjectProfessor(String json) throws IOException, ParseException {
 
         ObjectMapper mapper = new ObjectMapper();
+        
+        SimpleModule testModule = new SimpleModule("MyModule", new Version(1, 0, 0, null))
+                .addDeserializer(Professor.class, new ProfessorDeserializer());
+        
+        mapper.registerModule(testModule);
+        
+        
         Professor obj = mapper.readValue(json, Professor.class);
 
         return obj;
@@ -67,6 +78,11 @@ public class JsonService {
         List <String> json_list = split(json);
         
         Professor [] profs = new Professor[json_list.size()];
+        
+        SimpleModule testModule = new SimpleModule("MyModule", new Version(1, 0, 0, null))
+                .addDeserializer(Professor.class, new ProfessorDeserializer());
+        
+        mapper.registerModule(testModule);
         
         for(int i = 0; i < json_list.size(); i++){
             //System.out.println(json_list.get(i));
@@ -150,5 +166,7 @@ public class JsonService {
                 .collect(Collectors.toList()); 
     }
 
+        
+    
 }
 
