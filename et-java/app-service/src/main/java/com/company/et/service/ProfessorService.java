@@ -25,7 +25,7 @@ public class ProfessorService {
         return new Professor();
     }
 
-//    public static void addTaskToProfessor(Professor professor, Task task) {
+//    public static void addTaskToProfessor(Profegssor professor, Task task) {
 //        professor.getTasks().add(task);
 //    }
 //
