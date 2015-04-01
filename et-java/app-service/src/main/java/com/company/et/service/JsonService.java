@@ -26,7 +26,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import javafx.collections.FXCollections;
 
 /**
  *

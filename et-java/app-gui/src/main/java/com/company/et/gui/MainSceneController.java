@@ -9,7 +9,6 @@ import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
 import com.company.et.service.JsonService;
 
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -23,7 +22,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -32,6 +30,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -41,8 +40,6 @@ import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -78,6 +75,10 @@ public class MainSceneController implements Initializable {
     @FXML
     private MenuItem menuBarFileOpen;
     @FXML
+    private MenuItem menuBarFileSave;
+    @FXML
+    private MenuItem menuBarFileSaveAs;
+    @FXML
     private MenuItem menuBarFileExit;
     @FXML
     private ComboBox<Professor> comboBoxProfessorsList;
@@ -87,6 +88,8 @@ public class MainSceneController implements Initializable {
     private Button removeProfessor;
     @FXML
     private TextField rate;
+    @FXML
+    private Label labelFileName;
     @FXML
     private TreeTableColumn<Task, String> taskClmn;
     @FXML
@@ -127,15 +130,24 @@ public class MainSceneController implements Initializable {
     private TreeTableColumn<Task, Boolean> checkClmn;
     @FXML
     private TreeTableView<Task> treeTableView;
-   
+    
 
     @FXML
     private void fileOpen(ActionEvent event) {
         FileChooser fc = new FileChooser();
         fc.setTitle("Выберите файл");
         File f = fc.showOpenDialog(null);
+        labelFileName.setText(JsonService.getFilename());
     }
-
+    @FXML
+    private void fileSave(ActionEvent event) {
+        //сохранение в текущий файл
+    }
+    @FXML
+    private void fileSaveAs(ActionEvent event) {
+        //сохранение в новый файл (диалоговое окно)
+        labelFileName.setText(JsonService.getFilename());
+    }
     @FXML
     private void fileExit(ActionEvent event) {
     }
@@ -162,6 +174,7 @@ public class MainSceneController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
             initData();
+            labelFileName.setText(JsonService.getFilename());
         } catch (IOException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {

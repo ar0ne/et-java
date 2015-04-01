@@ -13,6 +13,8 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem fx:id="menuBarFileOpen" mnemonicParsing="false" onAction="#fileOpen" text="Open" />
+                  <MenuItem fx:id="menuBarFileSave" mnemonicParsing="false" text="Save" />
+                  <MenuItem fx:id="menuBarFileSaveAs" mnemonicParsing="false" text="Save As" />
               <MenuItem fx:id="menuBarFileExit" mnemonicParsing="false" onAction="#fileExit" text="Exit" />
             </items>
           </Menu>
@@ -40,6 +42,10 @@
                </padding>
             </Label>
             <TextField fx:id="rate" prefHeight="25.0" prefWidth="54.0" />
+            <Label fx:id="labelFileName" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="387.0" text="asdfasd" textAlignment="RIGHT">
+               <padding>
+                  <Insets left="200.0" />
+               </padding></Label>
         </items>
       </ToolBar>
       <TreeTableView fx:id="treeTableView" editable="true" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="574.0" prefWidth="1392.0" tableMenuButtonVisible="true">
