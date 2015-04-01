@@ -13,12 +13,13 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem fx:id="menuBarFileOpen" mnemonicParsing="false" onAction="#fileOpen" text="Open" />
+                  <MenuItem mnemonicParsing="false" onAction="#fileSave" text="Save" />
               <MenuItem fx:id="menuBarFileExit" mnemonicParsing="false" onAction="#fileExit" text="Exit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem mnemonicParsing="false" text="Settings" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -42,7 +43,7 @@
             <TextField fx:id="rate" prefHeight="25.0" prefWidth="54.0" />
         </items>
       </ToolBar>
-      <TreeTableView fx:id="treeTableView" editable="true" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="574.0" prefWidth="1392.0" tableMenuButtonVisible="true">
+      <TreeTableView fx:id="treeTableView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="569.0" prefWidth="1424.0" tableMenuButtonVisible="true">
         <columns>
           <TreeTableColumn id="taskClmn" fx:id="taskClmn" prefWidth="180.0" sortable="false" text="Работа преподавателя" />
           <TreeTableColumn id="periodClmn" fx:id="periodClmn" minWidth="0.0" prefWidth="156.0" sortable="false" text="Срок" />

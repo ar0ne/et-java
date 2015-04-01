@@ -131,11 +131,11 @@ public class JsonService {
      *
      * @return JSON String
      */
-    public static String readFromFile() {
+    public static String readFromFile(File file) {
 
         String str = "";
 
-        try (BufferedReader br = new BufferedReader(new FileReader(getFilename()))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile()))) {
 
             String currentLine;
 

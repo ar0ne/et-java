@@ -74,6 +74,7 @@ public class MainSceneController implements Initializable {
     private TreeItem<Task> part3;
 
     ObservableList<Task> tasksList = FXCollections.observableArrayList();
+    FileChooser fc = new FileChooser();
 
     @FXML
     private MenuItem menuBarFileOpen;
@@ -127,17 +128,50 @@ public class MainSceneController implements Initializable {
     private TreeTableColumn<Task, Boolean> checkClmn;
     @FXML
     private TreeTableView<Task> treeTableView;
-   
+    
 
     @FXML
-    private void fileOpen(ActionEvent event) {
-        FileChooser fc = new FileChooser();
+    private void fileOpen(ActionEvent event) throws IOException, ParseException {
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+            );
         fc.setTitle("Выберите файл");
-        File f = fc.showOpenDialog(null);
+        try {
+            File file = fc.showOpenDialog(null);
+
+            String json  = JsonService.readFromFile(file);
+            Professor [] profs = JsonService.jsonToObjectProfessorArray(json);         
+            professorsList.addAll(Arrays.asList(profs));
+
+            currentProfessor = profs[0];
+            comboBoxInitialize();
+            initTableData();
+            recountWork();
+        } catch(Exception e) {
+            Dialogs.create()
+                .title("Ошибка")
+                .message("Ошибка открытия файла")
+                .showError();
+        }
+        
+        
+
     }
+    
+    @FXML
+    private void fileSave(ActionEvent event) {
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json")
+            );
+        fc.setTitle("Сохранение");
+        File f = fc.showSaveDialog(null);
+    }
+    
+    
 
     @FXML
     private void fileExit(ActionEvent event) {
+        
     }
 
     @FXML
@@ -190,13 +224,7 @@ public class MainSceneController implements Initializable {
         
         
         // гружу из data.json и добавляю профессоров в professorsList
-        String json  = JsonService.readFromFile();
-        Professor [] profs = JsonService.jsonToObjectProfessorArray(json);
-                       
-        professorsList.addAll(Arrays.asList(profs));
-        
-        // выставляю текущим первый объект с json'a
-        currentProfessor = profs[0];
+
         
         initTableData();
 
