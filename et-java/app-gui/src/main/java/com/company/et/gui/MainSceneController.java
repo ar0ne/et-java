@@ -10,13 +10,16 @@ import com.company.et.domain.Task;
 import com.company.et.service.JsonService;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,7 +29,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
@@ -145,6 +151,7 @@ public class MainSceneController implements Initializable {
             Professor [] profs = JsonService.jsonToObjectProfessorArray(json); 
             JsonService.setFilename(file.getName());
             labelFileName.setText(JsonService.getFilename());
+            professorsList.clear(); // clear list before add profs from json
             professorsList.addAll(Arrays.asList(profs));
             currentProfessor = profs[0];
             comboBoxInitialize();
@@ -158,17 +165,52 @@ public class MainSceneController implements Initializable {
         }
     }
     @FXML
-    private void fileSave(ActionEvent event) {
-        //сохранение в текущий файл
+    private void fileSave(ActionEvent event) throws IOException, ParseException {
+        // если professorList не был загружен, то вызываем сохранить как
+        // @TODO: добавить проверку по лучше
+        if("undefined".equals(labelFileName.getText())){
+            fileSaveAs(event);
+        }else {
+            JsonService.writeToFile(JsonService.objectToString(professorsList));
+        }
+        
     }
     @FXML
     private void fileSaveAs(ActionEvent event) {
         //сохранение в новый файл (диалоговое окно)
-        labelFileName.setText(JsonService.getFilename());
+        File file = fc.showSaveDialog(null);
+        if (file != null) {
+            try {
+                // add .json to filename
+                String filename = file.getName();
+                if( !filename.substring(filename.length() - 5).equals(".json")) {
+                    filename += ".json";
+                }
+                JsonService.setFilename(filename);
+                JsonService.writeToFile(JsonService.objectToString(professorsList));
+                labelFileName.setText(JsonService.getFilename());
+            } catch (IOException | ParseException ex) {
+                Dialogs.create()
+                    .title("Ошибка")
+                    .message("Ошибка сохранения файла")
+                    .showError();
+            }
+        }
     }
+    
     @FXML
-    private void fileExit(ActionEvent event) {
+    private void fileExit(ActionEvent event) throws IOException, ParseException {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Выход");
+        alert.setHeaderText("Подтверждение");
+        alert.setContentText("Сохранить данные перед выходом?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            fileSave(event);
+        } 
         
+        Platform.exit();
     }
 
     @FXML
@@ -193,7 +235,7 @@ public class MainSceneController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
             initData();
-            labelFileName.setText(JsonService.getFilename());
+            labelFileName.setText("undefined");
         } catch (IOException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
@@ -221,7 +263,6 @@ public class MainSceneController implements Initializable {
 //        professorsList.add(secondProfessor);
         
         
-        // гружу из data.json и добавляю профессоров в professorsList
 
         
         initTableData();
