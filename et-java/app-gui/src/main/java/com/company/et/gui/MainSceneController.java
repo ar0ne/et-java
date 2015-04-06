@@ -23,8 +23,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -34,7 +32,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -48,8 +45,6 @@ import javafx.scene.control.TreeTableColumn.CellEditEvent;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -154,7 +149,7 @@ public class MainSceneController implements Initializable {
             comboBoxInitialize();
             initTableData();
             recountWork();
-        } catch (Exception e) {
+        } catch (IOException | ParseException e) {
             Dialogs.create()
                     .title("Ошибка")
                     .message("Ошибка открытия файла")
@@ -235,9 +230,7 @@ public class MainSceneController implements Initializable {
         try {
             initData();
             labelFileName.setText("undefined");
-        } catch (IOException ex) {
-            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
+        } catch (IOException | ParseException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
         comboBoxInitialize();
@@ -333,26 +326,40 @@ public class MainSceneController implements Initializable {
             for (TreeItem<Task> children : part.getChildren()) {
                 capacity += children.getValue().getCapacity();
                 septemberCapacity += children.getValue().getSeptemberCapacity();
-                //part1.getValue().setCapacity(part1.getChildren().get(i).getValue().getCapacity() + part1.getValue().getCapacity());
-//            part1.getValue().setSeptemberCapacity(part1.getChildren().get(i).getValue().getSeptemberCapacity() + part1.getValue().getSeptemberCapacity());
-//            part1.getValue().setOctoberCapacity(part1.getChildren().get(i).getValue().getOctoberCapacity() + part1.getValue().getOctoberCapacity());
-//            part1.getValue().setNovemberCapacity(part1.getChildren().get(i).getValue().getNovemberCapacity() + part1.getValue().getNovemberCapacity());
-//            part1.getValue().setDecemberCapacity(part1.getChildren().get(i).getValue().getDecemberCapacity() + part1.getValue().getDecemberCapacity());
-//            part1.getValue().setJanuaryCapacity(part1.getChildren().get(i).getValue().getJanuaryCapacity() + part1.getValue().getJanuaryCapacity());
-//            part1.getValue().setFirstSemester(part1.getChildren().get(i).getValue().getFirstSemester()+ part1.getValue().getFirstSemester());
-//            part1.getValue().setFebruaryCapacity(part1.getChildren().get(i).getValue().getFebruaryCapacity()+ part1.getValue().getFebruaryCapacity());
-//            part1.getValue().setMarchCapacity(part1.getChildren().get(i).getValue().getMarchCapacity()+ part1.getValue().getMarchCapacity());
-//            part1.getValue().setAprilCapacity(part1.getChildren().get(i).getValue().getAprilCapacity()+ part1.getValue().getAprilCapacity());
-//            part1.getValue().setMayCapacity(part1.getChildren().get(i).getValue().getMayCapacity()+ part1.getValue().getMayCapacity());
-//            part1.getValue().setJuneCapacity(part1.getChildren().get(i).getValue().getJuneCapacity()+ part1.getValue().getJuneCapacity());
-//            part1.getValue().setJulyCapacity(part1.getChildren().get(i).getValue().getJulyCapacity()+ part1.getValue().getJulyCapacity());
-//            part1.getValue().setAugustCapacity(part1.getChildren().get(i).getValue().getAugustCapacity()+ part1.getValue().getAugustCapacity());
-//            part1.getValue().setSecondSemester(part1.getChildren().get(i).getValue().getSecondSemester()+ part1.getValue().getSecondSemester());
-//            part1.getValue().setAllYear(part1.getChildren().get(i).getValue().getAllYear()+ part1.getValue().getAllYear());
+                octoberCapacity += children.getValue().getOctoberCapacity();
+                novemberCapacity += children.getValue().getNovemberCapacity();
+                decemberCapacity += children.getValue().getDecemberCapacity();
+                januaryCapacity += children.getValue().getJanuaryCapacity();
+                firstSemester += children.getValue().getFirstSemester();
+                februaryCapacity += children.getValue().getFebruaryCapacity();
+                marchCapacity += children.getValue().getMarchCapacity();
+                aprilCapacity += children.getValue().getAprilCapacity();
+                mayCapacity += children.getValue().getMayCapacity();
+                juneCapacity += children.getValue().getJuneCapacity();
+                julyCapacity += children.getValue().getJulyCapacity();
+                augustCapacity += children.getValue().getAugustCapacity();
+                secondSemester += children.getValue().getSecondSemester();
+                allYear += children.getValue().getAllYear();
             }
 
             part.getValue().setCapacity(capacity);
+            part.getValue().setSeptemberCapacity(septemberCapacity);
+            part.getValue().setOctoberCapacity(capacity);
+            part.getValue().setNovemberCapacity(capacity);
+            part.getValue().setDecemberCapacity(capacity);
+            part.getValue().setJanuaryCapacity(capacity);
+            part.getValue().setFirstSemester(firstSemester);
+            part.getValue().setFebruaryCapacity(februaryCapacity);
+            part.getValue().setMarchCapacity(marchCapacity);
+            part.getValue().setAprilCapacity(aprilCapacity);
+            part.getValue().setMayCapacity(mayCapacity);
+            part.getValue().setJuneCapacity(juneCapacity);
+            part.getValue().setJulyCapacity(julyCapacity);
+            part.getValue().setAugustCapacity(augustCapacity);
+            part.getValue().setSecondSemester(secondSemester);
+            part.getValue().setAllYear(allYear);
         }
+        
         tableColumnInitialize();
     }
 
@@ -550,7 +557,6 @@ public class MainSceneController implements Initializable {
             return controller.isOkClicked();
 
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
     }
