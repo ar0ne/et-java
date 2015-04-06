@@ -1,7 +1,7 @@
 package com.company.et.domain;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,53 +10,44 @@ public class Professor {
 
     
     private String fio;
-    private ObservableList<Task> tasksWorkMethod;
-    private ObservableList<Task> tasksScince;
-    private ObservableList<Task> tasksPublic;
+    private ArrayList<ObservableList<Task>> tasks;
     private Double rate; // ставка
 
-    public Professor(String fio, ObservableList<Task> tasksWorkMethod, ObservableList<Task> tasksScince, ObservableList<Task> tasksPublic, Double rate) {
+    public Professor(String fio, ArrayList<ObservableList<Task>> tasks, Double rate) {
+        initTasks();
         this.fio = fio;
-        this.tasksWorkMethod = tasksWorkMethod;
-        this.tasksScince = tasksScince;
-        this.tasksPublic = tasksPublic;
+        this.tasks = tasks;
         this.rate = rate;
     }
-    
-    public ObservableList<Task> getTasksWorkMethod() {
-        return tasksWorkMethod;
+    public Professor(Professor professor) {
+        initTasks();
+        this.fio = professor.fio;
+        this.rate = professor.rate;
+        Collections.copy(professor.tasks,this.tasks);
     }
 
-    public void setTasksWorkMethod(ObservableList<Task> tasksWorkMethod) {
-        this.tasksWorkMethod = tasksWorkMethod;
-    }
-
-    
-
-    public ObservableList<Task> getTasksScince() {
-        return tasksScince;
-    }
-
-    public void setTasksScince(ObservableList<Task> tasksScince) {
-        this.tasksScince = tasksScince;
-    }
-
-    public ObservableList<Task> getTasksPublic() {
-        return tasksPublic;
-    }
-
-    public void setTasksPublic(ObservableList<Task> tasksPublic) {
-        this.tasksPublic = tasksPublic;
-    }
     
     public Professor() {
-        tasksWorkMethod=FXCollections.observableArrayList();
-        tasksScince=FXCollections.observableArrayList();
-        tasksPublic=FXCollections.observableArrayList();
+        initTasks();
+        for(int i=0;i<tasks.size();i++)
+        Collections.copy(tasks.get(i),FXCollections.observableArrayList());
         fio="Example";
         rate = 1.0;
     }
+    public void initTasks() {
+        tasks = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            tasks.add(FXCollections.observableArrayList());
+        }
+    }
+    public ArrayList<ObservableList<Task>> getTasks() {
+        return tasks;
+    }
 
+    public void setTasks(ArrayList<ObservableList<Task>> tasks) {
+        this.tasks = tasks;
+    }
+    
     public String getFio() {
         return fio;
     }
@@ -74,6 +65,6 @@ public class Professor {
     }
     @Override
     public String toString() {
-        return "Professor{" + "fio=" + fio + ", tasks=" + tasksWorkMethod + ", rate=" + rate + '}';
+        return "Professor{" + "fio=" + fio + ", tasks=" + tasks + ", rate=" + rate + '}';
     }
 }

@@ -39,7 +39,7 @@ public class ProfessorDeserializer extends JsonDeserializer<Professor> {
         
         parentObject.setFio(node.get("fio").asText()); 
         parentObject.setRate(node.get("rate").asDouble()); 
-
+        
         JsonNode childNodesTasksWorkMethod  = node.get("tasksWorkMethod");
         JsonNode childNodesTasksScience     = node.get("tasksScince");
         JsonNode childNodesTasksPublic      = node.get("tasksPublic");
@@ -52,9 +52,9 @@ public class ProfessorDeserializer extends JsonDeserializer<Professor> {
         setFieldList(childNodesTasksScience, tasksScince);
         setFieldList(childNodesTasksPublic, tasksPublic);
 
-        parentObject.setTasksWorkMethod(tasksWorkMethod);
-        parentObject.setTasksPublic(tasksPublic);
-        parentObject.setTasksScince(tasksScince);
+//        parentObject.setTasksWorkMethod(tasksWorkMethod);
+//        parentObject.setTasksPublic(tasksPublic);
+//        parentObject.setTasksScince(tasksScince);
 
 
         return parentObject; 

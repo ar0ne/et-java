@@ -75,7 +75,27 @@ public class Task {
 
 
     }
-
+    public Task(Task task) {
+        this.professorsWork = task.professorsWork;
+        this.period = task.period;
+        this.capacity = task.capacity;
+        this.septemberCapacity = task.septemberCapacity;
+        this.octoberCapacity = task.octoberCapacity;
+        this.novemberCapacity = task.novemberCapacity;
+        this.decemberCapacity = task.decemberCapacity;
+        this.januaryCapacity = task.januaryCapacity;
+        this.firstSemester = task.firstSemester;
+        this.februaryCapacity = task.februaryCapacity;
+        this.marchCapacity = task.marchCapacity;
+        this.aprilCapacity = task.aprilCapacity;
+        this.mayCapacity = task.mayCapacity;
+        this.juneCapacity = task.juneCapacity;
+        this.julyCapacity = task.julyCapacity;
+        this.augustCapacity = task.augustCapacity;
+        this.secondSemester = task.secondSemester;
+        this.allYear = task.allYear;
+        this.completeWork = task.completeWork;
+    }
     public String getProfessorsWork() {
         return professorsWork;
     }

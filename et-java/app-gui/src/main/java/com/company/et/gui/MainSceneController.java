@@ -10,10 +10,10 @@ import com.company.et.domain.Task;
 import com.company.et.service.JsonService;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -60,7 +60,7 @@ import org.controlsfx.dialog.Dialogs;
 /**
  * FXML Controller class
  *
- * @author РџР°Р»СЊС‡СѓРє
+ * @author
  */
 public class MainSceneController implements Initializable {
 
@@ -68,14 +68,11 @@ public class MainSceneController implements Initializable {
     public static String NAUCHNAYA = "Научная";
     public static String OBSHESTVENNAYA = "Общественная";
     private Professor currentProfessor = new Professor();
-
     private final ObservableList<Professor> professorsList = FXCollections.observableArrayList();
 
     private TreeItem<Task> root;
-    private TreeItem<Task> part1;
-    private TreeItem<Task> part2;
-    private TreeItem<Task> part3;
-
+    private ArrayList<TreeItem<Task>> parts = new ArrayList<>();
+    private Task copiedTask;
     ObservableList<Task> tasksList = FXCollections.observableArrayList();
     FileChooser fc = new FileChooser();
 
@@ -137,18 +134,17 @@ public class MainSceneController implements Initializable {
     private TreeTableColumn<Task, Boolean> checkClmn;
     @FXML
     private TreeTableView<Task> treeTableView;
-    
 
     @FXML
     private void fileOpen(ActionEvent event) throws IOException, ParseException {
         fc.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
-            );
+        );
         fc.setTitle("Выберите файл");
         try {
             File file = fc.showOpenDialog(null);
-            String json  = JsonService.readFromFile(file);
-            Professor [] profs = JsonService.jsonToObjectProfessorArray(json); 
+            String json = JsonService.readFromFile(file);
+            Professor[] profs = JsonService.jsonToObjectProfessorArray(json);
             JsonService.setFilename(file.getName());
             labelFileName.setText(JsonService.getFilename());
             professorsList.clear(); // clear list before add profs from json
@@ -157,24 +153,26 @@ public class MainSceneController implements Initializable {
             comboBoxInitialize();
             initTableData();
             recountWork();
-        } catch(Exception e) {
+        } catch (Exception e) {
             Dialogs.create()
-                .title("Ошибка")
-                .message("Ошибка открытия файла")
-                .showError();
+                    .title("Ошибка")
+                    .message("Ошибка открытия файла")
+                    .showError();
         }
     }
+
     @FXML
     private void fileSave(ActionEvent event) throws IOException, ParseException {
         // если professorList не был загружен, то вызываем сохранить как
         // @TODO: добавить проверку по лучше
-        if("undefined".equals(labelFileName.getText())){
+        if ("undefined".equals(labelFileName.getText())) {
             fileSaveAs(event);
-        }else {
+        } else {
             JsonService.writeToFile(JsonService.objectToString(professorsList));
         }
-        
+
     }
+
     @FXML
     private void fileSaveAs(ActionEvent event) {
         //сохранение в новый файл (диалоговое окно)
@@ -183,7 +181,7 @@ public class MainSceneController implements Initializable {
             try {
                 // add .json to filename
                 String filename = file.getName();
-                if( !filename.substring(filename.length() - 5).equals(".json")) {
+                if (!filename.substring(filename.length() - 5).equals(".json")) {
                     filename += ".json";
                 }
                 JsonService.setFilename(filename);
@@ -191,13 +189,13 @@ public class MainSceneController implements Initializable {
                 labelFileName.setText(JsonService.getFilename());
             } catch (IOException | ParseException ex) {
                 Dialogs.create()
-                    .title("Ошибка")
-                    .message("Ошибка сохранения файла")
-                    .showError();
+                        .title("Ошибка")
+                        .message("Ошибка сохранения файла")
+                        .showError();
             }
         }
     }
-    
+
     @FXML
     private void fileExit(ActionEvent event) throws IOException, ParseException {
         Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -208,8 +206,8 @@ public class MainSceneController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             fileSave(event);
-        } 
-        
+        }
+
         Platform.exit();
     }
 
@@ -222,9 +220,9 @@ public class MainSceneController implements Initializable {
     @FXML
     private void newProfessorHandler(ActionEvent event) {
         Professor tempProfessor = new Professor();
-        tempProfessor.getTasksPublic().add(new Task());
-        tempProfessor.getTasksScince().add(new Task());
-        tempProfessor.getTasksWorkMethod().add(new Task());
+        for (int i = 0; i < tempProfessor.getTasks().size(); i++) {
+            tempProfessor.getTasks().get(i).add(new Task());
+        }
         boolean okClicked = showNewProfessorDialog(tempProfessor);
         if (okClicked) {
             professorsList.add(tempProfessor);
@@ -243,28 +241,24 @@ public class MainSceneController implements Initializable {
         }
         comboBoxInitialize();
         recountWork();
-        
+
     }
 
     public void initData() throws IOException, ParseException {
 
-//        currentProfessor = new Professor("Профессор1", FXCollections.observableArrayList(),
-//                FXCollections.observableArrayList(), FXCollections.observableArrayList(), 0.5);
-//        currentProfessor.getTasksPublic().add(new Task());
-//        currentProfessor.getTasksScince().add(new Task());
-//        currentProfessor.getTasksWorkMethod().add(new Task());
-//        professorsList.add(currentProfessor);
-//        ObservableList<Task> taskList2 = FXCollections.observableArrayList();
-//        Professor secondProfessor = new Professor("Профессор2", FXCollections.observableArrayList(),
-//                FXCollections.observableArrayList(), FXCollections.observableArrayList(), 1.0);
-//        secondProfessor.getTasksPublic().add(new Task());
-//        secondProfessor.getTasksScince().add(new Task());
-//        secondProfessor.getTasksWorkMethod().add(new Task());
-//        professorsList.add(secondProfessor);
+        currentProfessor = new Professor();
+        currentProfessor.setFio("Профессор 1");
+        currentProfessor.setRate(1.0);
+        for (int i = 0; i < currentProfessor.getTasks().size(); i++) {
+            currentProfessor.getTasks().get(i).add(new Task());
+        }
+        professorsList.add(currentProfessor);
         
-        
-
-        
+        Professor secondProfessor = new Professor();
+        for (int i = 0; i < currentProfessor.getTasks().size(); i++) {
+            secondProfessor.getTasks().get(i).add(new Task());
+        }
+        professorsList.add(secondProfessor);
         initTableData();
 
     }
@@ -283,35 +277,46 @@ public class MainSceneController implements Initializable {
         task3.setProfessorsWork(OBSHESTVENNAYA);
 
         root = new TreeItem<>(all);
-        part1 = new TreeItem<>(task);
-        part2 = new TreeItem<>(task2);
-        part3 = new TreeItem<>(task3);
-        
-        root.setExpanded(true);
-        part1.setExpanded(true);
-        part2.setExpanded(true);
-        part3.setExpanded(true);
-        root.getChildren().add(part1);
-        root.getChildren().add(part2);
-        root.getChildren().add(part3);
-        for (int i = 0; i < currentProfessor.getTasksWorkMethod().size(); i++) {
-            part1.getChildren().add(new TreeItem<>(currentProfessor.getTasksWorkMethod().get(i)));
-        }
-        for (int i = 0; i < currentProfessor.getTasksScince().size(); i++) {
-            part2.getChildren().add(new TreeItem<>(currentProfessor.getTasksScince().get(i)));
-        }
-        for (int i = 0; i < currentProfessor.getTasksPublic().size(); i++) {
-            part3.getChildren().add(new TreeItem<>(currentProfessor.getTasksPublic().get(i)));
+        parts.add(new TreeItem<>(task));
+        parts.add(new TreeItem<>(task2));
+        parts.add(new TreeItem<>(task3));
+
+        for (TreeItem<Task> part : parts) {
+            part.setExpanded(true);
+            root.getChildren().add(part);
         }
 
+        for (int i = 0; i < currentProfessor.getTasks().size(); i++) {
+            for (int j = 0; j < currentProfessor.getTasks().get(i).size(); j++) {
+                parts.get(i).getChildren().add(new TreeItem<>(currentProfessor.getTasks().get(i).get(j)));
+            }
+        }
     }
 
     public void recountWork() {
         double capacity = 0.0;
-        for (int i = 0; i < part1.getChildren().size(); i++) {
-            part1.getValue().nullCapacities();
-            capacity+=part1.getChildren().get(i).getValue().getCapacity();
-            //part1.getValue().setCapacity(part1.getChildren().get(i).getValue().getCapacity() + part1.getValue().getCapacity());
+        double septemberCapacity = 0.0;
+        double octoberCapacity = 0.0;
+        double novemberCapacity = 0.0;
+        double decemberCapacity = 0.0;
+        double januaryCapacity = 0.0;
+        double firstSemester = 0.0;
+        double februaryCapacity = 0.0;
+        double marchCapacity = 0.0;
+        double aprilCapacity = 0.0;
+        double mayCapacity = 0.0;
+        double juneCapacity = 0.0;
+        double julyCapacity = 0.0;
+        double augustCapacity = 0.0;
+        double secondSemester = 0.0;
+        double allYear = 0.0;
+        for (TreeItem<Task> part : parts) {
+            part.getValue().nullCapacities();
+
+            for (TreeItem<Task> children : part.getChildren()) {
+                capacity += children.getValue().getCapacity();
+                septemberCapacity += children.getValue().getSeptemberCapacity();
+                //part1.getValue().setCapacity(part1.getChildren().get(i).getValue().getCapacity() + part1.getValue().getCapacity());
 //            part1.getValue().setSeptemberCapacity(part1.getChildren().get(i).getValue().getSeptemberCapacity() + part1.getValue().getSeptemberCapacity());
 //            part1.getValue().setOctoberCapacity(part1.getChildren().get(i).getValue().getOctoberCapacity() + part1.getValue().getOctoberCapacity());
 //            part1.getValue().setNovemberCapacity(part1.getChildren().get(i).getValue().getNovemberCapacity() + part1.getValue().getNovemberCapacity());
@@ -327,8 +332,10 @@ public class MainSceneController implements Initializable {
 //            part1.getValue().setAugustCapacity(part1.getChildren().get(i).getValue().getAugustCapacity()+ part1.getValue().getAugustCapacity());
 //            part1.getValue().setSecondSemester(part1.getChildren().get(i).getValue().getSecondSemester()+ part1.getValue().getSecondSemester());
 //            part1.getValue().setAllYear(part1.getChildren().get(i).getValue().getAllYear()+ part1.getValue().getAllYear());
+            }
+
+            part.getValue().setCapacity(capacity);
         }
-        part1.getValue().setCapacity(capacity);
         tableColumnInitialize();
     }
 
@@ -514,6 +521,8 @@ public class MainSceneController implements Initializable {
         public EditingCell() {
             MenuItem addMenuItem = new MenuItem("Добавить работу");
             MenuItem deleteMenuItem = new MenuItem("Удалить работу");
+            MenuItem copyMenuItem = new MenuItem("Скопировать работу");
+            MenuItem pasteMenuItem = new MenuItem("Вставить работу");
             addMenu.getItems().add(addMenuItem);
             addMenuItem.setOnAction(new EventHandler() {
                 @Override
@@ -522,28 +531,36 @@ public class MainSceneController implements Initializable {
                     getTreeTableRow().getTreeItem().getChildren().add(newEmployee);
 
                     if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(UCHEBNO_METOD)) {
-                        currentProfessor.getTasksWorkMethod().add(newEmployee.getValue());
+                        currentProfessor.getTasks().get(0).add(newEmployee.getValue());
                     } else if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
-                        currentProfessor.getTasksScince().add(newEmployee.getValue());
+                        currentProfessor.getTasks().get(1).add(newEmployee.getValue());
                     } else {
-                        currentProfessor.getTasksPublic().add(newEmployee.getValue());
+                        currentProfessor.getTasks().get(2).add(newEmployee.getValue());
                     }
+                }
+            });
+            addMenu.getItems().add(pasteMenuItem);
+            addMenuItem.setOnAction(new EventHandler() {
+
+                @Override
+                public void handle(Event event) {
+
                 }
             });
 
             deleteMenu.getItems().add(deleteMenuItem);
-            deleteMenu.setOnAction(new EventHandler() {
+            deleteMenuItem.setOnAction(new EventHandler() {
                 @Override
                 public void handle(Event event) {
                     TreeItem<Task> deletedTask = getTreeTableRow().getTreeItem();
                     if (getTreeTableRow().getTreeItem().getParent().getChildren().size() > 1) {
                         getTreeTableRow().getTreeItem().getParent().getChildren().remove(deletedTask);
                         if (getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork().equals(UCHEBNO_METOD)) {
-                            currentProfessor.getTasksWorkMethod().remove(deletedTask.getValue());
+                            currentProfessor.getTasks().get(0).remove(deletedTask.getValue());
                         } else if (getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
-                            currentProfessor.getTasksScince().remove(deletedTask.getValue());
+                            currentProfessor.getTasks().get(1).remove(deletedTask.getValue());
                         } else {
-                            currentProfessor.getTasksPublic().remove(deletedTask.getValue());
+                            currentProfessor.getTasks().get(2).remove(deletedTask.getValue());
                         }
                     } else {
                         Dialogs.create()
@@ -552,9 +569,19 @@ public class MainSceneController implements Initializable {
                                 .message("В разделе " + getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork()
                                         + " должно быть хоть одна работа")
                                 .showError();
-                    } 
+                    }
                 }
             });
+
+            deleteMenu.getItems().add(copyMenuItem);
+            copyMenuItem.setOnAction(new EventHandler() {
+
+                @Override
+                public void handle(Event event) {
+                    copiedTask = new Task(getTreeTableRow().getTreeItem().getParent().getValue());
+                }
+            });
+
         }
 
         @Override
@@ -579,7 +606,7 @@ public class MainSceneController implements Initializable {
                 setText(String.valueOf(getItem()));
             }
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-            
+
         }
 
         @Override
@@ -617,7 +644,7 @@ public class MainSceneController implements Initializable {
                 if (t.getCode() == KeyCode.ENTER) {
                     try {
                         commitEdit(Double.parseDouble(textField.getText()));
-                        recountWork();                        
+                        recountWork();
                     } catch (NumberFormatException e) {
                         cancelEdit();
                     }
