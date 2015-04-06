@@ -68,11 +68,12 @@ public class MainSceneController implements Initializable {
     public static String NAUCHNAYA = "Научная";
     public static String OBSHESTVENNAYA = "Общественная";
     private Professor currentProfessor = new Professor();
+
     private final ObservableList<Professor> professorsList = FXCollections.observableArrayList();
 
     private TreeItem<Task> root;
     private ArrayList<TreeItem<Task>> parts = new ArrayList<>();
-    private Task copiedTask;
+    private Task copiedTask = null;
     ObservableList<Task> tasksList = FXCollections.observableArrayList();
     FileChooser fc = new FileChooser();
 
@@ -244,6 +245,21 @@ public class MainSceneController implements Initializable {
 
     }
 
+    
+    public Professor getCurrentProfessor() {
+        return currentProfessor;
+    }
+
+    public Task getCopiedTask() {
+        return copiedTask;
+    }
+
+    public void setCopiedTask(Task copiedTask) {
+        this.copiedTask = copiedTask;
+    }
+    public TreeItem getRoot() {
+        return root;
+    }
     public void initData() throws IOException, ParseException {
 
         currentProfessor = new Professor();
@@ -253,7 +269,7 @@ public class MainSceneController implements Initializable {
             currentProfessor.getTasks().get(i).add(new Task());
         }
         professorsList.add(currentProfessor);
-        
+
         Professor secondProfessor = new Professor();
         for (int i = 0; i < currentProfessor.getTasks().size(); i++) {
             secondProfessor.getTasks().get(i).add(new Task());
@@ -277,6 +293,7 @@ public class MainSceneController implements Initializable {
         task3.setProfessorsWork(OBSHESTVENNAYA);
 
         root = new TreeItem<>(all);
+        parts.clear();
         parts.add(new TreeItem<>(task));
         parts.add(new TreeItem<>(task2));
         parts.add(new TreeItem<>(task3));
@@ -294,23 +311,23 @@ public class MainSceneController implements Initializable {
     }
 
     public void recountWork() {
-        double capacity = 0.0;
-        double septemberCapacity = 0.0;
-        double octoberCapacity = 0.0;
-        double novemberCapacity = 0.0;
-        double decemberCapacity = 0.0;
-        double januaryCapacity = 0.0;
-        double firstSemester = 0.0;
-        double februaryCapacity = 0.0;
-        double marchCapacity = 0.0;
-        double aprilCapacity = 0.0;
-        double mayCapacity = 0.0;
-        double juneCapacity = 0.0;
-        double julyCapacity = 0.0;
-        double augustCapacity = 0.0;
-        double secondSemester = 0.0;
-        double allYear = 0.0;
         for (TreeItem<Task> part : parts) {
+            double capacity = 0.0;
+            double septemberCapacity = 0.0;
+            double octoberCapacity = 0.0;
+            double novemberCapacity = 0.0;
+            double decemberCapacity = 0.0;
+            double januaryCapacity = 0.0;
+            double firstSemester = 0.0;
+            double februaryCapacity = 0.0;
+            double marchCapacity = 0.0;
+            double aprilCapacity = 0.0;
+            double mayCapacity = 0.0;
+            double juneCapacity = 0.0;
+            double julyCapacity = 0.0;
+            double augustCapacity = 0.0;
+            double secondSemester = 0.0;
+            double allYear = 0.0;
             part.getValue().nullCapacities();
 
             for (TreeItem<Task> children : part.getChildren()) {
@@ -382,7 +399,7 @@ public class MainSceneController implements Initializable {
 
                     @Override
                     public TreeTableCell call(TreeTableColumn p) {
-                        return new EditingCell();
+                        return new EditingCell(MainSceneController.this);
                     }
                 };
 
@@ -487,7 +504,7 @@ public class MainSceneController implements Initializable {
 
                     @Override
                     public TreeTableCell call(TreeTableColumn p) {
-                        return new EditingCell();
+                        return new EditingCell(MainSceneController.this);
                     }
                 };
         checkClmn.setCellFactory(cellBoolFactory);
@@ -510,154 +527,6 @@ public class MainSceneController implements Initializable {
             }
         }
 
-    }
-
-    private class EditingCell extends TreeTableCell<Task, Double> {
-
-        private ContextMenu addMenu = new ContextMenu();
-        private ContextMenu deleteMenu = new ContextMenu();
-        private TextField textField;
-
-        public EditingCell() {
-            MenuItem addMenuItem = new MenuItem("Добавить работу");
-            MenuItem deleteMenuItem = new MenuItem("Удалить работу");
-            MenuItem copyMenuItem = new MenuItem("Скопировать работу");
-            MenuItem pasteMenuItem = new MenuItem("Вставить работу");
-            addMenu.getItems().add(addMenuItem);
-            addMenuItem.setOnAction(new EventHandler() {
-                @Override
-                public void handle(Event event) {
-                    TreeItem<Task> newEmployee = new TreeItem<Task>(new Task());
-                    getTreeTableRow().getTreeItem().getChildren().add(newEmployee);
-
-                    if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(UCHEBNO_METOD)) {
-                        currentProfessor.getTasks().get(0).add(newEmployee.getValue());
-                    } else if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
-                        currentProfessor.getTasks().get(1).add(newEmployee.getValue());
-                    } else {
-                        currentProfessor.getTasks().get(2).add(newEmployee.getValue());
-                    }
-                }
-            });
-            addMenu.getItems().add(pasteMenuItem);
-            addMenuItem.setOnAction(new EventHandler() {
-
-                @Override
-                public void handle(Event event) {
-
-                }
-            });
-
-            deleteMenu.getItems().add(deleteMenuItem);
-            deleteMenuItem.setOnAction(new EventHandler() {
-                @Override
-                public void handle(Event event) {
-                    TreeItem<Task> deletedTask = getTreeTableRow().getTreeItem();
-                    if (getTreeTableRow().getTreeItem().getParent().getChildren().size() > 1) {
-                        getTreeTableRow().getTreeItem().getParent().getChildren().remove(deletedTask);
-                        if (getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork().equals(UCHEBNO_METOD)) {
-                            currentProfessor.getTasks().get(0).remove(deletedTask.getValue());
-                        } else if (getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
-                            currentProfessor.getTasks().get(1).remove(deletedTask.getValue());
-                        } else {
-                            currentProfessor.getTasks().get(2).remove(deletedTask.getValue());
-                        }
-                    } else {
-                        Dialogs.create()
-                                .title("Ошибка")
-                                .masthead("Невозможно удалить работу")
-                                .message("В разделе " + getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork()
-                                        + " должно быть хоть одна работа")
-                                .showError();
-                    }
-                }
-            });
-
-            deleteMenu.getItems().add(copyMenuItem);
-            copyMenuItem.setOnAction(new EventHandler() {
-
-                @Override
-                public void handle(Event event) {
-                    copiedTask = new Task(getTreeTableRow().getTreeItem().getParent().getValue());
-                }
-            });
-
-        }
-
-        @Override
-        public void startEdit() {
-            super.startEdit();
-
-            if (textField == null) {
-                createTextField();
-            }
-
-            setGraphic(textField);
-            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            textField.selectAll();
-        }
-
-        @Override
-        public void cancelEdit() {
-            super.cancelEdit();
-            if (String.valueOf(getItem()).equals("null") || String.valueOf(getItem()).equals("0.0")) {
-                setText(" ");
-            } else {
-                setText(String.valueOf(getItem()));
-            }
-            setContentDisplay(ContentDisplay.TEXT_ONLY);
-
-        }
-
-        @Override
-        public void updateItem(Double item, boolean empty) {
-            super.updateItem(item, empty);
-
-            if (empty) {
-                setText(null);
-                setGraphic(null);
-            } else {
-                if (isEditing()) {
-                    if (textField != null) {
-                        textField.setText(getString());
-                    }
-
-                    setGraphic(textField);
-                    setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                } else {
-                    setText(getString());
-                    setContentDisplay(ContentDisplay.TEXT_ONLY);
-                    if (!getTreeTableRow().getTreeItem().isLeaf()
-                            && !getTreeTableRow().getTreeItem().equals(root)) {
-                        setContextMenu(addMenu);
-                    } else if (getTreeTableRow().getTreeItem().isLeaf()) {
-                        setContextMenu(deleteMenu);
-                    }
-                }
-            }
-        }
-
-        private void createTextField() {
-            textField = new TextField(getString());
-            textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-            textField.setOnKeyPressed((KeyEvent t) -> {
-                if (t.getCode() == KeyCode.ENTER) {
-                    try {
-                        commitEdit(Double.parseDouble(textField.getText()));
-                        recountWork();
-                    } catch (NumberFormatException e) {
-                        cancelEdit();
-                    }
-
-                } else if (t.getCode() == KeyCode.ESCAPE) {
-                    cancelEdit();
-                }
-            });
-        }
-
-        private String getString() {
-            return getItem() == null ? "" : getItem().toString();
-        }
     }
 
     public boolean showNewProfessorDialog(Professor professor) { //РјРµС‚РѕРґ РґР»СЏ РїСЂРѕСЂРёСЃРѕРІРєРё РґРёР°Р»РѕРіРѕРІРѕРіРѕ РѕРєРЅР° РґРѕР±Р°РІР»РµРЅРёСЏ РїСЂРµРїРѕРґР°
