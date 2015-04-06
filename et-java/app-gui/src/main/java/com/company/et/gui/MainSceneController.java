@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.company.et.gui;
 
 import com.company.et.domain.Professor;
@@ -177,7 +173,7 @@ public class MainSceneController implements Initializable {
             try {
                 // add .json to filename
                 String filename = file.getName();
-                if (!filename.substring(filename.length() - 5).equals(".json")) {
+                if ( filename.length() <= 5 || !filename.substring(filename.length() - 5).equals(".json") ) {
                     filename += ".json";
                 }
                 JsonService.setFilename(filename);
@@ -388,7 +384,7 @@ public class MainSceneController implements Initializable {
         treeTableView.setRoot(root);
     }
 
-    public void setEditableCells() { //РјРµС‚РѕРґ РїРѕ РѕР±СЂР°Р±РѕС‚РєРµ РёР·РјРµРЅРµРЅРёСЏ РІ СЏС‡РµР№РєРµ
+    public void setEditableCells() { 
 
         taskClmn.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
         taskClmn.setOnEditCommit((CellEditEvent<Task, String> t) -> {
@@ -536,7 +532,7 @@ public class MainSceneController implements Initializable {
 
     }
 
-    public boolean showNewProfessorDialog(Professor professor) { //РјРµС‚РѕРґ РґР»СЏ РїСЂРѕСЂРёСЃРѕРІРєРё РґРёР°Р»РѕРіРѕРІРѕРіРѕ РѕРєРЅР° РґРѕР±Р°РІР»РµРЅРёСЏ РїСЂРµРїРѕРґР°
+    public boolean showNewProfessorDialog(Professor professor) { 
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/NewProfessor.fxml"));

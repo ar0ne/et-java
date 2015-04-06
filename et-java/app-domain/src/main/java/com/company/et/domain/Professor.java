@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 
 public class Professor {
 
-    
     private String fio;
     private ArrayList<ObservableList<Task>> tasks;
     private Double rate; // ставка
@@ -23,14 +22,13 @@ public class Professor {
         initTasks();
         this.fio = professor.fio;
         this.rate = professor.rate;
-        Collections.copy(professor.tasks,this.tasks);
+        Collections.copy(professor.tasks, this.tasks);
     }
-
-    
     public Professor() {
         initTasks();
-        for(int i=0;i<tasks.size();i++)
-        Collections.copy(tasks.get(i),FXCollections.observableArrayList());
+        for(int i=0; i < tasks.size(); i++) {
+            Collections.copy(tasks.get(i), FXCollections.observableArrayList());
+        }
         fio="Example";
         rate = 1.0;
     }
