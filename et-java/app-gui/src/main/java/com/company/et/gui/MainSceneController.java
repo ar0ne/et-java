@@ -1,4 +1,8 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.company.et.gui;
 
 import com.company.et.domain.Professor;
@@ -229,6 +233,7 @@ public class MainSceneController implements Initializable {
         } catch (IOException | ParseException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         comboBoxInitialize();
         recountWork();
 
@@ -340,10 +345,10 @@ public class MainSceneController implements Initializable {
 
             part.getValue().setCapacity(capacity);
             part.getValue().setSeptemberCapacity(septemberCapacity);
-            part.getValue().setOctoberCapacity(capacity);
-            part.getValue().setNovemberCapacity(capacity);
-            part.getValue().setDecemberCapacity(capacity);
-            part.getValue().setJanuaryCapacity(capacity);
+            part.getValue().setOctoberCapacity(octoberCapacity);
+            part.getValue().setNovemberCapacity(novemberCapacity);
+            part.getValue().setDecemberCapacity(decemberCapacity);
+            part.getValue().setJanuaryCapacity(januaryCapacity);
             part.getValue().setFirstSemester(firstSemester);
             part.getValue().setFebruaryCapacity(februaryCapacity);
             part.getValue().setMarchCapacity(marchCapacity);
@@ -381,10 +386,17 @@ public class MainSceneController implements Initializable {
         taskClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("professorsWork"));
         periodClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("period"));
         capacityClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("capacity"));
+        septemberClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("septemberCapacity"));
+        octoberClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("octoberCapacity"));
+        novemberClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("novemberCapacity"));
+        decemberClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("decemberCapacity"));
+        januaryClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("januaryCapacity"));
+        firstSemClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("firstSemester"));
+        februaryClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("februaryCapacity"));
         treeTableView.setRoot(root);
     }
 
-    public void setEditableCells() { 
+    public void setEditableCells() { //РјРµС‚РѕРґ РїРѕ РѕР±СЂР°Р±РѕС‚РєРµ РёР·РјРµРЅРµРЅРёСЏ РІ СЏС‡РµР№РєРµ
 
         taskClmn.setCellFactory(TextFieldTreeTableCell.forTreeTableColumn());
         taskClmn.setOnEditCommit((CellEditEvent<Task, String> t) -> {
@@ -415,7 +427,8 @@ public class MainSceneController implements Initializable {
         septemberClmn.setCellFactory(cellFactory);
         septemberClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
             Task task = t.getRowValue().getValue();
-            task.setSeptemberCapacity(t.getNewValue());
+                task.setSeptemberCapacity(t.getNewValue());
+                    
         });
 
         octoberClmn.setCellFactory(cellFactory);
@@ -532,7 +545,7 @@ public class MainSceneController implements Initializable {
 
     }
 
-    public boolean showNewProfessorDialog(Professor professor) { 
+    public boolean showNewProfessorDialog(Professor professor) { //РјРµС‚РѕРґ РґР»СЏ РїСЂРѕСЂРёСЃРѕРІРєРё РґРёР°Р»РѕРіРѕРІРѕРіРѕ РѕРєРЅР° РґРѕР±Р°РІР»РµРЅРёСЏ РїСЂРµРїРѕРґР°
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/NewProfessor.fxml"));
