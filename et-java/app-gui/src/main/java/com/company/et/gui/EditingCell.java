@@ -141,7 +141,7 @@ class EditingCell extends TreeTableCell<Task, Double> {
             setGraphic(null);
         } else {
             if (isEditing()) {
-                if (textField != null && item != 0.0) {
+                if (textField != null) {
                     textField.setText(getString());
                 }
 
@@ -151,6 +151,11 @@ class EditingCell extends TreeTableCell<Task, Double> {
                 setText(getString());
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
 
+            }
+            if (item != null && item != 0.0) {
+                setText(item.toString());
+            } else {
+                setText("");
             }
             if (!getTreeTableRow().getTreeItem().isLeaf()
                     && !getTreeTableRow().getTreeItem().equals(mainSceneController.getRoot())) {
@@ -168,10 +173,14 @@ class EditingCell extends TreeTableCell<Task, Double> {
         textField.setOnKeyPressed((KeyEvent t) -> {
             if (t.getCode() == KeyCode.ENTER) {
                 try {
-                    if (Double.parseDouble(textField.getText()) != 0.0) {
+                    double parseDouble = Double.parseDouble(textField.getText());
+
+                    if (parseDouble == 0.0) {
+                        commitEdit(null);
+                    } else {
                         commitEdit(Double.parseDouble(textField.getText()));
-                        mainSceneController.recountWork();
                     }
+                    mainSceneController.recountWork();
                 } catch (NumberFormatException e) {
                     cancelEdit();
                 }

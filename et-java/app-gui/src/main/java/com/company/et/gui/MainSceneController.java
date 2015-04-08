@@ -50,6 +50,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import org.controlsfx.dialog.Dialogs;
 
 /**
@@ -177,7 +178,7 @@ public class MainSceneController implements Initializable {
             try {
                 // add .json to filename
                 String filename = file.getName();
-                if ( filename.length() <= 5 || !filename.substring(filename.length() - 5).equals(".json") ) {
+                if (filename.length() <= 5 || !filename.substring(filename.length() - 5).equals(".json")) {
                     filename += ".json";
                 }
                 JsonService.setFilename(filename);
@@ -233,13 +234,12 @@ public class MainSceneController implements Initializable {
         } catch (IOException | ParseException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         comboBoxInitialize();
         recountWork();
 
     }
 
-    
     public Professor getCurrentProfessor() {
         return currentProfessor;
     }
@@ -251,9 +251,11 @@ public class MainSceneController implements Initializable {
     public void setCopiedTask(Task copiedTask) {
         this.copiedTask = copiedTask;
     }
+
     public TreeItem getRoot() {
         return root;
     }
+
     public void initData() throws IOException, ParseException {
 
         currentProfessor = new Professor();
@@ -305,7 +307,7 @@ public class MainSceneController implements Initializable {
     }
 
     public void recountWork() {
-        for (TreeItem<Task> part : parts) {
+for (TreeItem<Task> part : parts) {
             double capacity = 0.0;
             double septemberCapacity = 0.0;
             double octoberCapacity = 0.0;
@@ -322,7 +324,6 @@ public class MainSceneController implements Initializable {
             double augustCapacity = 0.0;
             double secondSemester = 0.0;
             double allYear = 0.0;
-            part.getValue().nullCapacities();
 
             for (TreeItem<Task> children : part.getChildren()) {
                 capacity += children.getValue().getCapacity();
@@ -360,7 +361,7 @@ public class MainSceneController implements Initializable {
             part.getValue().setSecondSemester(secondSemester);
             part.getValue().setAllYear(allYear);
         }
-        
+
         tableColumnInitialize();
     }
 
@@ -427,8 +428,7 @@ public class MainSceneController implements Initializable {
         septemberClmn.setCellFactory(cellFactory);
         septemberClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
             Task task = t.getRowValue().getValue();
-                task.setSeptemberCapacity(t.getNewValue());
-                    
+            task.setSeptemberCapacity(t.getNewValue());
         });
 
         octoberClmn.setCellFactory(cellFactory);
@@ -545,7 +545,7 @@ public class MainSceneController implements Initializable {
 
     }
 
-    public boolean showNewProfessorDialog(Professor professor) { //РјРµС‚РѕРґ РґР»СЏ РїСЂРѕСЂРёСЃРѕРІРєРё РґРёР°Р»РѕРіРѕРІРѕРіРѕ РѕРєРЅР° РґРѕР±Р°РІР»РµРЅРёСЏ РїСЂРµРїРѕРґР°
+    public boolean showNewProfessorDialog(Professor professor) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/fxml/NewProfessor.fxml"));
@@ -569,4 +569,5 @@ public class MainSceneController implements Initializable {
             return false;
         }
     }
+
 }

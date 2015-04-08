@@ -266,23 +266,4 @@ public class Task {
         this.completeWork = completeWork;
     }
     
-    public void nullCapacities() {
-        capacity=0.0;
-        septemberCapacity=0.0;
-        octoberCapacity=0.0;
-        novemberCapacity=0.0;
-        decemberCapacity=0.0;
-        januaryCapacity=0.0;
-        firstSemester=0.0;
-        februaryCapacity=0.0;
-        marchCapacity=0.0;
-        aprilCapacity=0.0;
-        mayCapacity=0.0;
-        juneCapacity=0.0;
-        julyCapacity=0.0;
-        augustCapacity=0.0;
-        secondSemester=0.0;
-        allYear=0.0;
-    }
-    
 }
