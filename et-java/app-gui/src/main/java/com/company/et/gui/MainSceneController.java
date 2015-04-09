@@ -12,6 +12,7 @@ import com.company.et.service.JsonService;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.channels.AsynchronousServerSocketChannel;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,6 +68,8 @@ public class MainSceneController implements Initializable {
 
     private final ObservableList<Professor> professorsList = FXCollections.observableArrayList();
 
+    private TreeItem<Task> dummyRoot;
+    private TreeItem<Task> reserve;
     private TreeItem<Task> root;
     private ArrayList<TreeItem<Task>> parts = new ArrayList<>();
     private Task copiedTask = null;
@@ -91,6 +94,8 @@ public class MainSceneController implements Initializable {
     private TextField rate;
     @FXML
     private Label labelFileName;
+    @FXML
+    private TextField hours;
     @FXML
     private TreeTableColumn<Task, String> taskClmn;
     @FXML
@@ -287,7 +292,10 @@ public class MainSceneController implements Initializable {
 
         Task task3 = new Task();
         task3.setProfessorsWork(OBSHESTVENNAYA);
-
+        
+        Task reserveTask = new Task();
+        reserveTask.setProfessorsWork("Резерв");
+        
         root = new TreeItem<>(all);
         parts.clear();
         parts.add(new TreeItem<>(task));
@@ -304,6 +312,10 @@ public class MainSceneController implements Initializable {
                 parts.get(i).getChildren().add(new TreeItem<>(currentProfessor.getTasks().get(i).get(j)));
             }
         }
+        
+        reserve = new TreeItem<>(reserveTask);
+        dummyRoot = new TreeItem<>();
+        dummyRoot.getChildren().addAll(root,reserve);
     }
 
     public void recountWork() {
@@ -443,7 +455,8 @@ public class MainSceneController implements Initializable {
         januaryClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("januaryCapacity"));
         firstSemClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("firstSemester"));
         februaryClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("februaryCapacity"));
-        treeTableView.setRoot(root);
+        treeTableView.setRoot(dummyRoot);
+        treeTableView.setShowRoot(false);
     }
 
     public void setEditableCells() { //РјРµС‚РѕРґ РїРѕ РѕР±СЂР°Р±РѕС‚РєРµ РёР·РјРµРЅРµРЅРёСЏ РІ СЏС‡РµР№РєРµ

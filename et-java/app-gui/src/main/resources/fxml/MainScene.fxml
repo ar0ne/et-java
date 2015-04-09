@@ -46,6 +46,7 @@
                <padding>
                   <Insets left="200.0" />
                </padding></Label>
+            <TextField fx:id="hours" alignment="CENTER" text="Какой-то коэфф" />
         </items>
       </ToolBar>
       <TreeTableView fx:id="treeTableView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="569.0" prefWidth="1424.0" tableMenuButtonVisible="true">
