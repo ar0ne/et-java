@@ -307,7 +307,7 @@ public class MainSceneController implements Initializable {
     }
 
     public void recountWork() {
-for (TreeItem<Task> part : parts) {
+        for (TreeItem<Task> part : parts) {
             double capacity = 0.0;
             double septemberCapacity = 0.0;
             double octoberCapacity = 0.0;
@@ -361,7 +361,56 @@ for (TreeItem<Task> part : parts) {
             part.getValue().setSecondSemester(secondSemester);
             part.getValue().setAllYear(allYear);
         }
-
+        double capacity = 0.0;
+        double septemberCapacity = 0.0;
+        double octoberCapacity = 0.0;
+        double novemberCapacity = 0.0;
+        double decemberCapacity = 0.0;
+        double januaryCapacity = 0.0;
+        double firstSemester = 0.0;
+        double februaryCapacity = 0.0;
+        double marchCapacity = 0.0;
+        double aprilCapacity = 0.0;
+        double mayCapacity = 0.0;
+        double juneCapacity = 0.0;
+        double julyCapacity = 0.0;
+        double augustCapacity = 0.0;
+        double secondSemester = 0.0;
+        double allYear = 0.0;
+        for (TreeItem<Task> part : parts) {
+            capacity += part.getValue().getCapacity();
+            septemberCapacity += part.getValue().getSeptemberCapacity();
+            octoberCapacity += part.getValue().getOctoberCapacity();
+            novemberCapacity += part.getValue().getNovemberCapacity();
+            decemberCapacity += part.getValue().getDecemberCapacity();
+            januaryCapacity += part.getValue().getJanuaryCapacity();
+            firstSemester += part.getValue().getFirstSemester();
+            februaryCapacity += part.getValue().getFebruaryCapacity();
+            marchCapacity += part.getValue().getMarchCapacity();
+            aprilCapacity += part.getValue().getAprilCapacity();
+            mayCapacity += part.getValue().getMayCapacity();
+            juneCapacity += part.getValue().getJuneCapacity();
+            julyCapacity += part.getValue().getJulyCapacity();
+            augustCapacity += part.getValue().getAugustCapacity();
+            secondSemester += part.getValue().getSecondSemester();
+            allYear += part.getValue().getAllYear();
+        }
+        root.getValue().setCapacity(capacity);
+        root.getValue().setSeptemberCapacity(septemberCapacity);
+        root.getValue().setOctoberCapacity(octoberCapacity);
+        root.getValue().setNovemberCapacity(novemberCapacity);
+        root.getValue().setDecemberCapacity(decemberCapacity);
+        root.getValue().setJanuaryCapacity(januaryCapacity);
+        root.getValue().setFirstSemester(firstSemester);
+        root.getValue().setFebruaryCapacity(februaryCapacity);
+        root.getValue().setMarchCapacity(marchCapacity);
+        root.getValue().setAprilCapacity(aprilCapacity);
+        root.getValue().setMayCapacity(mayCapacity);
+        root.getValue().setJuneCapacity(juneCapacity);
+        root.getValue().setJulyCapacity(julyCapacity);
+        root.getValue().setAugustCapacity(augustCapacity);
+        root.getValue().setSecondSemester(secondSemester);
+        root.getValue().setAllYear(allYear);
         tableColumnInitialize();
     }
 

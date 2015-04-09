@@ -157,14 +157,19 @@ class EditingCell extends TreeTableCell<Task, Double> {
             } else {
                 setText("");
             }
-            if (!getTreeTableRow().getTreeItem().isLeaf()
-                    && !getTreeTableRow().getTreeItem().equals(mainSceneController.getRoot())) {
-                setContextMenu(addMenu);
-            } else if (getTreeTableRow().getTreeItem().isLeaf()) {
-                setContextMenu(deleteMenu);
+            if (getTreeTableRow().getTreeItem() != null) {
+
+                if (getTreeTableRow().getTreeItem().isLeaf()) {
+                    setContextMenu(deleteMenu);
+                } 
+                else {
+                    setEditable(false);
+                    if (!getTreeTableRow().getTreeItem().equals(mainSceneController.getRoot())) {
+                        setContextMenu(addMenu);
+                    }
+                }
             }
         }
-
     }
 
     private void createTextField() {
