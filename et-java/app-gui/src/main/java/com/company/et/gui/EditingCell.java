@@ -35,6 +35,8 @@ class EditingCell extends TreeTableCell<Task, Double> {
     private MenuItem deleteMenuItem = new MenuItem("Удалить работу");
     private MenuItem copyMenuItem = new MenuItem("Скопировать работу");
     private MenuItem pasteMenuItem = new MenuItem("Вставить работу");
+    private MenuItem markComplMenuItem = new MenuItem("Отметить как выполнена");
+    private MenuItem markUnComplItem = new MenuItem("Отменить отметку о выполнении");
     private MainSceneController mainSceneController;
 
     public EditingCell(MainSceneController mainSC) {
@@ -104,7 +106,25 @@ class EditingCell extends TreeTableCell<Task, Double> {
                 mainSceneController.setCopiedTask(new Task(getTreeTableRow().getTreeItem().getValue()));
             }
         });
-
+        deleteMenu.getItems().add(markComplMenuItem);
+        markComplMenuItem.setOnAction(new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                getTreeTableRow().setStyle("-fx-background-color:lightgreen");
+                getTreeTableRow().getItem().setCompleteWork(true);
+            }
+        });
+        deleteMenu.getItems().add(markUnComplItem);
+        markUnComplItem.setOnAction(new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                getTreeTableRow().setStyle("");
+                getTreeTableRow().getItem().setCompleteWork(true);
+            }
+        });
+//        markAllFields(mainSC);
+        if ( getTreeTableRow() != null && getTreeTableRow().getItem().getCompleteWork())
+            getTreeTableRow().setStyle("-fx-background-color:lightgreen");
     }
 
     @Override
@@ -161,11 +181,15 @@ class EditingCell extends TreeTableCell<Task, Double> {
 
                 if (getTreeTableRow().getTreeItem().isLeaf()) {
                     setContextMenu(deleteMenu);
+                    if (getTreeTableRow().getTreeItem().getValue().getCompleteWork())
+                        getTreeTableRow().setStyle("-fx-background-color:lightgreen");
+                    else getTreeTableRow().setStyle("");
                 } 
                 else {
                     setEditable(false);
                     if (!getTreeTableRow().getTreeItem().equals(mainSceneController.getRoot())) {
                         setContextMenu(addMenu);
+                        getTreeTableRow().setStyle("");
                     }
                 }
             }
@@ -199,4 +223,11 @@ class EditingCell extends TreeTableCell<Task, Double> {
     private String getString() {
         return getItem() == null ? "" : getItem().toString();
     }
+
+//    public void markAllFields(MainSceneController mainSC) {
+//       for(TreeItem<Task> mainPart : mainSC.getParts())
+//           for (TreeItem<Task> subPart : mainPart.getChildren())
+//               if (subPart.getValue().getCompleteWork())
+//                   subPart.
+//    }
 }
