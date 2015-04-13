@@ -65,17 +65,16 @@ public class MainSceneController implements Initializable {
     public static String NAUCHNAYA = "Научная";
     public static String OBSHESTVENNAYA = "Общественная";
     private Professor currentProfessor = new Professor();
-
     private final ObservableList<Professor> professorsList = FXCollections.observableArrayList();
-
     private TreeItem<Task> dummyRoot;
     private TreeItem<Task> reserve;
     private TreeItem<Task> root;
     private ArrayList<TreeItem<Task>> parts = new ArrayList<>();
     private Task copiedTask = null;
-    ObservableList<Task> tasksList = FXCollections.observableArrayList();
-    FileChooser fc = new FileChooser();
-
+    private final ObservableList<Task> tasksList = FXCollections.observableArrayList();
+    private final FileChooser fc = new FileChooser();
+    private int hours;
+    public static final int COUNT_OF_HOURS = 1548;
     @FXML
     private MenuItem menuBarFileOpen;
     @FXML
@@ -91,11 +90,11 @@ public class MainSceneController implements Initializable {
     @FXML
     private Button removeProfessor;
     @FXML
-    private TextField rate;
+    private TextField textFieldRate;
     @FXML
     private Label labelFileName;
     @FXML
-    private TextField hours;
+    private TextField textFieldHours;
     @FXML
     private TreeTableColumn<Task, String> taskClmn;
     @FXML
@@ -239,7 +238,7 @@ public class MainSceneController implements Initializable {
         } catch (IOException | ParseException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        textLabelsInitialize();
         comboBoxInitialize();
         recountWork();
 
@@ -259,6 +258,14 @@ public class MainSceneController implements Initializable {
 
     public TreeItem getRoot() {
         return root;
+    }
+
+    public ArrayList<TreeItem<Task>> getParts() {
+        return parts;
+    }
+
+    public void setParts(ArrayList<TreeItem<Task>> parts) {
+        this.parts = parts;
     }
 
     public void initData() throws IOException, ParseException {
@@ -281,6 +288,8 @@ public class MainSceneController implements Initializable {
     }
 
     public void initTableData() {
+        hours = COUNT_OF_HOURS;
+
         Task all = new Task();
         all.setProfessorsWork("Общее");
 
@@ -292,10 +301,10 @@ public class MainSceneController implements Initializable {
 
         Task task3 = new Task();
         task3.setProfessorsWork(OBSHESTVENNAYA);
-        
+
         Task reserveTask = new Task();
         reserveTask.setProfessorsWork("Резерв");
-        
+
         root = new TreeItem<>(all);
         parts.clear();
         parts.add(new TreeItem<>(task));
@@ -312,10 +321,10 @@ public class MainSceneController implements Initializable {
                 parts.get(i).getChildren().add(new TreeItem<>(currentProfessor.getTasks().get(i).get(j)));
             }
         }
-        
+
         reserve = new TreeItem<>(reserveTask);
         dummyRoot = new TreeItem<>();
-        dummyRoot.getChildren().addAll(root,reserve);
+        dummyRoot.getChildren().addAll(root, reserve);
     }
 
     public void recountWork() {
@@ -423,7 +432,39 @@ public class MainSceneController implements Initializable {
         root.getValue().setAugustCapacity(augustCapacity);
         root.getValue().setSecondSemester(secondSemester);
         root.getValue().setAllYear(allYear);
+        
+        reserve.getValue().setSeptemberCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getSeptemberCapacity());
+        reserve.getValue().setOctoberCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getOctoberCapacity());
+        reserve.getValue().setNovemberCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getNovemberCapacity());
+        reserve.getValue().setDecemberCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getDecemberCapacity());
+        reserve.getValue().setJanuaryCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getJanuaryCapacity());
+        reserve.getValue().setFirstSemester(hours/2 - root.getValue().getFirstSemester());
+        reserve.getValue().setFebruaryCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getFebruaryCapacity());
+        reserve.getValue().setMarchCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getMarchCapacity());
+        reserve.getValue().setAprilCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getAprilCapacity());
+        reserve.getValue().setMayCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getMayCapacity());
+        reserve.getValue().setJuneCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getJuneCapacity());
+        reserve.getValue().setJulyCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getJulyCapacity());
+        reserve.getValue().setAugustCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getAugustCapacity());
+        reserve.getValue().setSecondSemester(hours/2 - root.getValue().getSecondSemester());
+        reserve.getValue().setAllYear(hours - root.getValue().getSecondSemester());
         tableColumnInitialize();
+    }
+
+    public void textLabelsInitialize() {
+        textFieldHours.setOnAction((event) -> {
+            if (textFieldHours.getText() != null && !textFieldHours.getText().isEmpty()) {
+                hours = Integer.parseInt(textFieldHours.getText());
+            }
+        });
+        textFieldHours.setText(Integer.toString(hours));
+        
+        textFieldRate.setOnAction((event) -> {
+            if (textFieldRate.getText() != null && !textFieldRate.getText().isEmpty()) {
+                currentProfessor.setRate(Double.parseDouble(textFieldRate.getText()));
+            }
+        });
+        textFieldRate.setText(currentProfessor.getRate().toString());
     }
 
     public void comboBoxInitialize() {
@@ -436,8 +477,7 @@ public class MainSceneController implements Initializable {
         comboBoxProfessorsList.setOnAction((event) -> {
             Professor selectedProfessor = comboBoxProfessorsList.getSelectionModel().getSelectedItem();
             this.currentProfessor = selectedProfessor;
-            initTableData();
-            recountWork();
+            changeProfessor();
         });
     }
 
@@ -455,6 +495,14 @@ public class MainSceneController implements Initializable {
         januaryClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("januaryCapacity"));
         firstSemClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("firstSemester"));
         februaryClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("februaryCapacity"));
+        marchClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("marchCapacity"));
+        aprilClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("aprilCapacity"));
+        mayClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("mayCapacity"));
+        juneClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("juneCapacity"));
+        julyClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("julyCapacity"));
+        augustClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("augustCapacity"));
+        secondSemClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("secondSemester"));
+        allYearClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("allYear"));
         treeTableView.setRoot(dummyRoot);
         treeTableView.setShowRoot(false);
     }
@@ -590,6 +638,13 @@ public class MainSceneController implements Initializable {
             Task task = t.getRowValue().getValue();
             task.setCompleteWork(t.getNewValue());
         });
+    }
+
+    private void changeProfessor() {
+        initTableData();
+        recountWork();
+        textFieldRate.setText("");
+        textLabelsInitialize();
     }
 
     private class ProfessorsListCell extends ListCell<Professor> {

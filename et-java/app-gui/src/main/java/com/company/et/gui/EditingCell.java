@@ -9,6 +9,7 @@ import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
 import static com.company.et.gui.MainSceneController.NAUCHNAYA;
 import static com.company.et.gui.MainSceneController.UCHEBNO_METOD;
+import java.text.NumberFormat;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -38,8 +39,9 @@ class EditingCell extends TreeTableCell<Task, Double> {
     private MenuItem markComplMenuItem = new MenuItem("Отметить как выполнена");
     private MenuItem markUnComplItem = new MenuItem("Отменить отметку о выполнении");
     private MainSceneController mainSceneController;
-
+    private NumberFormat numberFormat = NumberFormat.getNumberInstance(); 
     public EditingCell(MainSceneController mainSC) {
+        numberFormat.setMaximumFractionDigits(3);
         this.mainSceneController = mainSC;
         addMenu.getItems().add(addMenuItem);
         addMenuItem.setOnAction(new EventHandler() {
@@ -173,7 +175,8 @@ class EditingCell extends TreeTableCell<Task, Double> {
 
             }
             if (item != null && item != 0.0) {
-                setText(item.toString());
+                    
+                setText(numberFormat.format(item));
             } else {
                 setText("");
             }

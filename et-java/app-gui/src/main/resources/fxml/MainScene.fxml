@@ -41,12 +41,12 @@
                   <Insets left="30.0" />
                </padding>
             </Label>
-            <TextField fx:id="rate" prefHeight="25.0" prefWidth="54.0" />
+            <TextField fx:id="textFieldRate" prefHeight="25.0" prefWidth="54.0" />
             <Label fx:id="labelFileName" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="387.0" text="asdfasd" textAlignment="RIGHT">
                <padding>
                   <Insets left="200.0" />
                </padding></Label>
-            <TextField fx:id="hours" alignment="CENTER" text="Какой-то коэфф" />
+            <TextField fx:id="textFieldHours" alignment="CENTER" text="Какой-то коэфф" />
         </items>
       </ToolBar>
       <TreeTableView fx:id="treeTableView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="569.0" prefWidth="1424.0" tableMenuButtonVisible="true">
