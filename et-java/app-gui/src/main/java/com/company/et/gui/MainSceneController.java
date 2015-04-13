@@ -273,6 +273,11 @@ public class MainSceneController implements Initializable {
         currentProfessor = new Professor();
         currentProfessor.setFio("Профессор 1");
         currentProfessor.setRate(1.0);
+        currentProfessor.getTasks().get(0).add(new Task("Учебная","",
+        new Double(0.0),new Double(0.0),new Double(0.0),new Double(0.0),new Double(0.0),
+                new Double(0.0),new Double(0.0),new Double(0.0),new Double(0.0),
+                new Double(0.0),new Double(0.0),new Double(0.0),new Double(0.0),new Double(0.0),
+                new Double(0.0),new Double(0.0),false,new Double(0.0)));
         for (int i = 0; i < currentProfessor.getTasks().size(); i++) {
             currentProfessor.getTasks().get(i).add(new Task());
         }
