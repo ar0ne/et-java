@@ -211,7 +211,7 @@ class EditingCell extends TreeTableCell<Task, Double> {
                         commitEdit(null);
                     } else {
                         commitEdit(Double.parseDouble(textField.getText()));
-                    }
+                    }                  
                     mainSceneController.recountWork();
                 } catch (NumberFormatException e) {
                     cancelEdit();

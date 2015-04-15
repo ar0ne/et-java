@@ -5,25 +5,32 @@
  */
 package com.company.et.gui;
 
+import com.company.et.domain.DoubleCapacities;
 import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
 import com.company.et.service.JsonService;
+import com.company.et.service.XlsService;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -33,7 +40,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -51,7 +57,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 import org.controlsfx.dialog.Dialogs;
 
 /**
@@ -64,6 +69,7 @@ public class MainSceneController implements Initializable {
     public static String UCHEBNO_METOD = "Учебно-методическая";
     public static String NAUCHNAYA = "Научная";
     public static String OBSHESTVENNAYA = "Общественная";
+    ArrayList<TreeTableColumn<Task, Double>> listOfColumns;
     private Professor currentProfessor = new Professor();
     private final ObservableList<Professor> professorsList = FXCollections.observableArrayList();
     private TreeItem<Task> dummyRoot;
@@ -74,7 +80,7 @@ public class MainSceneController implements Initializable {
     private final ObservableList<Task> tasksList = FXCollections.observableArrayList();
     private final FileChooser fc = new FileChooser();
     private int hours;
-    public static final int COUNT_OF_HOURS = 1548;
+    public static int countOfHours = 1548;
     @FXML
     private MenuItem menuBarFileOpen;
     @FXML
@@ -83,6 +89,8 @@ public class MainSceneController implements Initializable {
     private MenuItem menuBarFileSaveAs;
     @FXML
     private MenuItem menuBarFileExit;
+    @FXML
+    private MenuItem menuBarGenerateForAllYear;
     @FXML
     private ComboBox<Professor> comboBoxProfessorsList;
     @FXML
@@ -99,40 +107,6 @@ public class MainSceneController implements Initializable {
     private TreeTableColumn<Task, String> taskClmn;
     @FXML
     private TreeTableColumn<Task, String> periodClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> capacityClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> septemberClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> octoberClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> novemberClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> decemberClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> januaryClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> firstSemClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> februaryClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> marchClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> aprilClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> mayClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> juneClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> julyClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> augustClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> secondSemClmn;
-    @FXML
-    private TreeTableColumn<Task, Double> allYearClmn;
-    @FXML
-    private TreeTableColumn<Task, Boolean> checkClmn;
     @FXML
     private TreeTableView<Task> treeTableView;
 
@@ -230,13 +204,38 @@ public class MainSceneController implements Initializable {
         }
     }
 
+    @FXML
+    private void generateAllYearReport(ActionEvent event) throws IOException {
+        final String extentionString = ".xls";
+        File file = fc.showSaveDialog(null);
+        if (file != null) {
+            try {
+                // add .xlsx to filename
+                String filename = file.getName();
+                if (filename.length() <= extentionString.length()
+                        || !filename.substring(filename.length() - extentionString.length()).equals(extentionString)) {
+                    filename += ".xls";
+                }
+                XlsService.setFilename(filename);
+                XlsService.generateFile(currentProfessor);
+            } catch (FileNotFoundException ex) {
+                Dialogs.create()
+                        .title("Ошибка")
+                        .message("Ошибка генерации файла")
+                        .showError();
+            }
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
             initData();
             labelFileName.setText("undefined");
+
         } catch (IOException | ParseException ex) {
-            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainSceneController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         textLabelsInitialize();
         comboBoxInitialize();
@@ -269,15 +268,30 @@ public class MainSceneController implements Initializable {
     }
 
     public void initData() throws IOException, ParseException {
-
+        listOfColumns = new ArrayList<>();
+        
+        listOfColumns.add(new TreeTableColumn<>("Объём"));
+        listOfColumns.add(new TreeTableColumn<>("Сентябрь"));
+        listOfColumns.add(new TreeTableColumn<>("Октябрь"));
+        listOfColumns.add(new TreeTableColumn<>("Ноябрь"));
+        listOfColumns.add(new TreeTableColumn<>("Декабрь"));
+        listOfColumns.add(new TreeTableColumn<>("Январь"));
+        listOfColumns.add(new TreeTableColumn<>("1сем"));
+        listOfColumns.add(new TreeTableColumn<>("Фефраль"));
+        listOfColumns.add(new TreeTableColumn<>("Март"));
+        listOfColumns.add(new TreeTableColumn<>("Апрель"));
+        listOfColumns.add(new TreeTableColumn<>("Май"));
+        listOfColumns.add(new TreeTableColumn<>("Июнь"));
+        listOfColumns.add(new TreeTableColumn<>("Июль"));
+        listOfColumns.add(new TreeTableColumn<>("Август"));
+        listOfColumns.add(new TreeTableColumn<>("2сем"));
+        listOfColumns.add(new TreeTableColumn<>("Весь год"));
+        
+        
         currentProfessor = new Professor();
         currentProfessor.setFio("Профессор 1");
         currentProfessor.setRate(1.0);
-        currentProfessor.getTasks().get(0).add(new Task("Учебная","",
-        new Double(0.0),new Double(0.0),new Double(0.0),new Double(0.0),new Double(0.0),
-                new Double(0.0),new Double(0.0),new Double(0.0),new Double(0.0),
-                new Double(0.0),new Double(0.0),new Double(0.0),new Double(0.0),new Double(0.0),
-                new Double(0.0),new Double(0.0),false,new Double(0.0)));
+        currentProfessor.getTasks().get(0).add(new Task("Учебная", "", false));
         for (int i = 0; i < currentProfessor.getTasks().size(); i++) {
             currentProfessor.getTasks().get(i).add(new Task());
         }
@@ -288,12 +302,13 @@ public class MainSceneController implements Initializable {
             secondProfessor.getTasks().get(i).add(new Task());
         }
         professorsList.add(secondProfessor);
+        treeTableView.getColumns().addAll(listOfColumns);
         initTableData();
 
     }
 
     public void initTableData() {
-        hours = COUNT_OF_HOURS;
+        hours = countOfHours;
 
         Task all = new Task();
         all.setProfessorsWork("Общее");
@@ -333,126 +348,42 @@ public class MainSceneController implements Initializable {
     }
 
     public void recountWork() {
+        ArrayList<Double> sumCapacities;
+
         for (TreeItem<Task> part : parts) {
-            double capacity = 0.0;
-            double septemberCapacity = 0.0;
-            double octoberCapacity = 0.0;
-            double novemberCapacity = 0.0;
-            double decemberCapacity = 0.0;
-            double januaryCapacity = 0.0;
-            double firstSemester = 0.0;
-            double februaryCapacity = 0.0;
-            double marchCapacity = 0.0;
-            double aprilCapacity = 0.0;
-            double mayCapacity = 0.0;
-            double juneCapacity = 0.0;
-            double julyCapacity = 0.0;
-            double augustCapacity = 0.0;
-            double secondSemester = 0.0;
-            double allYear = 0.0;
+            sumCapacities = new ArrayList<>(Collections.nCopies(16,0.0));
 
             for (TreeItem<Task> children : part.getChildren()) {
-                capacity += children.getValue().getCapacity();
-                septemberCapacity += children.getValue().getSeptemberCapacity();
-                octoberCapacity += children.getValue().getOctoberCapacity();
-                novemberCapacity += children.getValue().getNovemberCapacity();
-                decemberCapacity += children.getValue().getDecemberCapacity();
-                januaryCapacity += children.getValue().getJanuaryCapacity();
-                firstSemester += children.getValue().getFirstSemester();
-                februaryCapacity += children.getValue().getFebruaryCapacity();
-                marchCapacity += children.getValue().getMarchCapacity();
-                aprilCapacity += children.getValue().getAprilCapacity();
-                mayCapacity += children.getValue().getMayCapacity();
-                juneCapacity += children.getValue().getJuneCapacity();
-                julyCapacity += children.getValue().getJulyCapacity();
-                augustCapacity += children.getValue().getAugustCapacity();
-                secondSemester += children.getValue().getSecondSemester();
-                allYear += children.getValue().getAllYear();
+                for (int i = 0; i < children.getValue().getCapacities().size(); i++) {
+                    sumCapacities.set(i, sumCapacities.get(i) + children.getValue().getCapacities().get(i));
+                }
             }
 
-            part.getValue().setCapacity(capacity);
-            part.getValue().setSeptemberCapacity(septemberCapacity);
-            part.getValue().setOctoberCapacity(octoberCapacity);
-            part.getValue().setNovemberCapacity(novemberCapacity);
-            part.getValue().setDecemberCapacity(decemberCapacity);
-            part.getValue().setJanuaryCapacity(januaryCapacity);
-            part.getValue().setFirstSemester(firstSemester);
-            part.getValue().setFebruaryCapacity(februaryCapacity);
-            part.getValue().setMarchCapacity(marchCapacity);
-            part.getValue().setAprilCapacity(aprilCapacity);
-            part.getValue().setMayCapacity(mayCapacity);
-            part.getValue().setJuneCapacity(juneCapacity);
-            part.getValue().setJulyCapacity(julyCapacity);
-            part.getValue().setAugustCapacity(augustCapacity);
-            part.getValue().setSecondSemester(secondSemester);
-            part.getValue().setAllYear(allYear);
+            for (int i = 0; i < sumCapacities.size(); i++) {
+                part.getValue().getCapacities().set(i, sumCapacities.get(i));
+            }
         }
-        double capacity = 0.0;
-        double septemberCapacity = 0.0;
-        double octoberCapacity = 0.0;
-        double novemberCapacity = 0.0;
-        double decemberCapacity = 0.0;
-        double januaryCapacity = 0.0;
-        double firstSemester = 0.0;
-        double februaryCapacity = 0.0;
-        double marchCapacity = 0.0;
-        double aprilCapacity = 0.0;
-        double mayCapacity = 0.0;
-        double juneCapacity = 0.0;
-        double julyCapacity = 0.0;
-        double augustCapacity = 0.0;
-        double secondSemester = 0.0;
-        double allYear = 0.0;
+
+        sumCapacities = new ArrayList<>(Collections.nCopies(16,0.0));
         for (TreeItem<Task> part : parts) {
-            capacity += part.getValue().getCapacity();
-            septemberCapacity += part.getValue().getSeptemberCapacity();
-            octoberCapacity += part.getValue().getOctoberCapacity();
-            novemberCapacity += part.getValue().getNovemberCapacity();
-            decemberCapacity += part.getValue().getDecemberCapacity();
-            januaryCapacity += part.getValue().getJanuaryCapacity();
-            firstSemester += part.getValue().getFirstSemester();
-            februaryCapacity += part.getValue().getFebruaryCapacity();
-            marchCapacity += part.getValue().getMarchCapacity();
-            aprilCapacity += part.getValue().getAprilCapacity();
-            mayCapacity += part.getValue().getMayCapacity();
-            juneCapacity += part.getValue().getJuneCapacity();
-            julyCapacity += part.getValue().getJulyCapacity();
-            augustCapacity += part.getValue().getAugustCapacity();
-            secondSemester += part.getValue().getSecondSemester();
-            allYear += part.getValue().getAllYear();
+            for (int i = 0; i < sumCapacities.size(); i++) {
+                sumCapacities.set(i, sumCapacities.get(i) + part.getValue().getCapacities().get(i));
+            }
         }
-        root.getValue().setCapacity(capacity);
-        root.getValue().setSeptemberCapacity(septemberCapacity);
-        root.getValue().setOctoberCapacity(octoberCapacity);
-        root.getValue().setNovemberCapacity(novemberCapacity);
-        root.getValue().setDecemberCapacity(decemberCapacity);
-        root.getValue().setJanuaryCapacity(januaryCapacity);
-        root.getValue().setFirstSemester(firstSemester);
-        root.getValue().setFebruaryCapacity(februaryCapacity);
-        root.getValue().setMarchCapacity(marchCapacity);
-        root.getValue().setAprilCapacity(aprilCapacity);
-        root.getValue().setMayCapacity(mayCapacity);
-        root.getValue().setJuneCapacity(juneCapacity);
-        root.getValue().setJulyCapacity(julyCapacity);
-        root.getValue().setAugustCapacity(augustCapacity);
-        root.getValue().setSecondSemester(secondSemester);
-        root.getValue().setAllYear(allYear);
-        
-        reserve.getValue().setSeptemberCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getSeptemberCapacity());
-        reserve.getValue().setOctoberCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getOctoberCapacity());
-        reserve.getValue().setNovemberCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getNovemberCapacity());
-        reserve.getValue().setDecemberCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getDecemberCapacity());
-        reserve.getValue().setJanuaryCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getJanuaryCapacity());
-        reserve.getValue().setFirstSemester(hours/2 - root.getValue().getFirstSemester());
-        reserve.getValue().setFebruaryCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getFebruaryCapacity());
-        reserve.getValue().setMarchCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getMarchCapacity());
-        reserve.getValue().setAprilCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getAprilCapacity());
-        reserve.getValue().setMayCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getMayCapacity());
-        reserve.getValue().setJuneCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getJuneCapacity());
-        reserve.getValue().setJulyCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getJulyCapacity());
-        reserve.getValue().setAugustCapacity(hours*currentProfessor.getRate()/10 - root.getValue().getAugustCapacity());
-        reserve.getValue().setSecondSemester(hours/2 - root.getValue().getSecondSemester());
-        reserve.getValue().setAllYear(hours - root.getValue().getSecondSemester());
+
+        for (int i = 0; i < 16; i++) {
+            root.getValue().getCapacities().set(i, sumCapacities.get(i));
+        }
+
+        for (int i = 0; i < 16; i++) {
+            if (i == DoubleCapacities.CAPACITY.ordinal() || i == DoubleCapacities.ALL_YEAR.ordinal()) {
+                reserve.getValue().getCapacities().set(i, hours - root.getValue().getCapacities().get(i));
+            } else if (i == DoubleCapacities.FIRST_SEMESTER.ordinal() || i == DoubleCapacities.SECOND_SEMESTER.ordinal()) {
+                reserve.getValue().getCapacities().set(i, hours / 2 - root.getValue().getCapacities().get(i));
+            } else {
+                reserve.getValue().getCapacities().set(i, hours * currentProfessor.getRate() / 10 - root.getValue().getCapacities().get(i));
+            }
+        }
         tableColumnInitialize();
     }
 
@@ -463,7 +394,7 @@ public class MainSceneController implements Initializable {
             }
         });
         textFieldHours.setText(Integer.toString(hours));
-        
+
         textFieldRate.setOnAction((event) -> {
             if (textFieldRate.getText() != null && !textFieldRate.getText().isEmpty()) {
                 currentProfessor.setRate(Double.parseDouble(textFieldRate.getText()));
@@ -492,24 +423,20 @@ public class MainSceneController implements Initializable {
         setEditableCells();
         taskClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("professorsWork"));
         periodClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("period"));
-        capacityClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("capacity"));
-        septemberClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("septemberCapacity"));
-        octoberClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("octoberCapacity"));
-        novemberClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("novemberCapacity"));
-        decemberClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("decemberCapacity"));
-        januaryClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("januaryCapacity"));
-        firstSemClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("firstSemester"));
-        februaryClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("februaryCapacity"));
-        marchClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("marchCapacity"));
-        aprilClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("aprilCapacity"));
-        mayClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("mayCapacity"));
-        juneClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("juneCapacity"));
-        julyClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("julyCapacity"));
-        augustClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("augustCapacity"));
-        secondSemClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("secondSemester"));
-        allYearClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("allYear"));
+        for (int i = 0; i < 16; i++) {
+            final int columnIndex = i;
+            listOfColumns.get(i).setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<Task, Double>, ObservableValue<Double>>() {
+
+                @Override
+                public ObservableValue<Double> call(TreeTableColumn.CellDataFeatures<Task, Double> param) {
+                    return new ReadOnlyObjectWrapper<>(param.getValue().getValue().getCapacities().get(columnIndex));
+                }
+
+            });
+        }
         treeTableView.setRoot(dummyRoot);
         treeTableView.setShowRoot(false);
+        
     }
 
     public void setEditableCells() { //РјРµС‚РѕРґ РїРѕ РѕР±СЂР°Р±РѕС‚РєРµ РёР·РјРµРЅРµРЅРёСЏ РІ СЏС‡РµР№РєРµ
@@ -533,116 +460,17 @@ public class MainSceneController implements Initializable {
                         return new EditingCell(MainSceneController.this);
                     }
                 };
+        for (int i = 0; i < listOfColumns.size(); i++) {
+            final int index = i;
+            listOfColumns.get(i).setCellFactory(cellFactory);
+            listOfColumns.get(i).setOnEditCommit(new EventHandler<CellEditEvent<Task, Double>>() {
 
-        capacityClmn.setCellFactory(cellFactory);
-        capacityClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setCapacity(t.getNewValue());
-        });
-
-        septemberClmn.setCellFactory(cellFactory);
-        septemberClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setSeptemberCapacity(t.getNewValue());
-        });
-
-        octoberClmn.setCellFactory(cellFactory);
-        octoberClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setOctoberCapacity(t.getNewValue());
-        });
-
-        novemberClmn.setCellFactory(cellFactory);
-        novemberClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setNovemberCapacity(t.getNewValue());
-        });
-
-        decemberClmn.setCellFactory(cellFactory);
-        decemberClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setDecemberCapacity(t.getNewValue());
-        });
-
-        januaryClmn.setCellFactory(cellFactory);
-        januaryClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setJanuaryCapacity(t.getNewValue());
-        });
-
-        firstSemClmn.setCellFactory(cellFactory);
-        firstSemClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setFirstSemester(t.getNewValue());
-        });
-
-        februaryClmn.setCellFactory(cellFactory);
-        februaryClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setFebruaryCapacity(t.getNewValue());
-        });
-
-        marchClmn.setCellFactory(cellFactory);
-        marchClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setMarchCapacity(t.getNewValue());
-        });
-
-        aprilClmn.setCellFactory(cellFactory);
-        aprilClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setAprilCapacity(t.getNewValue());
-        });
-
-        mayClmn.setCellFactory(cellFactory);
-        juneClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setMayCapacity(t.getNewValue());
-        });
-
-        juneClmn.setCellFactory(cellFactory);
-        juneClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setJuneCapacity(t.getNewValue());
-        });
-
-        julyClmn.setCellFactory(cellFactory);
-        julyClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setJulyCapacity(t.getNewValue());
-        });
-
-        augustClmn.setCellFactory(cellFactory);
-        augustClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setAugustCapacity(t.getNewValue());
-        });
-
-        secondSemClmn.setCellFactory(cellFactory);
-        secondSemClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setSecondSemester(t.getNewValue());
-        });
-
-        allYearClmn.setCellFactory(cellFactory);
-        allYearClmn.setOnEditCommit((CellEditEvent<Task, Double> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setAllYear(t.getNewValue());
-        });
-
-        Callback<TreeTableColumn<Task, Boolean>, TreeTableCell<Task, Boolean>> cellBoolFactory
-                = new Callback<TreeTableColumn<Task, Boolean>, TreeTableCell<Task, Boolean>>() {
-
-                    @Override
-                    public TreeTableCell call(TreeTableColumn p) {
-                        return new EditingCell(MainSceneController.this);
-                    }
-                };
-        checkClmn.setCellFactory(cellBoolFactory);
-        checkClmn.setOnEditCommit((CellEditEvent<Task, Boolean> t) -> {
-            Task task = t.getRowValue().getValue();
-            task.setCompleteWork(t.getNewValue());
-        });
+                public void handle(CellEditEvent<Task, Double> t) {
+                    Task task = t.getRowValue().getValue();
+                    task.getCapacities().set(index, t.getNewValue());
+                }
+            });
+        }
     }
 
     private void changeProfessor() {
@@ -650,6 +478,7 @@ public class MainSceneController implements Initializable {
         recountWork();
         textFieldRate.setText("");
         textLabelsInitialize();
+
     }
 
     private class ProfessorsListCell extends ListCell<Professor> {

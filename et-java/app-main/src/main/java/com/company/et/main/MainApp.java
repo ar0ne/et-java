@@ -31,10 +31,6 @@ package com.company.et.main;
 //
 //}
 
-
-import com.company.et.domain.Professor;
-import com.company.et.domain.Task;
-
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;

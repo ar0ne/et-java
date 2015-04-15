@@ -10,22 +10,17 @@
        
       <MenuBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="1368.0">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="Файл">
             <items>
-                  <MenuItem fx:id="menuBarFileOpen" mnemonicParsing="false" onAction="#fileOpen" text="Open" />
-                  <MenuItem fx:id="menuBarFileSave" mnemonicParsing="false" onAction="#fileSave" text="Save" />
-                  <MenuItem fx:id="menuBarFileSaveAs" mnemonicParsing="false" onAction="#fileSaveAs" text="Save As" />
-              <MenuItem fx:id="menuBarFileExit" mnemonicParsing="false" onAction="#fileExit" text="Exit" />
+                  <MenuItem fx:id="menuBarFileOpen" mnemonicParsing="false" onAction="#fileOpen" text="Открыть" />
+                  <MenuItem fx:id="menuBarFileSave" mnemonicParsing="false" onAction="#fileSave" text="Сохранить" />
+                  <MenuItem fx:id="menuBarFileSaveAs" mnemonicParsing="false" onAction="#fileSaveAs" text="Сохранить как..." />
+              <MenuItem fx:id="menuBarFileExit" mnemonicParsing="false" onAction="#fileExit" text="Выход" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" onAction="#generateAllYearReport" text="Генерация">
             <items>
-              <MenuItem mnemonicParsing="false" text="Settings" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="menuBarGenerateForAllYear" mnemonicParsing="false" text="Отчёт за год" />
             </items>
           </Menu>
         </menus>
@@ -52,24 +47,7 @@
       <TreeTableView fx:id="treeTableView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="569.0" prefWidth="1424.0" tableMenuButtonVisible="true">
         <columns>
           <TreeTableColumn id="taskClmn" fx:id="taskClmn" prefWidth="180.0" sortable="false" text="Работа преподавателя" />
-          <TreeTableColumn id="periodClmn" fx:id="periodClmn" minWidth="0.0" prefWidth="156.0" sortable="false" text="Срок" />
-            <TreeTableColumn id="volumeClmn" fx:id="capacityClmn" prefWidth="58.0" sortable="false" text="Объем" />
-            <TreeTableColumn id="septemberClmn" fx:id="septemberClmn" prefWidth="78.0" sortable="false" text="Сентябрь" />
-            <TreeTableColumn id="octoberClmn" fx:id="octoberClmn" prefWidth="69.0" sortable="false" text="Октябрь" />
-            <TreeTableColumn id="novemberClmn" fx:id="novemberClmn" prefWidth="61.0" sortable="false" text="Ноябрь" />
-            <TreeTableColumn id="decemberClmn" fx:id="decemberClmn" prefWidth="75.0" sortable="false" text="Декабрь" />
-            <TreeTableColumn id="januaryClmn" fx:id="januaryClmn" prefWidth="60.0" sortable="false" text="Январь" />
-            <TreeTableColumn id="firstSemClmn" fx:id="firstSemClmn" prefWidth="48.0" sortable="false" text="1 сем" />
-            <TreeTableColumn id="februaryClmn" fx:id="februaryClmn" prefWidth="72.0" sortable="false" text="Февраль" />
-            <TreeTableColumn id="marchClmn" fx:id="marchClmn" prefWidth="48.0" sortable="false" text="Март" />
-            <TreeTableColumn id="aprilClmn" fx:id="aprilClmn" prefWidth="63.0" sortable="false" text="Апрель" />
-            <TreeTableColumn id="mayClmn" fx:id="mayClmn" prefWidth="46.0" sortable="false" text="Май" />
-            <TreeTableColumn id="juneClmn" fx:id="juneClmn" prefWidth="55.0" sortable="false" text="Июнь" />
-            <TreeTableColumn id="julyClmn" fx:id="julyClmn" prefWidth="55.0" sortable="false" text="Июль" />
-            <TreeTableColumn id="augustClmn" fx:id="augustClmn" prefWidth="59.0" sortable="false" text="Август" />
-            <TreeTableColumn id="secondSemClmn" fx:id="secondSemClmn" prefWidth="47.0" sortable="false" text="2 сем" />
-            <TreeTableColumn id="allYearClmn" fx:id="allYearClmn" prefWidth="76.0" sortable="false" text="Весь год" />
-            <TreeTableColumn id="checkClmn" fx:id="checkClmn" prefWidth="84.0" sortable="false" text="Проверка" />
+          <TreeTableColumn id="periodClmn" fx:id="periodClmn" minWidth="0.0" prefWidth="126.0" sortable="false" text="Срок" />
         </columns>
       </TreeTableView>
       
