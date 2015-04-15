@@ -206,6 +206,9 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void generateAllYearReport(ActionEvent event) throws IOException {
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("EXCEL", "*.xls")
+        );
         final String extentionString = ".xls";
         File file = fc.showSaveDialog(null);
         if (file != null) {
