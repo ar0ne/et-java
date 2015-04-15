@@ -2,18 +2,22 @@
   "fio" : "Профессор 1",
   "tasks" : [ [ {
     "professorsWork" : "Учебная",
+    "period" : "dsfa",
     "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   }, {
     "professorsWork" : "SomeWork",
+    "period" : "dsfa",
     "capacities" : [ 0.0, 70.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ], [ {
     "professorsWork" : "ololo",
+    "period" : "dsfa",
     "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ], [ {
     "professorsWork" : "SomeWork",
+    "period" : "dsfa",
     "capacities" : [ 0.0, 50.0, 0.0, 0.0, 80.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ] ],
@@ -22,14 +26,17 @@
   "fio" : "Example",
   "tasks" : [ [ {
     "professorsWork" : "SomeWork",
+    "period" : "dsfa",
     "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ], [ {
     "professorsWork" : "SomeWork",
+    "period" : "dsfa",
     "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ], [ {
     "professorsWork" : "SomeWork",
+    "period" : "dsfa",
     "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ] ],

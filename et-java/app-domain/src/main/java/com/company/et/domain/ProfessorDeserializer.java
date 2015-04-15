@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.company.et.domain;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -13,9 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -54,17 +46,32 @@ public class ProfessorDeserializer extends JsonDeserializer<Professor> {
     }
     
     private void setFieldList(JsonNode childNodes, ObservableList<Task> tasks){
-        for (JsonNode childNode : childNodes) { 
-            Task child = new Task();
+        try {
+            for (JsonNode childNode : childNodes) { 
+                Task child = new Task();
 
-            child.setProfessorsWork     (childNode.get("professorsWork").asText());
-            child.setPeriod             (childNode.get("period").asText());
-            JsonNode capacities = childNode.get("capacities");
-            for (int i=0;i<capacities.size();i++) {
-                child.getCapacities().set(i,capacities.get(i).asDouble());
-            }  
-            child.setCompleteWork       (childNode.get("completeWork").asBoolean());
-            tasks.add(child);
+                if (childNode.get("professorsWork") != null) {
+                    child.setProfessorsWork(childNode.get("professorsWork").asText());
+                }
+                
+                if(childNode.get("period") != null) {
+                    child.setPeriod(childNode.get("period").asText());
+                }
+                
+                if(childNode.get("capacities") != null) {
+                    JsonNode capacities = childNode.get("capacities");
+                    for (int i = 0; i < capacities.size(); i++) {
+                        child.getCapacities().set(i, capacities.get(i).asDouble());
+                    }
+                }
+                
+                child.setCompleteWork(childNode.get("completeWork").asBoolean());
+                tasks.add(child);
+                   
+            }
+        } catch (Exception e ) {
+           System.out.println("Error: Something wrong with JSON file!");
+           e.printStackTrace();
         }
     }
     
