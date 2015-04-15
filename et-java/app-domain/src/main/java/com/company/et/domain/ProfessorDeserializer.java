@@ -58,7 +58,7 @@ public class ProfessorDeserializer extends JsonDeserializer<Professor> {
             Task child = new Task();
 
             child.setProfessorsWork     (childNode.get("professorsWork").asText());
- //           child.setPeriod             (childNode.get("period").asText());
+            child.setPeriod             (childNode.get("period").asText());
             JsonNode capacities = childNode.get("capacities");
             for (int i=0;i<capacities.size();i++) {
                 child.getCapacities().set(i,capacities.get(i).asDouble());

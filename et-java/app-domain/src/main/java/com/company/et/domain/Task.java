@@ -15,7 +15,7 @@ public class Task {
 
     public Task() {
         professorsWork = "SomeWork";
-        period = " ";
+        period = "dsfa";
         capacities = new ArrayList<>(Collections.nCopies(16, 0.0));
         completeWork = false;
     }
@@ -55,6 +55,10 @@ public class Task {
 
     public ArrayList<Double> getCapacities() {
         return capacities;
+    }
+
+    public String getPeriod() {
+        return period;
     }
 
     public void setPeriod(String period) {
