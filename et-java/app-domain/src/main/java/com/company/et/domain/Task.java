@@ -15,7 +15,7 @@ public class Task {
 
     public Task() {
         professorsWork = "SomeWork";
-        period = "dsfa";
+        period = "";
         capacities = new ArrayList<>(Collections.nCopies(16, 0.0));
         completeWork = false;
     }

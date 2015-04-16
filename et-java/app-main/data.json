@@ -2,23 +2,23 @@
   "fio" : "Профессор 1",
   "tasks" : [ [ {
     "professorsWork" : "Учебная",
-    "period" : "dsfa",
-    "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+    "period" : "Сен-Дек",
+    "capacities" : [ 50.0, 70.0, 0.0, 80.0, 0.0, 0.0, 150.0, 0.0, 0.0, 0.0, 30.0, 0.0, 0.0, 0.0, 30.0, 180.0 ],
     "completeWork" : false
   }, {
     "professorsWork" : "SomeWork",
-    "period" : "dsfa",
-    "capacities" : [ 0.0, 70.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
-    "completeWork" : false
+    "period" : "",
+    "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 12.0, 0.0, 12.0, 12.0 ],
+    "completeWork" : true
   } ], [ {
-    "professorsWork" : "ololo",
-    "period" : "dsfa",
-    "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+    "professorsWork" : "SomeWork",
+    "period" : "",
+    "capacities" : [ 0.0, 13.0, 0.0, 0.0, 0.0, 80.0, 93.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 93.0 ],
     "completeWork" : false
   } ], [ {
     "professorsWork" : "SomeWork",
-    "period" : "dsfa",
-    "capacities" : [ 0.0, 50.0, 0.0, 0.0, 80.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+    "period" : "",
+    "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ] ],
   "rate" : 1.0
@@ -26,17 +26,17 @@
   "fio" : "Example",
   "tasks" : [ [ {
     "professorsWork" : "SomeWork",
-    "period" : "dsfa",
+    "period" : "",
     "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ], [ {
     "professorsWork" : "SomeWork",
-    "period" : "dsfa",
+    "period" : "",
     "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ], [ {
     "professorsWork" : "SomeWork",
-    "period" : "dsfa",
+    "period" : "",
     "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ] ],

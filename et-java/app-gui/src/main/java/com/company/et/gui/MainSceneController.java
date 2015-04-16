@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.channels.AsynchronousServerSocketChannel;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,7 +77,7 @@ public class MainSceneController implements Initializable {
     private ArrayList<TreeItem<Task>> parts = new ArrayList<>();
     private Task copiedTask = null;
     private final ObservableList<Task> tasksList = FXCollections.observableArrayList();
-    private final FileChooser fc = new FileChooser();
+    private final FileChooser fileChooserForJson = new FileChooser();
     private int hours;
     public static int countOfHours = 1548;
     @FXML
@@ -112,12 +111,12 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void fileOpen(ActionEvent event) throws IOException, ParseException {
-        fc.getExtensionFilters().addAll(
+        fileChooserForJson.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json")
         );
-        fc.setTitle("Выберите файл");
+        fileChooserForJson.setTitle("Выберите файл");
         try {
-            File file = fc.showOpenDialog(null);
+            File file = fileChooserForJson.showOpenDialog(null);
             String json = JsonService.readFromFile(file);
             Professor[] profs = JsonService.jsonToObjectProfessorArray(json);
             JsonService.setFilename(file.getName());
@@ -151,7 +150,7 @@ public class MainSceneController implements Initializable {
     @FXML
     private void fileSaveAs(ActionEvent event) {
         //сохранение в новый файл (диалоговое окно)
-        File file = fc.showSaveDialog(null);
+        File file = fileChooserForJson.showSaveDialog(null);
         if (file != null) {
             try {
                 // add .json to filename
@@ -206,11 +205,12 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void generateAllYearReport(ActionEvent event) throws IOException {
-        fc.getExtensionFilters().addAll(
+        FileChooser fileChooserForXls = new FileChooser();
+        fileChooserForXls.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("EXCEL", "*.xls")
         );
         final String extentionString = ".xls";
-        File file = fc.showSaveDialog(null);
+        File file = fileChooserForXls.showSaveDialog(null);
         if (file != null) {
             try {
                 // add .xlsx to filename
@@ -220,7 +220,8 @@ public class MainSceneController implements Initializable {
                     filename += ".xls";
                 }
                 XlsService.setFilename(filename);
-                XlsService.generateFile(currentProfessor);
+
+                XlsService.generateFile(root, currentProfessor);
             } catch (FileNotFoundException ex) {
                 Dialogs.create()
                         .title("Ошибка")
@@ -272,25 +273,10 @@ public class MainSceneController implements Initializable {
 
     public void initData() throws IOException, ParseException {
         listOfColumns = new ArrayList<>();
-        
-        listOfColumns.add(new TreeTableColumn<>("Объём"));
-        listOfColumns.add(new TreeTableColumn<>("Сентябрь"));
-        listOfColumns.add(new TreeTableColumn<>("Октябрь"));
-        listOfColumns.add(new TreeTableColumn<>("Ноябрь"));
-        listOfColumns.add(new TreeTableColumn<>("Декабрь"));
-        listOfColumns.add(new TreeTableColumn<>("Январь"));
-        listOfColumns.add(new TreeTableColumn<>("1сем"));
-        listOfColumns.add(new TreeTableColumn<>("Фефраль"));
-        listOfColumns.add(new TreeTableColumn<>("Март"));
-        listOfColumns.add(new TreeTableColumn<>("Апрель"));
-        listOfColumns.add(new TreeTableColumn<>("Май"));
-        listOfColumns.add(new TreeTableColumn<>("Июнь"));
-        listOfColumns.add(new TreeTableColumn<>("Июль"));
-        listOfColumns.add(new TreeTableColumn<>("Август"));
-        listOfColumns.add(new TreeTableColumn<>("2сем"));
-        listOfColumns.add(new TreeTableColumn<>("Весь год"));
-        
-        
+        for (int i = 0; i < 16; i++) {
+            listOfColumns.add(new TreeTableColumn<>(DoubleCapacities.getDoubleCapacitiesByIndex(i).toString()));
+        }
+
         currentProfessor = new Professor();
         currentProfessor.setFio("Профессор 1");
         currentProfessor.setRate(1.0);
@@ -354,9 +340,25 @@ public class MainSceneController implements Initializable {
         ArrayList<Double> sumCapacities;
 
         for (TreeItem<Task> part : parts) {
-            sumCapacities = new ArrayList<>(Collections.nCopies(16,0.0));
+            sumCapacities = new ArrayList<>(Collections.nCopies(16, 0.0));
 
             for (TreeItem<Task> children : part.getChildren()) {
+
+                double allCapacityForSem = 0.0;
+                for (int i = 1; i < 6; i++) {
+                    allCapacityForSem += children.getValue().getCapacities().get(i);
+                }
+                children.getValue().getCapacities().set(6, allCapacityForSem);
+
+                allCapacityForSem = 0.0;
+                for (int i = 7; i < 14; i++) {
+                    allCapacityForSem += children.getValue().getCapacities().get(i);
+                }
+                children.getValue().getCapacities().set(14, allCapacityForSem);
+
+                children.getValue().getCapacities().set(15, children.getValue().getCapacities().get(6)
+                        + children.getValue().getCapacities().get(14));
+
                 for (int i = 0; i < children.getValue().getCapacities().size(); i++) {
                     sumCapacities.set(i, sumCapacities.get(i) + children.getValue().getCapacities().get(i));
                 }
@@ -367,7 +369,7 @@ public class MainSceneController implements Initializable {
             }
         }
 
-        sumCapacities = new ArrayList<>(Collections.nCopies(16,0.0));
+        sumCapacities = new ArrayList<>(Collections.nCopies(16, 0.0));
         for (TreeItem<Task> part : parts) {
             for (int i = 0; i < sumCapacities.size(); i++) {
                 sumCapacities.set(i, sumCapacities.get(i) + part.getValue().getCapacities().get(i));
@@ -439,7 +441,7 @@ public class MainSceneController implements Initializable {
         }
         treeTableView.setRoot(dummyRoot);
         treeTableView.setShowRoot(false);
-        
+
     }
 
     public void setEditableCells() { //РјРµС‚РѕРґ РїРѕ РѕР±СЂР°Р±РѕС‚РєРµ РёР·РјРµРЅРµРЅРёСЏ РІ СЏС‡РµР№РєРµ
