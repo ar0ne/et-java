@@ -13,8 +13,8 @@
           <Menu mnemonicParsing="false" text="Файл">
             <items>
                   <MenuItem fx:id="menuBarFileOpen" mnemonicParsing="false" onAction="#fileOpen" text="Открыть" />
-                  <MenuItem fx:id="menuBarFileSave" mnemonicParsing="false" onAction="#fileSave" text="Сохранить" />
-                  <MenuItem fx:id="menuBarFileSaveAs" mnemonicParsing="false" onAction="#fileSaveAs" text="Сохранить как..." />
+                  <MenuItem fx:id="menuBarFileSave" mnemonicParsing="false" onAction="#fileSaveHandler" text="Сохранить" />
+                  <MenuItem fx:id="menuBarFileSaveAs" mnemonicParsing="false" onAction="#fileSaveAsHandler" text="Сохранить как..." />
               <MenuItem fx:id="menuBarFileExit" mnemonicParsing="false" onAction="#fileExit" text="Выход" />
             </items>
           </Menu>
@@ -36,7 +36,7 @@
                   <Insets left="30.0" />
                </padding>
             </Label>
-            <TextField fx:id="textFieldRate" prefHeight="25.0" prefWidth="54.0" />
+            <TextField fx:id="textFieldRate"  prefHeight="25.0" prefWidth="54.0" />
             <Label fx:id="labelFileName" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="387.0" text="asdfasd" textAlignment="RIGHT">
                <padding>
                   <Insets left="200.0" />
