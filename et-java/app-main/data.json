@@ -1,30 +1,35 @@
 [ {
   "fio" : "Профессор 1",
   "tasks" : [ [ {
-    "professorsWork" : "Учебная",
-    "period" : "Сен-Дек",
-    "capacities" : [ 50.0, 70.0, 0.0, 80.0, 0.0, 0.0, 150.0, 0.0, 0.0, 0.0, 30.0, 0.0, 0.0, 0.0, 30.0, 180.0 ],
-    "completeWork" : false
-  }, {
     "professorsWork" : "SomeWork",
     "period" : "",
-    "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 12.0, 0.0, 12.0, 12.0 ],
+    "capacities" : [ 0.0, 0.0, 0.0, 80.0, 0.0, 0.0, 80.0, 0.0, 0.0, 0.0, 45.0, 0.0, 0.0, 0.0, 45.0, 125.0 ],
     "completeWork" : true
   } ], [ {
     "professorsWork" : "SomeWork",
     "period" : "",
-    "capacities" : [ 0.0, 13.0, 0.0, 0.0, 0.0, 80.0, 93.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 93.0 ],
+    "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 15.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ], [ {
     "professorsWork" : "SomeWork",
     "period" : "",
-    "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+    "capacities" : [ 0.0, 0.0, 0.0, 70.0, 0.0, 0.0, 0.0, 0.0, 77.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+    "completeWork" : false
+  } ], [ {
+    "professorsWork" : "SomeWork",
+    "period" : "",
+    "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 456.0, 55555.0, 0.0, 0.0, 0.0, 0.0 ],
     "completeWork" : false
   } ] ],
   "rate" : 1.0
 }, {
   "fio" : "Example",
   "tasks" : [ [ {
+    "professorsWork" : "SomeWork",
+    "period" : "",
+    "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+    "completeWork" : false
+  } ], [ {
     "professorsWork" : "SomeWork",
     "period" : "",
     "capacities" : [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],

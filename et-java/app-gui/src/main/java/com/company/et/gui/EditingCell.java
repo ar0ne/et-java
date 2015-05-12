@@ -4,15 +4,11 @@
  * and open the template in the editor.
  */
 package com.company.et.gui;
-
-import com.company.et.domain.Professor;
 import com.company.et.domain.Task;
 import static com.company.et.gui.MainSceneController.NAUCHNAYA;
-import static com.company.et.gui.MainSceneController.UCHEBNO_METOD;
+import static com.company.et.gui.MainSceneController.METOD;
 import java.text.NumberFormat;
-import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -29,104 +25,90 @@ import org.controlsfx.dialog.Dialogs;
  */
 class EditingCell extends TreeTableCell<Task, Double> {
 
-    private ContextMenu addMenu = new ContextMenu();
-    private ContextMenu deleteMenu = new ContextMenu();
+    private final ContextMenu addMenu = new ContextMenu();
+    private final ContextMenu deleteMenu = new ContextMenu();
     private TextField textField;
-    private MenuItem addMenuItem = new MenuItem("Добавить работу");
-    private MenuItem deleteMenuItem = new MenuItem("Удалить работу");
-    private MenuItem copyMenuItem = new MenuItem("Скопировать работу");
-    private MenuItem pasteMenuItem = new MenuItem("Вставить работу");
-    private MenuItem markComplMenuItem = new MenuItem("Отметить как выполнена");
-    private MenuItem markUnComplItem = new MenuItem("Отменить отметку о выполнении");
+    private final MenuItem addMenuItem;
+    private final MenuItem deleteMenuItem;
+    private final MenuItem copyMenuItem;
+    private final MenuItem pasteMenuItem;
+    private final MenuItem markComplMenuItem;
+    private final MenuItem markUnComplItem;
     private MainSceneController mainSceneController;
-    private NumberFormat numberFormat = NumberFormat.getNumberInstance(); 
+    private final NumberFormat numberFormat; 
     public EditingCell(MainSceneController mainSC) {
+        this.numberFormat = NumberFormat.getNumberInstance();
+        this.markUnComplItem = new MenuItem("Отменить отметку о выполнении");
+        this.markComplMenuItem = new MenuItem("Отметить как выполнена");
+        this.pasteMenuItem = new MenuItem("Вставить работу");
+        this.copyMenuItem = new MenuItem("Скопировать работу");
+        this.deleteMenuItem = new MenuItem("Удалить работу");
+        this.addMenuItem = new MenuItem("Добавить работу");
         numberFormat.setMaximumFractionDigits(3);
         this.mainSceneController = mainSC;
         addMenu.getItems().add(addMenuItem);
-        addMenuItem.setOnAction(new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                TreeItem<Task> newEmployee = new TreeItem<Task>(new Task());
-                getTreeTableRow().getTreeItem().getChildren().add(newEmployee);
-
-                if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(UCHEBNO_METOD)) {
-                    mainSceneController.getCurrentProfessor().getTasks().get(0).add(newEmployee.getValue());
-                } else if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
-                    mainSceneController.getCurrentProfessor().getTasks().get(1).add(newEmployee.getValue());
-                } else {
-                    mainSceneController.getCurrentProfessor().getTasks().get(2).add(newEmployee.getValue());
-                }
+        addMenuItem.setOnAction((ActionEvent event) -> {
+            TreeItem<Task> newEmployee = new TreeItem<>(new Task());
+            getTreeTableRow().getTreeItem().getChildren().add(newEmployee);
+            
+            if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(METOD)) {
+                mainSceneController.getCurrentProfessor().getTasks().get(0).add(newEmployee.getValue());
+            } else if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
+                mainSceneController.getCurrentProfessor().getTasks().get(1).add(newEmployee.getValue());
+            } else {
+                mainSceneController.getCurrentProfessor().getTasks().get(2).add(newEmployee.getValue());
             }
         });
 
         addMenu.getItems().add(pasteMenuItem);
-        pasteMenuItem.setOnAction(new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                TreeItem<Task> newEmployee = new TreeItem<>(mainSceneController.getCopiedTask());
-                getTreeTableRow().getTreeItem().getChildren().add(newEmployee);
-
-                if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(UCHEBNO_METOD)) {
-                    mainSceneController.getCurrentProfessor().getTasks().get(0).add(newEmployee.getValue());
-                } else if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
-                    mainSceneController.getCurrentProfessor().getTasks().get(1).add(newEmployee.getValue());
-                } else {
-                    mainSceneController.getCurrentProfessor().getTasks().get(2).add(newEmployee.getValue());
-                }
+        pasteMenuItem.setOnAction((ActionEvent event) -> {
+            TreeItem<Task> newEmployee = new TreeItem<>(mainSceneController.getCopiedTask());
+            getTreeTableRow().getTreeItem().getChildren().add(newEmployee);
+            
+            if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(METOD)) {
+                mainSceneController.getCurrentProfessor().getTasks().get(0).add(newEmployee.getValue());
+            } else if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
+                mainSceneController.getCurrentProfessor().getTasks().get(1).add(newEmployee.getValue());
+            } else {
+                mainSceneController.getCurrentProfessor().getTasks().get(2).add(newEmployee.getValue());
             }
         });
 
         deleteMenu.getItems().add(deleteMenuItem);
-        deleteMenuItem.setOnAction(new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                TreeItem<Task> deletedTask = getTreeTableRow().getTreeItem();
-                if (getTreeTableRow().getTreeItem().getParent().getChildren().size() > 1) {
-                    getTreeTableRow().getTreeItem().getParent().getChildren().remove(deletedTask);
-                    for (ObservableList<Task> task : mainSceneController.getCurrentProfessor().getTasks()) {
-                        if (task.remove(deletedTask)) {
-                            break;
-                        }
-                    }
-                } else {
-                    Dialogs.create()
-                            .title("Ошибка")
-                            .masthead("Невозможно удалить работу")
-                            .message("В разделе " + getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork()
-                                    + " должно быть хоть одна работа")
-                            .showError();
-                }
+        deleteMenuItem.setOnAction((ActionEvent event) -> {
+            TreeItem<Task> deletedTask = getTreeTableRow().getTreeItem();
+            if (getTreeTableRow().getTreeItem().getParent().getChildren().size() > 1) {
+                getTreeTableRow().getTreeItem().getParent().getChildren().remove(deletedTask);
+            } else {
+                Dialogs.create()
+                        .title("Ошибка")
+                        .masthead("Невозможно удалить работу")
+                        .message("В разделе " + getTreeTableRow().getTreeItem().getParent().getValue().getProfessorsWork()
+                                + " должно быть хоть одна работа")
+                        .showError();
             }
         });
 
         deleteMenu.getItems().add(copyMenuItem);
-        copyMenuItem.setOnAction(new EventHandler() {
-
-            @Override
-            public void handle(Event event) {
-                mainSceneController.setCopiedTask(new Task(getTreeTableRow().getTreeItem().getValue()));
-            }
+        copyMenuItem.setOnAction((ActionEvent event) -> {
+            mainSceneController.setCopiedTask(new Task(getTreeTableRow().getTreeItem().getValue()));
         });
         deleteMenu.getItems().add(markComplMenuItem);
-        markComplMenuItem.setOnAction(new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                getTreeTableRow().setStyle("-fx-background-color:lightgreen");
-                getTreeTableRow().getItem().setCompleteWork(true);
-            }
+        markComplMenuItem.setOnAction((ActionEvent event) -> {
+            getTreeTableRow().getItem().setCompleteWork(true);
+            mainSC.recountWork();
+            getTreeTableRow().setStyle("-fx-background-color:lightgreen");
         });
         deleteMenu.getItems().add(markUnComplItem);
-        markUnComplItem.setOnAction(new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                getTreeTableRow().setStyle("");
-                getTreeTableRow().getItem().setCompleteWork(true);
-            }
+        markUnComplItem.setOnAction((ActionEvent event) -> {
+            getTreeTableRow().setStyle("");
+            getTreeTableRow().getItem().setCompleteWork(false);
+            mainSC.recountWork();
         });
-//        markAllFields(mainSC);
-        if ( getTreeTableRow() != null && getTreeTableRow().getItem().getCompleteWork())
+        if ( getTreeTableRow() != null && getTreeTableRow().getItem().getCompleteWork()) {
             getTreeTableRow().setStyle("-fx-background-color:lightgreen");
+        }
+            
     }
 
     @Override
@@ -226,11 +208,4 @@ class EditingCell extends TreeTableCell<Task, Double> {
     private String getString() {
         return getItem() == null ? "" : getItem().toString();
     }
-
-//    public void markAllFields(MainSceneController mainSC) {
-//       for(TreeItem<Task> mainPart : mainSC.getParts())
-//           for (TreeItem<Task> subPart : mainPart.getChildren())
-//               if (subPart.getValue().getCompleteWork())
-//                   subPart.
-//    }
 }

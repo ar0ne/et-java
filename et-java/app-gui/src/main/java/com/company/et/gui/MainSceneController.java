@@ -25,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,13 +35,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
@@ -65,10 +62,15 @@ import org.controlsfx.dialog.Dialogs;
  */
 public class MainSceneController implements Initializable {
 
-    public static String UCHEBNO_METOD = "Учебно-методическая";
-    public static String NAUCHNAYA = "Научная";
-    public static String OBSHESTVENNAYA = "Общественная";
-    ArrayList<TreeTableColumn<Task, Double>> listOfColumns;
+    public static final String METOD = "Методическая";
+    public static final String UCHEBNAYA = "Учебная";
+    public static final String NAUCHNAYA = "Научная";
+    public static final String OBSHESTVENNAYA = "Общественная";
+    public static final String RESERVE = "Резерв";
+    public static final String OBSHEE = "Общее";
+    public static final String ADD_NEW_PROFESSOR = "Добавление нового преподавателя";
+    
+    private ArrayList<TreeTableColumn<Task, Double>> listOfColumns;
     private Professor currentProfessor = new Professor();
     private final ObservableList<Professor> professorsList = FXCollections.observableArrayList();
     private TreeItem<Task> dummyRoot;
@@ -76,26 +78,11 @@ public class MainSceneController implements Initializable {
     private TreeItem<Task> root;
     private ArrayList<TreeItem<Task>> parts = new ArrayList<>();
     private Task copiedTask = null;
-    private final ObservableList<Task> tasksList = FXCollections.observableArrayList();
     private final FileChooser fileChooserForJson = new FileChooser();
     private int hours;
     public static int countOfHours = 1548;
     @FXML
-    private MenuItem menuBarFileOpen;
-    @FXML
-    private MenuItem menuBarFileSave;
-    @FXML
-    private MenuItem menuBarFileSaveAs;
-    @FXML
-    private MenuItem menuBarFileExit;
-    @FXML
-    private MenuItem menuBarGenerateForAllYear;
-    @FXML
     private ComboBox<Professor> comboBoxProfessorsList;
-    @FXML
-    private Button newProfessor;
-    @FXML
-    private Button removeProfessor;
     @FXML
     private TextField textFieldRate;
     @FXML
@@ -124,9 +111,7 @@ public class MainSceneController implements Initializable {
             professorsList.clear(); // clear list before add profs from json
             professorsList.addAll(Arrays.asList(profs));
             currentProfessor = profs[0];
-            comboBoxInitialize();
-            initTableData();
-            recountWork();
+            initializeGUI();
         } catch (IOException | ParseException e) {
             Dialogs.create()
                     .title("Ошибка")
@@ -241,9 +226,7 @@ public class MainSceneController implements Initializable {
             Logger.getLogger(MainSceneController.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
-        textLabelsInitialize();
-        comboBoxInitialize();
-        recountWork();
+        initializeGUI();
 
     }
 
@@ -280,7 +263,6 @@ public class MainSceneController implements Initializable {
         currentProfessor = new Professor();
         currentProfessor.setFio("Профессор 1");
         currentProfessor.setRate(1.0);
-        currentProfessor.getTasks().get(0).add(new Task("Учебная", "", false));
         for (int i = 0; i < currentProfessor.getTasks().size(); i++) {
             currentProfessor.getTasks().get(i).add(new Task());
         }
@@ -292,7 +274,6 @@ public class MainSceneController implements Initializable {
         }
         professorsList.add(secondProfessor);
         treeTableView.getColumns().addAll(listOfColumns);
-        initTableData();
 
     }
 
@@ -300,11 +281,14 @@ public class MainSceneController implements Initializable {
         hours = countOfHours;
 
         Task all = new Task();
-        all.setProfessorsWork("Общее");
+        all.setProfessorsWork(OBSHEE);
 
         Task task = new Task();
-        task.setProfessorsWork(UCHEBNO_METOD);
+        task.setProfessorsWork(METOD);
 
+        Task task4 = new Task();
+        task4.setProfessorsWork(UCHEBNAYA);
+        
         Task task2 = new Task();
         task2.setProfessorsWork(NAUCHNAYA);
 
@@ -312,13 +296,15 @@ public class MainSceneController implements Initializable {
         task3.setProfessorsWork(OBSHESTVENNAYA);
 
         Task reserveTask = new Task();
-        reserveTask.setProfessorsWork("Резерв");
+        reserveTask.setProfessorsWork(RESERVE);
 
         root = new TreeItem<>(all);
         parts.clear();
         parts.add(new TreeItem<>(task));
+        parts.add(new TreeItem<>(task4));
         parts.add(new TreeItem<>(task2));
         parts.add(new TreeItem<>(task3));
+        
 
         for (TreeItem<Task> part : parts) {
             part.setExpanded(true);
@@ -344,24 +330,32 @@ public class MainSceneController implements Initializable {
 
             for (TreeItem<Task> children : part.getChildren()) {
 
-                double allCapacityForSem = 0.0;
-                for (int i = 1; i < 6; i++) {
-                    allCapacityForSem += children.getValue().getCapacities().get(i);
+                double allCapacityForSem = 0.0; 
+                if (children.getValue().getCompleteWork()) {
+                    for (int i = 1; i < 6; i++) {
+                        allCapacityForSem += children.getValue().getCapacities().get(i);
+                    }
+                    children.getValue().getCapacities().set(6, allCapacityForSem);
+
+                    allCapacityForSem = 0.0;
+                    for (int i = 7; i < 14; i++) {
+                        allCapacityForSem += children.getValue().getCapacities().get(i);
+                    }
+                    children.getValue().getCapacities().set(14, allCapacityForSem);
+
+                    children.getValue().getCapacities().set(15, children.getValue().getCapacities().get(6)
+                            + children.getValue().getCapacities().get(14));
                 }
-                children.getValue().getCapacities().set(6, allCapacityForSem);
+                else {
+                    children.getValue().getCapacities().set(6, 0.0);
+                    children.getValue().getCapacities().set(14, 0.0);
 
-                allCapacityForSem = 0.0;
-                for (int i = 7; i < 14; i++) {
-                    allCapacityForSem += children.getValue().getCapacities().get(i);
+                    children.getValue().getCapacities().set(15, 0.0);
                 }
-                children.getValue().getCapacities().set(14, allCapacityForSem);
-
-                children.getValue().getCapacities().set(15, children.getValue().getCapacities().get(6)
-                        + children.getValue().getCapacities().get(14));
-
                 for (int i = 0; i < children.getValue().getCapacities().size(); i++) {
                     sumCapacities.set(i, sumCapacities.get(i) + children.getValue().getCapacities().get(i));
                 }
+
             }
 
             for (int i = 0; i < sumCapacities.size(); i++) {
@@ -414,11 +408,10 @@ public class MainSceneController implements Initializable {
         comboBoxProfessorsList.setButtonCell(new ProfessorsListCell());
         comboBoxProfessorsList.setCellFactory((ListView<Professor> p) -> new ProfessorsListCell());
 
-        // Handle CheckBox event.
         comboBoxProfessorsList.setOnAction((event) -> {
             Professor selectedProfessor = comboBoxProfessorsList.getSelectionModel().getSelectedItem();
-            this.currentProfessor = selectedProfessor;
-            changeProfessor();
+            setCurrentProfessor(selectedProfessor);
+
         });
     }
 
@@ -430,14 +423,7 @@ public class MainSceneController implements Initializable {
         periodClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("period"));
         for (int i = 0; i < 16; i++) {
             final int columnIndex = i;
-            listOfColumns.get(i).setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<Task, Double>, ObservableValue<Double>>() {
-
-                @Override
-                public ObservableValue<Double> call(TreeTableColumn.CellDataFeatures<Task, Double> param) {
-                    return new ReadOnlyObjectWrapper<>(param.getValue().getValue().getCapacities().get(columnIndex));
-                }
-
-            });
+            listOfColumns.get(i).setCellValueFactory((TreeTableColumn.CellDataFeatures<Task, Double> param) -> new ReadOnlyObjectWrapper<>(param.getValue().getValue().getCapacities().get(columnIndex)));
         }
         treeTableView.setRoot(dummyRoot);
         treeTableView.setShowRoot(false);
@@ -468,22 +454,22 @@ public class MainSceneController implements Initializable {
         for (int i = 0; i < listOfColumns.size(); i++) {
             final int index = i;
             listOfColumns.get(i).setCellFactory(cellFactory);
-            listOfColumns.get(i).setOnEditCommit(new EventHandler<CellEditEvent<Task, Double>>() {
-
-                public void handle(CellEditEvent<Task, Double> t) {
-                    Task task = t.getRowValue().getValue();
-                    task.getCapacities().set(index, t.getNewValue());
-                }
-            });
+            listOfColumns.get(i).setOnEditCommit(new EventHandlerImpl(index));
         }
     }
 
-    private void changeProfessor() {
+    private void initializeGUI() {
         initTableData();
         recountWork();
-        textFieldRate.setText("");
         textLabelsInitialize();
+        comboBoxInitialize();
+    }
 
+    private void setCurrentProfessor(Professor selectedProfessor) {
+        this.currentProfessor = selectedProfessor;
+        initTableData();
+        recountWork();
+        textLabelsInitialize();
     }
 
     private class ProfessorsListCell extends ListCell<Professor> {
@@ -508,7 +494,7 @@ public class MainSceneController implements Initializable {
             GridPane page = (GridPane) loader.load();
 
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Добавление нового преподавателя");
+            dialogStage.setTitle(ADD_NEW_PROFESSOR);
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
@@ -523,6 +509,21 @@ public class MainSceneController implements Initializable {
 
         } catch (IOException e) {
             return false;
+        }
+    }
+
+    private static class EventHandlerImpl implements EventHandler<CellEditEvent<Task, Double>> {
+
+        private final int index;
+
+        public EventHandlerImpl(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void handle(CellEditEvent<Task, Double> t) {
+            Task task = t.getRowValue().getValue();
+            task.getCapacities().set(index, t.getNewValue());
         }
     }
 

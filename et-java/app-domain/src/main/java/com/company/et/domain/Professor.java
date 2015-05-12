@@ -26,15 +26,15 @@ public class Professor {
     }
     public Professor() {
         initTasks();
-        for(int i=0; i < tasks.size(); i++) {
-            Collections.copy(tasks.get(i), FXCollections.observableArrayList());
-        }
+        tasks.stream().forEach((task) -> {
+            Collections.copy(task, FXCollections.observableArrayList());
+        });
         fio="Example";
         rate = 1.0;
     }
-    public void initTasks() {
+    private void initTasks() {
         tasks = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             tasks.add(FXCollections.observableArrayList());
         }
     }
