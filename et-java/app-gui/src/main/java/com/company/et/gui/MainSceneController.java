@@ -69,14 +69,14 @@ public class MainSceneController implements Initializable {
     public static final String RESERVE = "Резерв";
     public static final String OBSHEE = "Общее";
     public static final String ADD_NEW_PROFESSOR = "Добавление нового преподавателя";
-    
+
     private ArrayList<TreeTableColumn<Task, Double>> listOfColumns;
     private Professor currentProfessor = new Professor();
     private final ObservableList<Professor> professorsList = FXCollections.observableArrayList();
     private TreeItem<Task> dummyRoot;
     private TreeItem<Task> reserve;
     private TreeItem<Task> root;
-    private ArrayList<TreeItem<Task>> parts = new ArrayList<>();
+    private ArrayList<ArrayList<Double>> partsWaiting = new ArrayList<>();
     private Task copiedTask = null;
     private final FileChooser fileChooserForJson = new FileChooser();
     private int hours;
@@ -108,7 +108,8 @@ public class MainSceneController implements Initializable {
             Professor[] profs = JsonService.jsonToObjectProfessorArray(json);
             JsonService.setFilename(file.getName());
             labelFileName.setText(JsonService.getFilename());
-            professorsList.clear(); // clear list before add profs from json
+            // clear list and add profs from json
+            professorsList.clear();
             professorsList.addAll(Arrays.asList(profs));
             currentProfessor = profs[0];
             initializeGUI();
@@ -197,22 +198,23 @@ public class MainSceneController implements Initializable {
         final String extentionString = ".xls";
         File file = fileChooserForXls.showSaveDialog(null);
         if (file != null) {
-            try {
-                // add .xlsx to filename
-                String filename = file.getName();
-                if (filename.length() <= extentionString.length()
-                        || !filename.substring(filename.length() - extentionString.length()).equals(extentionString)) {
-                    filename += ".xls";
-                }
-                XlsService.setFilename(filename);
-
-                XlsService.generateFile(root, currentProfessor);
-            } catch (FileNotFoundException ex) {
-                Dialogs.create()
-                        .title("Ошибка")
-                        .message("Ошибка генерации файла")
-                        .showError();
+            String filename = file.getName();
+            if (filename.length() <= extentionString.length()
+                    || !filename.substring(filename.length() - extentionString.length()).equals(extentionString)) {
+                filename += ".xls";
             }
+            XlsService.setFilename(filename);
+
+            ArrayList<TreeItem<Task>> roots = new ArrayList<>();
+            ArrayList<ArrayList<ArrayList<Double>>> allOfParts = new ArrayList<>();
+            int currentId = professorsList.indexOf(currentProfessor);
+            for (Professor professor : professorsList) {
+                setCurrentProfessor(professor);
+                roots.add(root);
+                allOfParts.add(new ArrayList<>(partsWaiting));
+            }
+            setCurrentProfessor(professorsList.get(currentId));
+            XlsService.generateFile(roots, allOfParts, professorsList);
         }
     }
 
@@ -246,12 +248,12 @@ public class MainSceneController implements Initializable {
         return root;
     }
 
-    public ArrayList<TreeItem<Task>> getParts() {
-        return parts;
+    public ArrayList<ArrayList<Double>> getPartsWaiting() {
+        return partsWaiting;
     }
 
-    public void setParts(ArrayList<TreeItem<Task>> parts) {
-        this.parts = parts;
+    public void setPartsWaiting(ArrayList<ArrayList<Double>> parts) {
+        this.partsWaiting = parts;
     }
 
     public void initData() throws IOException, ParseException {
@@ -288,7 +290,7 @@ public class MainSceneController implements Initializable {
 
         Task task4 = new Task();
         task4.setProfessorsWork(UCHEBNAYA);
-        
+
         Task task2 = new Task();
         task2.setProfessorsWork(NAUCHNAYA);
 
@@ -299,21 +301,18 @@ public class MainSceneController implements Initializable {
         reserveTask.setProfessorsWork(RESERVE);
 
         root = new TreeItem<>(all);
-        parts.clear();
-        parts.add(new TreeItem<>(task));
-        parts.add(new TreeItem<>(task4));
-        parts.add(new TreeItem<>(task2));
-        parts.add(new TreeItem<>(task3));
-        
+        root.getChildren().add(new TreeItem<>(task));
+        root.getChildren().add(new TreeItem<>(task4));
+        root.getChildren().add(new TreeItem<>(task2));
+        root.getChildren().add(new TreeItem<>(task3));
 
-        for (TreeItem<Task> part : parts) {
+        for (TreeItem<Task> part : root.getChildren()) {
             part.setExpanded(true);
-            root.getChildren().add(part);
         }
 
         for (int i = 0; i < currentProfessor.getTasks().size(); i++) {
             for (int j = 0; j < currentProfessor.getTasks().get(i).size(); j++) {
-                parts.get(i).getChildren().add(new TreeItem<>(currentProfessor.getTasks().get(i).get(j)));
+                root.getChildren().get(i).getChildren().add(new TreeItem<>(currentProfessor.getTasks().get(i).get(j)));
             }
         }
 
@@ -323,55 +322,67 @@ public class MainSceneController implements Initializable {
     }
 
     public void recountWork() {
-        ArrayList<Double> sumCapacities;
+        partsWaiting.clear();
+        partsWaiting.add(new ArrayList<>());
+        partsWaiting.add(new ArrayList<>());
+        partsWaiting.add(new ArrayList<>());
+        partsWaiting.add(new ArrayList<>());
+        for (int i = 0; i < partsWaiting.size(); i++) {
+            partsWaiting.get(i).addAll(Collections.nCopies(16, 0.0));
+        }
 
-        for (TreeItem<Task> part : parts) {
-            sumCapacities = new ArrayList<>(Collections.nCopies(16, 0.0));
+        ArrayList<Double> sumCapacitiesActual;
+        ArrayList<Double> sumCapacitiesWaiting;
 
-            for (TreeItem<Task> children : part.getChildren()) {
+        for (int k = 0; k < root.getChildren().size(); k++) {
+            sumCapacitiesActual = new ArrayList<>(Collections.nCopies(16, 0.0));
+            sumCapacitiesWaiting = new ArrayList<>(Collections.nCopies(16, 0.0));
 
-                double allCapacityForSem = 0.0; 
-                if (children.getValue().getCompleteWork()) {
-                    for (int i = 1; i < 6; i++) {
-                        allCapacityForSem += children.getValue().getCapacities().get(i);
-                    }
-                    children.getValue().getCapacities().set(6, allCapacityForSem);
+            for (TreeItem<Task> children : root.getChildren().get(k).getChildren()) {
 
-                    allCapacityForSem = 0.0;
-                    for (int i = 7; i < 14; i++) {
-                        allCapacityForSem += children.getValue().getCapacities().get(i);
-                    }
-                    children.getValue().getCapacities().set(14, allCapacityForSem);
+                double allCapacityForSem = 0.0;
 
-                    children.getValue().getCapacities().set(15, children.getValue().getCapacities().get(6)
-                            + children.getValue().getCapacities().get(14));
+                for (int i = 1; i < 6; i++) {
+                    allCapacityForSem += children.getValue().getCapacities().get(i);
                 }
-                else {
-                    children.getValue().getCapacities().set(6, 0.0);
-                    children.getValue().getCapacities().set(14, 0.0);
+                children.getValue().getCapacities().set(6, allCapacityForSem);
 
-                    children.getValue().getCapacities().set(15, 0.0);
+                allCapacityForSem = 0.0;
+                for (int i = 7; i < 14; i++) {
+                    allCapacityForSem += children.getValue().getCapacities().get(i);
                 }
+                children.getValue().getCapacities().set(14, allCapacityForSem);
+
+                children.getValue().getCapacities().set(15, children.getValue().getCapacities().get(6)
+                        + children.getValue().getCapacities().get(14));
+
                 for (int i = 0; i < children.getValue().getCapacities().size(); i++) {
-                    sumCapacities.set(i, sumCapacities.get(i) + children.getValue().getCapacities().get(i));
+                    sumCapacitiesWaiting.set(i, sumCapacitiesWaiting.get(i) + children.getValue().getCapacities().get(i));
+                    if (children.getValue().getCompleteWork()) {
+                        sumCapacitiesActual.set(i, sumCapacitiesActual.get(i) + children.getValue().getCapacities().get(i));
+                    }
                 }
 
             }
 
-            for (int i = 0; i < sumCapacities.size(); i++) {
-                part.getValue().getCapacities().set(i, sumCapacities.get(i));
+            for (int i = 0; i < sumCapacitiesActual.size(); i++) {
+                partsWaiting.get(k).set(i, sumCapacitiesWaiting.get(i));
+                root.getChildren().get(k).getValue().getCapacities().set(i, sumCapacitiesActual.get(i));
             }
         }
 
-        sumCapacities = new ArrayList<>(Collections.nCopies(16, 0.0));
-        for (TreeItem<Task> part : parts) {
-            for (int i = 0; i < sumCapacities.size(); i++) {
-                sumCapacities.set(i, sumCapacities.get(i) + part.getValue().getCapacities().get(i));
+        sumCapacitiesActual = new ArrayList<>(Collections.nCopies(16, 0.0));
+        sumCapacitiesWaiting = new ArrayList<>(Collections.nCopies(16, 0.0));
+
+        for (int k = 0; k < root.getChildren().size(); k++) {
+            for (int i = 0; i < sumCapacitiesActual.size(); i++) {
+                sumCapacitiesWaiting.set(i, sumCapacitiesWaiting.get(i) + partsWaiting.get(k).get(i));
+                sumCapacitiesActual.set(i, sumCapacitiesActual.get(i) + root.getChildren().get(k).getValue().getCapacities().get(i));
             }
         }
 
         for (int i = 0; i < 16; i++) {
-            root.getValue().getCapacities().set(i, sumCapacities.get(i));
+            root.getValue().getCapacities().set(i, sumCapacitiesActual.get(i));
         }
 
         for (int i = 0; i < 16; i++) {
@@ -443,14 +454,10 @@ public class MainSceneController implements Initializable {
             task.setPeriod(t.getNewValue());
         });
 
-        Callback<TreeTableColumn<Task, Double>, TreeTableCell<Task, Double>> cellFactory
-                = new Callback<TreeTableColumn<Task, Double>, TreeTableCell<Task, Double>>() {
-
-                    @Override
-                    public TreeTableCell call(TreeTableColumn p) {
-                        return new EditingCell(MainSceneController.this);
-                    }
-                };
+        Callback<TreeTableColumn<Task, Double>, TreeTableCell<Task, Double>> cellFactory;
+        cellFactory = (TreeTableColumn<Task, Double> p) -> {
+            return new EditingCell(MainSceneController.this);
+        };
         for (int i = 0; i < listOfColumns.size(); i++) {
             final int index = i;
             listOfColumns.get(i).setCellFactory(cellFactory);

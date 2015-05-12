@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.company.et.gui;
+
 import com.company.et.domain.Task;
 import static com.company.et.gui.MainSceneController.NAUCHNAYA;
 import static com.company.et.gui.MainSceneController.METOD;
@@ -35,7 +36,8 @@ class EditingCell extends TreeTableCell<Task, Double> {
     private final MenuItem markComplMenuItem;
     private final MenuItem markUnComplItem;
     private MainSceneController mainSceneController;
-    private final NumberFormat numberFormat; 
+    private final NumberFormat numberFormat;
+
     public EditingCell(MainSceneController mainSC) {
         this.numberFormat = NumberFormat.getNumberInstance();
         this.markUnComplItem = new MenuItem("Отменить отметку о выполнении");
@@ -50,13 +52,17 @@ class EditingCell extends TreeTableCell<Task, Double> {
         addMenuItem.setOnAction((ActionEvent event) -> {
             TreeItem<Task> newEmployee = new TreeItem<>(new Task());
             getTreeTableRow().getTreeItem().getChildren().add(newEmployee);
-            
-            if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(METOD)) {
-                mainSceneController.getCurrentProfessor().getTasks().get(0).add(newEmployee.getValue());
-            } else if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
-                mainSceneController.getCurrentProfessor().getTasks().get(1).add(newEmployee.getValue());
-            } else {
-                mainSceneController.getCurrentProfessor().getTasks().get(2).add(newEmployee.getValue());
+
+            switch (getTreeTableRow().getTreeItem().getValue().getProfessorsWork()) {
+                case METOD:
+                    mainSceneController.getCurrentProfessor().getTasks().get(0).add(newEmployee.getValue());
+                    break;
+                case NAUCHNAYA:
+                    mainSceneController.getCurrentProfessor().getTasks().get(1).add(newEmployee.getValue());
+                    break;
+                default:
+                    mainSceneController.getCurrentProfessor().getTasks().get(2).add(newEmployee.getValue());
+                    break;
             }
         });
 
@@ -64,13 +70,17 @@ class EditingCell extends TreeTableCell<Task, Double> {
         pasteMenuItem.setOnAction((ActionEvent event) -> {
             TreeItem<Task> newEmployee = new TreeItem<>(mainSceneController.getCopiedTask());
             getTreeTableRow().getTreeItem().getChildren().add(newEmployee);
-            
-            if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(METOD)) {
-                mainSceneController.getCurrentProfessor().getTasks().get(0).add(newEmployee.getValue());
-            } else if (getTreeTableRow().getTreeItem().getValue().getProfessorsWork().equals(NAUCHNAYA)) {
-                mainSceneController.getCurrentProfessor().getTasks().get(1).add(newEmployee.getValue());
-            } else {
-                mainSceneController.getCurrentProfessor().getTasks().get(2).add(newEmployee.getValue());
+
+            switch (getTreeTableRow().getTreeItem().getValue().getProfessorsWork()) {
+                case METOD:
+                    mainSceneController.getCurrentProfessor().getTasks().get(0).add(newEmployee.getValue());
+                    break;
+                case NAUCHNAYA:
+                    mainSceneController.getCurrentProfessor().getTasks().get(1).add(newEmployee.getValue());
+                    break;
+                default:
+                    mainSceneController.getCurrentProfessor().getTasks().get(2).add(newEmployee.getValue());
+                    break;
             }
         });
 
@@ -105,10 +115,10 @@ class EditingCell extends TreeTableCell<Task, Double> {
             getTreeTableRow().getItem().setCompleteWork(false);
             mainSC.recountWork();
         });
-        if ( getTreeTableRow() != null && getTreeTableRow().getItem().getCompleteWork()) {
+        if (getTreeTableRow() != null && getTreeTableRow().getItem().getCompleteWork()) {
             getTreeTableRow().setStyle("-fx-background-color:lightgreen");
         }
-            
+
     }
 
     @Override
@@ -157,7 +167,7 @@ class EditingCell extends TreeTableCell<Task, Double> {
 
             }
             if (item != null && item != 0.0) {
-                    
+
                 setText(numberFormat.format(item));
             } else {
                 setText("");
@@ -166,11 +176,12 @@ class EditingCell extends TreeTableCell<Task, Double> {
 
                 if (getTreeTableRow().getTreeItem().isLeaf()) {
                     setContextMenu(deleteMenu);
-                    if (getTreeTableRow().getTreeItem().getValue().getCompleteWork())
+                    if (getTreeTableRow().getTreeItem().getValue().getCompleteWork()) {
                         getTreeTableRow().setStyle("-fx-background-color:lightgreen");
-                    else getTreeTableRow().setStyle("");
-                } 
-                else {
+                    } else {
+                        getTreeTableRow().setStyle("");
+                    }
+                } else {
                     setEditable(false);
                     if (!getTreeTableRow().getTreeItem().equals(mainSceneController.getRoot())) {
                         setContextMenu(addMenu);
@@ -193,7 +204,7 @@ class EditingCell extends TreeTableCell<Task, Double> {
                         commitEdit(null);
                     } else {
                         commitEdit(Double.parseDouble(textField.getText()));
-                    }                  
+                    }
                     mainSceneController.recountWork();
                 } catch (NumberFormatException e) {
                     cancelEdit();
