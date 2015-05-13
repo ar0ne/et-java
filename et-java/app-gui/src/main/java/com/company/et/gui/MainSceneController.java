@@ -45,6 +45,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellEditEvent;
+import javafx.scene.control.TreeTablePosition;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
@@ -62,6 +63,10 @@ import org.controlsfx.dialog.Dialogs;
  */
 public class MainSceneController implements Initializable {
 
+    public static final int COUNT_OF_DOUBLE_COLUMNS = 16;
+    public static final int NUMBER_OF_ALL_YEAR_COLUMN = 15;
+    public static final int NUMBER_OF_COLUNM_OF_SECOND_SEM = 14;
+    public static final int NUMBER_OF_COLUMN_OF_FIRST_SEM = 6;
     public static final String METOD = "Методическая";
     public static final String UCHEBNAYA = "Учебная";
     public static final String NAUCHNAYA = "Научная";
@@ -69,9 +74,11 @@ public class MainSceneController implements Initializable {
     public static final String RESERVE = "Резерв";
     public static final String OBSHEE = "Общее";
     public static final String ADD_NEW_PROFESSOR = "Добавление нового преподавателя";
+    public static final String SPISOK_ZADACH = "Список Задач";
 
     private ArrayList<TreeTableColumn<Task, Double>> listOfColumns;
     private Professor currentProfessor = new Professor();
+    private Professor standartProfessor = new Professor();
     private final ObservableList<Professor> professorsList = FXCollections.observableArrayList();
     private TreeItem<Task> dummyRoot;
     private TreeItem<Task> reserve;
@@ -190,7 +197,8 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void generateAllYearReport(ActionEvent event) throws IOException {
+    public void generateAllYearReport(ActionEvent event) throws IOException {
+        //Настраиваем форму создания файла генерации
         FileChooser fileChooserForXls = new FileChooser();
         fileChooserForXls.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("EXCEL", "*.xls")
@@ -205,17 +213,67 @@ public class MainSceneController implements Initializable {
             }
             XlsService.setFilename(filename);
 
+            /*Создаем список часов всех выполненных работ (roots)  и возможно 
+             выполненных работ (allOfParts). Также удаляем список всех работ 
+             (standartProfessor)
+             */
             ArrayList<TreeItem<Task>> roots = new ArrayList<>();
             ArrayList<ArrayList<ArrayList<Double>>> allOfParts = new ArrayList<>();
             int currentId = professorsList.indexOf(currentProfessor);
-            for (Professor professor : professorsList) {
+            
+            ObservableList<Professor> professors = FXCollections.observableArrayList();
+
+            professorsList.stream().filter((professor) -> !(professor.getFio().equals(SPISOK_ZADACH))).forEach((professor) -> {
+                professors.add(professor);
                 setCurrentProfessor(professor);
                 roots.add(root);
                 allOfParts.add(new ArrayList<>(partsWaiting));
-            }
+            });
+            XlsService.generateFile(roots, allOfParts, professors);
             setCurrentProfessor(professorsList.get(currentId));
-            XlsService.generateFile(roots, allOfParts, professorsList);
         }
+    }
+
+    @FXML
+    public void generateForMonthReport(ActionEvent event) throws FileNotFoundException, IOException {
+        //Настраиваем форму создания файла генерации
+        FileChooser fileChooserForXls = new FileChooser();
+        fileChooserForXls.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("EXCEL", "*.xls")
+        );
+        final String extentionString = ".xls";
+        File file = fileChooserForXls.showSaveDialog(null);
+        if (file != null) {
+            String filename = file.getName();
+            if (filename.length() <= extentionString.length()
+                    || !filename.substring(filename.length() - extentionString.length()).equals(extentionString)) {
+                filename += ".xls";
+            }
+            XlsService.setFilename(filename);
+        }
+
+        ObservableList<TreeTablePosition<Task, ?>> currentColumn = treeTableView.getSelectionModel().getSelectedCells();
+        int column;
+        if (currentColumn.isEmpty()) {
+            showError("Не выделена ячейка для определения месяца");
+        } else {
+            column = currentColumn.get(0).getColumn();
+            if (column >= 3) {
+                column -= 2;
+                XlsService.createReportForMonth(column, currentProfessor, partsWaiting,root);
+            } else {
+                showError("Выделена ячейка не с месяцем");
+            }
+        }
+    }
+    
+    
+
+    public void showError(String textError) {
+        Dialogs.create()
+                .title("Ошибка")
+                .message(textError)
+                .showError();
     }
 
     @Override
@@ -258,10 +316,10 @@ public class MainSceneController implements Initializable {
 
     public void initData() throws IOException, ParseException {
         listOfColumns = new ArrayList<>();
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < COUNT_OF_DOUBLE_COLUMNS; i++) {
             listOfColumns.add(new TreeTableColumn<>(DoubleCapacities.getDoubleCapacitiesByIndex(i).toString()));
         }
-
+        //два преподавателя при инициализации
         currentProfessor = new Professor();
         currentProfessor.setFio("Профессор 1");
         currentProfessor.setRate(1.0);
@@ -275,6 +333,15 @@ public class MainSceneController implements Initializable {
             secondProfessor.getTasks().get(i).add(new Task());
         }
         professorsList.add(secondProfessor);
+
+        //Преподаватель - список всех задач
+        standartProfessor = new Professor();
+        standartProfessor.setFio(SPISOK_ZADACH);
+        for (int i = 0; i < currentProfessor.getTasks().size(); i++) {
+            standartProfessor.getTasks().get(i).add(new Task());
+        }
+        professorsList.add(standartProfessor);
+
         treeTableView.getColumns().addAll(listOfColumns);
 
     }
@@ -306,9 +373,9 @@ public class MainSceneController implements Initializable {
         root.getChildren().add(new TreeItem<>(task2));
         root.getChildren().add(new TreeItem<>(task3));
 
-        for (TreeItem<Task> part : root.getChildren()) {
+        root.getChildren().stream().forEach((part) -> {
             part.setExpanded(true);
-        }
+        });
 
         for (int i = 0; i < currentProfessor.getTasks().size(); i++) {
             for (int j = 0; j < currentProfessor.getTasks().get(i).size(); j++) {
@@ -322,39 +389,41 @@ public class MainSceneController implements Initializable {
     }
 
     public void recountWork() {
+        //обнуляем список возможновыполненных работ
         partsWaiting.clear();
         partsWaiting.add(new ArrayList<>());
         partsWaiting.add(new ArrayList<>());
         partsWaiting.add(new ArrayList<>());
         partsWaiting.add(new ArrayList<>());
-        for (int i = 0; i < partsWaiting.size(); i++) {
-            partsWaiting.get(i).addAll(Collections.nCopies(16, 0.0));
-        }
+
+        partsWaiting.stream().forEach((partsWaiting1) -> {
+            partsWaiting1.addAll(Collections.nCopies(COUNT_OF_DOUBLE_COLUMNS, 0.0));
+        });
 
         ArrayList<Double> sumCapacitiesActual;
         ArrayList<Double> sumCapacitiesWaiting;
 
         for (int k = 0; k < root.getChildren().size(); k++) {
-            sumCapacitiesActual = new ArrayList<>(Collections.nCopies(16, 0.0));
-            sumCapacitiesWaiting = new ArrayList<>(Collections.nCopies(16, 0.0));
+            sumCapacitiesActual = new ArrayList<>(Collections.nCopies(COUNT_OF_DOUBLE_COLUMNS, 0.0));
+            sumCapacitiesWaiting = new ArrayList<>(Collections.nCopies(COUNT_OF_DOUBLE_COLUMNS, 0.0));
 
             for (TreeItem<Task> children : root.getChildren().get(k).getChildren()) {
 
                 double allCapacityForSem = 0.0;
 
-                for (int i = 1; i < 6; i++) {
+                for (int i = 1; i < NUMBER_OF_COLUMN_OF_FIRST_SEM; i++) {
                     allCapacityForSem += children.getValue().getCapacities().get(i);
                 }
-                children.getValue().getCapacities().set(6, allCapacityForSem);
+                children.getValue().getCapacities().set(NUMBER_OF_COLUMN_OF_FIRST_SEM, allCapacityForSem);
 
                 allCapacityForSem = 0.0;
-                for (int i = 7; i < 14; i++) {
+                for (int i = 7; i < NUMBER_OF_COLUNM_OF_SECOND_SEM; i++) {
                     allCapacityForSem += children.getValue().getCapacities().get(i);
                 }
-                children.getValue().getCapacities().set(14, allCapacityForSem);
+                children.getValue().getCapacities().set(NUMBER_OF_COLUNM_OF_SECOND_SEM, allCapacityForSem);
 
-                children.getValue().getCapacities().set(15, children.getValue().getCapacities().get(6)
-                        + children.getValue().getCapacities().get(14));
+                children.getValue().getCapacities().set(NUMBER_OF_ALL_YEAR_COLUMN, children.getValue().getCapacities().get(NUMBER_OF_COLUMN_OF_FIRST_SEM)
+                        + children.getValue().getCapacities().get(NUMBER_OF_COLUNM_OF_SECOND_SEM));
 
                 for (int i = 0; i < children.getValue().getCapacities().size(); i++) {
                     sumCapacitiesWaiting.set(i, sumCapacitiesWaiting.get(i) + children.getValue().getCapacities().get(i));
@@ -371,8 +440,8 @@ public class MainSceneController implements Initializable {
             }
         }
 
-        sumCapacitiesActual = new ArrayList<>(Collections.nCopies(16, 0.0));
-        sumCapacitiesWaiting = new ArrayList<>(Collections.nCopies(16, 0.0));
+        sumCapacitiesActual = new ArrayList<>(Collections.nCopies(COUNT_OF_DOUBLE_COLUMNS, 0.0));
+        sumCapacitiesWaiting = new ArrayList<>(Collections.nCopies(COUNT_OF_DOUBLE_COLUMNS, 0.0));
 
         for (int k = 0; k < root.getChildren().size(); k++) {
             for (int i = 0; i < sumCapacitiesActual.size(); i++) {
@@ -381,11 +450,11 @@ public class MainSceneController implements Initializable {
             }
         }
 
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < COUNT_OF_DOUBLE_COLUMNS; i++) {
             root.getValue().getCapacities().set(i, sumCapacitiesActual.get(i));
         }
 
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < COUNT_OF_DOUBLE_COLUMNS; i++) {
             if (i == DoubleCapacities.CAPACITY.ordinal() || i == DoubleCapacities.ALL_YEAR.ordinal()) {
                 reserve.getValue().getCapacities().set(i, hours - root.getValue().getCapacities().get(i));
             } else if (i == DoubleCapacities.FIRST_SEMESTER.ordinal() || i == DoubleCapacities.SECOND_SEMESTER.ordinal()) {
@@ -432,7 +501,7 @@ public class MainSceneController implements Initializable {
         setEditableCells();
         taskClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("professorsWork"));
         periodClmn.setCellValueFactory(new TreeItemPropertyValueFactory<>("period"));
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < COUNT_OF_DOUBLE_COLUMNS; i++) {
             final int columnIndex = i;
             listOfColumns.get(i).setCellValueFactory((TreeTableColumn.CellDataFeatures<Task, Double> param) -> new ReadOnlyObjectWrapper<>(param.getValue().getValue().getCapacities().get(columnIndex)));
         }

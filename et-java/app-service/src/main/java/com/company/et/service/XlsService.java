@@ -100,12 +100,9 @@ public class XlsService {
             createConstStringCells(wb, s, professors.get(i).getFio(), row, 1, i + 2, i + 2, 1, 1);
             createConstStringCells(wb, s, professors.get(i).getRate().toString(), row, 3, i + 2, i + 2, 3, 3);
             for (int j = 1; j < 16; j++) {
-//                createCellOfDouble(wb, s, row, (j*3)+1, wb.getSheet(professors.get(i).getFio()).getRow(j+1).getCell(13).getNumericCellValue());
-//                createCellOfDouble(wb, s, row, (j*3)+2, wb.getSheet(professors.get(i).getFio()).getRow(j+1).getCell(14).getNumericCellValue());
-//                createCellOfDouble(wb, s, row, (j*3)+3, wb.getSheet(professors.get(i).getFio()).getRow(j+1).getCell(15).getNumericCellValue());
-                  createConstStringCells(wb, s, formulaEval.evaluate(wb.getSheet(professors.get(i).getFio()).getRow(j+1).getCell(13)).formatAsString(), row, (j*3)+1, i + 2, i + 2, (j*3)+1, (j*3)+1);  
-                  createConstStringCells(wb, s, formulaEval.evaluate(wb.getSheet(professors.get(i).getFio()).getRow(j+1).getCell(14)).formatAsString(), row, (j*3)+2, i + 2, i + 2, (j*3)+2, (j*3)+2);  
-                  createConstStringCells(wb, s, formulaEval.evaluate(wb.getSheet(professors.get(i).getFio()).getRow(j+1).getCell(15)).formatAsString(), row, (j*3)+3, i + 2, i + 2, (j*3)+3, (j*3)+3);  
+                createConstStringCells(wb, s, formulaEval.evaluate(wb.getSheet(professors.get(i).getFio()).getRow(j + 1).getCell(13)).formatAsString(), row, (j * 3) + 1, i + 2, i + 2, (j * 3) + 1, (j * 3) + 1);
+                createConstStringCells(wb, s, formulaEval.evaluate(wb.getSheet(professors.get(i).getFio()).getRow(j + 1).getCell(14)).formatAsString(), row, (j * 3) + 2, i + 2, i + 2, (j * 3) + 2, (j * 3) + 2);
+                createConstStringCells(wb, s, formulaEval.evaluate(wb.getSheet(professors.get(i).getFio()).getRow(j + 1).getCell(15)).formatAsString(), row, (j * 3) + 3, i + 2, i + 2, (j * 3) + 3, (j * 3) + 3);
             }
         }
         wb.write(out);
@@ -114,8 +111,43 @@ public class XlsService {
 
     }
 
-    public static void createReportForMonth() {
+    public static void createReportForMonth(int numOfMonth, Professor professor, ArrayList<ArrayList<Double>> waitingParts, TreeItem<Task> root) throws FileNotFoundException, IOException {
 
+        FileOutputStream out = new FileOutputStream(filename);
+        Workbook wb = new HSSFWorkbook();
+        Sheet s = wb.createSheet(professor.getFio());
+        Row row = s.createRow(0);
+
+        createConstStringCells(wb, s, "Работа преподавателя", row, 0, 0, 0, 0, 0);
+        createConstStringCells(wb, s, "Срок", row, 1, 0, 0, 1, 1);
+        createConstStringCells(wb, s, "Объём", row, 2, 0, 0, 2, 2);
+        createConstStringCells(wb, s, DoubleCapacities.getDoubleCapacitiesByIndex(numOfMonth).toString(), row, 3, 0, 0, 3, 3);
+        int rowCounter = 1;
+        for (int i = 0; i < root.getChildren().size(); i++) {
+            row = s.createRow(rowCounter);
+            createConstStringCells(wb, s, (i + 1) + ". " + root.getChildren().get(i).getValue().getProfessorsWork(), row, 0, rowCounter, rowCounter, 0, 0);
+            createConstStringCells(wb, s, root.getChildren().get(i).getValue().getPeriod(), row, 1, rowCounter, rowCounter, 1, 1);
+            createCellOfDouble(wb, s, row, 2, root.getChildren().get(i).getValue().getCapacities().get(0));
+            createCellOfDouble(wb, s, row, 3, waitingParts.get(i).get(numOfMonth));
+            rowCounter++;
+            for (TreeItem<Task> treeItem : root.getChildren().get(i).getChildren()) {
+                Task task = treeItem.getValue();
+                row = s.createRow(rowCounter);
+                createConstStringCells(wb, s, task.getProfessorsWork(), row, 0, rowCounter, rowCounter, 0, 0);
+                createConstStringCells(wb, s, task.getPeriod(), row, 1, rowCounter, rowCounter, 1, 1);
+                createCellOfDouble(wb, s, row, 2, task.getCapacities().get(0));
+                createCellOfDouble(wb, s, row, 3, task.getCapacities().get(numOfMonth));
+                rowCounter++;
+            }
+        }
+        row=s.createRow(rowCounter);
+        createConstStringCells(wb, s, "Итого(1+2+3+4)", row, 0, rowCounter, rowCounter, 0, 0);
+        createConstStringCells(wb, s, "", row, 1, rowCounter, rowCounter, 1, 1);
+        createCellOfDouble(wb, s, row, 2, root.getValue().getCapacities().get(0));
+        createCellOfDouble(wb, s, row, 3, root.getValue().getCapacities().get(numOfMonth));
+
+        wb.write(out);
+        out.close();
     }
 
     private static void createConstStringCells(Workbook wb, Sheet s, String text, Row rowFirst, int coordinateColumn,

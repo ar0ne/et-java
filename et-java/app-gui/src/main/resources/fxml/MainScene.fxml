@@ -18,9 +18,11 @@
               <MenuItem fx:id="menuBarFileExit" mnemonicParsing="false" onAction="#fileExit" text="Выход" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" onAction="#generateAllYearReport" text="Генерация">
+          <Menu mnemonicParsing="false" text="Генерация">
             <items>
-              <MenuItem fx:id="menuBarGenerateForAllYear" mnemonicParsing="false" text="Отчёт за год" />
+              <MenuItem fx:id="menuBarGenerateForAllYear" mnemonicParsing="false" text="Отчёт за год" onAction="#generateAllYearReport"/>
+              <MenuItem fx:id="menuBarGenerateForMonth" mnemonicParsing="false" text="Отчёт за месяц" onAction="#generateForMonthReport" />
+              <MenuItem fx:id="menuBarGenerateForMonthForAll" mnemonicParsing="false" text="Отчёт за месяц для всех" />
             </items>
           </Menu>
         </menus>
