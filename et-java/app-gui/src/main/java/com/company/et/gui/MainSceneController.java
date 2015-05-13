@@ -88,6 +88,7 @@ public class MainSceneController implements Initializable {
     private final FileChooser fileChooserForJson = new FileChooser();
     private int hours;
     public static int countOfHours = 1548;
+    private boolean flag = false; //переменная, которая не пропускает окошко сохранения при старте проги
     @FXML
     private ComboBox<Professor> comboBoxProfessorsList;
     @FXML
@@ -129,19 +130,26 @@ public class MainSceneController implements Initializable {
     }
 
     @FXML
-    private void fileSave(ActionEvent event) throws IOException, ParseException {
+    private void fileSaveHandler(ActionEvent event) throws IOException, ParseException {
+        fileSave();
+    }
+    
+    private void fileSave() throws IOException, ParseException {
         // если professorList не был загружен, то вызываем сохранить как
         // @TODO: добавить проверку по лучше
         if ("undefined".equals(labelFileName.getText())) {
-            fileSaveAs(event);
+            fileSaveAs();
         } else {
             JsonService.writeToFile(JsonService.objectToString(professorsList));
         }
-
     }
 
     @FXML
-    private void fileSaveAs(ActionEvent event) {
+    private void fileSaveAsHandler(ActionEvent event) {
+        fileSaveAs();
+    }
+    
+    private void fileSaveAs() {
         //сохранение в новый файл (диалоговое окно)
         File file = fileChooserForJson.showSaveDialog(null);
         if (file != null) {
@@ -172,7 +180,7 @@ public class MainSceneController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            fileSave(event);
+            fileSave();
         }
 
         Platform.exit();
@@ -180,8 +188,16 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void removeProfessorHandler(ActionEvent event) {
-        professorsList.remove(currentProfessor);
-        currentProfessor = professorsList.get(0);
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Удаление");
+        alert.setHeaderText("Подтверждение");
+        alert.setContentText("Вы уверены, что хотите удалить запись?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            professorsList.remove(currentProfessor);
+            currentProfessor = professorsList.get(0);
+        }  
     }
 
     @FXML
@@ -194,8 +210,15 @@ public class MainSceneController implements Initializable {
         if (okClicked) {
             professorsList.add(tempProfessor);
         }
+        try {
+            fileSave();
+        } catch (IOException ex) {
+            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-
+   
     @FXML
     public void generateAllYearReport(ActionEvent event) throws IOException {
         //Настраиваем форму создания файла генерации
@@ -287,7 +310,7 @@ public class MainSceneController implements Initializable {
                     .getName()).log(Level.SEVERE, null, ex);
         }
         initializeGUI();
-
+        flag = true;
     }
 
     public Professor getCurrentProfessor() {
@@ -507,6 +530,18 @@ public class MainSceneController implements Initializable {
         }
         treeTableView.setRoot(dummyRoot);
         treeTableView.setShowRoot(false);
+        
+        try {
+            if(flag)
+                fileSave();
+            else
+                flag = true;
+        } catch (IOException ex) {
+            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
 
     }
 
