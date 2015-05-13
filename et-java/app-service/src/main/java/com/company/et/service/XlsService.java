@@ -111,11 +111,28 @@ public class XlsService {
 
     }
 
-    public static void createReportForMonth(int numOfMonth, Professor professor, ArrayList<ArrayList<Double>> waitingParts, TreeItem<Task> root) throws FileNotFoundException, IOException {
+    public static void createReportForMonthForOnePerson(int numOfMonth, Professor professor, ArrayList<ArrayList<Double>> waitingParts, TreeItem<Task> root) throws FileNotFoundException, IOException {
 
         FileOutputStream out = new FileOutputStream(filename);
         Workbook wb = new HSSFWorkbook();
         Sheet s = wb.createSheet(professor.getFio());
+        createReportForMonth(wb, s, numOfMonth, professor, waitingParts, root);
+        wb.write(out);
+        out.close();
+    }
+    public static void createReportForMonthForManyPerson(int numOfMonth, List<Professor> professors, ArrayList<ArrayList<ArrayList<Double>>> waitingParts, List<TreeItem<Task>> root) throws FileNotFoundException, IOException {
+
+        FileOutputStream out = new FileOutputStream(filename);
+        Workbook wb = new HSSFWorkbook();
+        for(int i=0;i<professors.size();i++) {
+        Sheet s = wb.createSheet(professors.get(i).getFio());
+        createReportForMonth(wb, s, numOfMonth, professors.get(i), waitingParts.get(i), root.get(i));
+        }
+        wb.write(out);
+        out.close();
+    }
+    public static void createReportForMonth(Workbook wb, Sheet s, int numOfMonth, Professor professor, ArrayList<ArrayList<Double>> waitingParts, TreeItem<Task> root) {
+
         Row row = s.createRow(0);
 
         createConstStringCells(wb, s, "Работа преподавателя", row, 0, 0, 0, 0, 0);
@@ -140,14 +157,11 @@ public class XlsService {
                 rowCounter++;
             }
         }
-        row=s.createRow(rowCounter);
+        row = s.createRow(rowCounter);
         createConstStringCells(wb, s, "Итого(1+2+3+4)", row, 0, rowCounter, rowCounter, 0, 0);
         createConstStringCells(wb, s, "", row, 1, rowCounter, rowCounter, 1, 1);
         createCellOfDouble(wb, s, row, 2, root.getValue().getCapacities().get(0));
         createCellOfDouble(wb, s, row, 3, root.getValue().getCapacities().get(numOfMonth));
-
-        wb.write(out);
-        out.close();
     }
 
     private static void createConstStringCells(Workbook wb, Sheet s, String text, Row rowFirst, int coordinateColumn,

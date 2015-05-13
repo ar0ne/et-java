@@ -133,7 +133,7 @@ public class MainSceneController implements Initializable {
     private void fileSaveHandler(ActionEvent event) throws IOException, ParseException {
         fileSave();
     }
-    
+
     private void fileSave() throws IOException, ParseException {
         // если professorList не был загружен, то вызываем сохранить как
         // @TODO: добавить проверку по лучше
@@ -148,7 +148,7 @@ public class MainSceneController implements Initializable {
     private void fileSaveAsHandler(ActionEvent event) {
         fileSaveAs();
     }
-    
+
     private void fileSaveAs() {
         //сохранение в новый файл (диалоговое окно)
         File file = fileChooserForJson.showSaveDialog(null);
@@ -197,7 +197,7 @@ public class MainSceneController implements Initializable {
         if (result.get() == ButtonType.OK) {
             professorsList.remove(currentProfessor);
             currentProfessor = professorsList.get(0);
-        }  
+        }
     }
 
     @FXML
@@ -218,7 +218,7 @@ public class MainSceneController implements Initializable {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-   
+
     @FXML
     public void generateAllYearReport(ActionEvent event) throws IOException {
         //Настраиваем форму создания файла генерации
@@ -243,7 +243,7 @@ public class MainSceneController implements Initializable {
             ArrayList<TreeItem<Task>> roots = new ArrayList<>();
             ArrayList<ArrayList<ArrayList<Double>>> allOfParts = new ArrayList<>();
             int currentId = professorsList.indexOf(currentProfessor);
-            
+
             ObservableList<Professor> professors = FXCollections.observableArrayList();
 
             professorsList.stream().filter((professor) -> !(professor.getFio().equals(SPISOK_ZADACH))).forEach((professor) -> {
@@ -283,14 +283,59 @@ public class MainSceneController implements Initializable {
             column = currentColumn.get(0).getColumn();
             if (column >= 3) {
                 column -= 2;
-                XlsService.createReportForMonth(column, currentProfessor, partsWaiting,root);
+                XlsService.createReportForMonthForOnePerson(column, currentProfessor, partsWaiting, root);
             } else {
                 showError("Выделена ячейка не с месяцем");
             }
         }
     }
-    
-    
+
+    @FXML
+    public void generateForMonthReportForAll(ActionEvent event) throws FileNotFoundException, IOException {
+        //Настраиваем форму создания файла генерации
+        FileChooser fileChooserForXls = new FileChooser();
+        fileChooserForXls.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("EXCEL", "*.xls")
+        );
+        final String extentionString = ".xls";
+        File file = fileChooserForXls.showSaveDialog(null);
+        if (file != null) {
+            String filename = file.getName();
+            if (filename.length() <= extentionString.length()
+                    || !filename.substring(filename.length() - extentionString.length()).equals(extentionString)) {
+                filename += ".xls";
+            }
+            XlsService.setFilename(filename);
+
+            ObservableList<TreeTablePosition<Task, ?>> currentColumn = treeTableView.getSelectionModel().getSelectedCells();
+            int column;
+            if (currentColumn.isEmpty()) {
+                showError("Не выделена ячейка для определения месяца");
+            } else {
+                column = currentColumn.get(0).getColumn();
+                if (column >= 3) {
+                    column -= 2;
+                    ArrayList<TreeItem<Task>> roots = new ArrayList<>();
+                    ArrayList<ArrayList<ArrayList<Double>>> allOfParts = new ArrayList<>();
+                    int currentId = professorsList.indexOf(currentProfessor);
+
+                    ObservableList<Professor> professors = FXCollections.observableArrayList();
+
+                    professorsList.stream().filter((professor) -> !(professor.getFio().equals(SPISOK_ZADACH))).forEach((professor) -> {
+                        professors.add(professor);
+                        setCurrentProfessor(professor);
+                        roots.add(root);
+                        allOfParts.add(new ArrayList<>(partsWaiting));
+                    });
+                    XlsService.createReportForMonthForManyPerson(column, professors, allOfParts, roots);
+                    setCurrentProfessor(professorsList.get(currentId));
+                } else {
+                    showError("Выделена ячейка не с месяцем");
+                }
+            }
+
+        }
+    }
 
     public void showError(String textError) {
         Dialogs.create()
@@ -530,18 +575,18 @@ public class MainSceneController implements Initializable {
         }
         treeTableView.setRoot(dummyRoot);
         treeTableView.setShowRoot(false);
-        
+
         try {
-            if(flag)
+            if (flag) {
                 fileSave();
-            else
+            } else {
                 flag = true;
+            }
         } catch (IOException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
 
     }
 

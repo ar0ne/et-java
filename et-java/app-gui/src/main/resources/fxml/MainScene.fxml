@@ -22,7 +22,7 @@
             <items>
               <MenuItem fx:id="menuBarGenerateForAllYear" mnemonicParsing="false" text="Отчёт за год" onAction="#generateAllYearReport"/>
               <MenuItem fx:id="menuBarGenerateForMonth" mnemonicParsing="false" text="Отчёт за месяц" onAction="#generateForMonthReport" />
-              <MenuItem fx:id="menuBarGenerateForMonthForAll" mnemonicParsing="false" text="Отчёт за месяц для всех" />
+              <MenuItem fx:id="menuBarGenerateForMonthForAll" mnemonicParsing="false" text="Отчёт за месяц для всех" onAction="#generateForMonthReportForAll" />
             </items>
           </Menu>
         </menus>
