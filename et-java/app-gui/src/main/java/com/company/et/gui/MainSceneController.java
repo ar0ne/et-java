@@ -114,7 +114,7 @@ public class MainSceneController implements Initializable {
             File file = fileChooserForJson.showOpenDialog(null);
             String json = JsonService.readFromFile(file);
             Professor[] profs = JsonService.jsonToObjectProfessorArray(json);
-            JsonService.setFilename(file.getName());
+            JsonService.setFilename(file.getAbsolutePath());
             labelFileName.setText(JsonService.getFilename());
             // clear list and add profs from json
             professorsList.clear();
@@ -155,7 +155,7 @@ public class MainSceneController implements Initializable {
         if (file != null) {
             try {
                 // add .json to filename
-                String filename = file.getName();
+                String filename = file.getAbsolutePath();
                 if (filename.length() <= 5 || !filename.substring(filename.length() - 5).equals(".json")) {
                     filename += ".json";
                 }
@@ -212,9 +212,7 @@ public class MainSceneController implements Initializable {
         }
         try {
             fileSave();
-        } catch (IOException ex) {
-            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
+        } catch (IOException | ParseException ex) {
             Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -229,7 +227,7 @@ public class MainSceneController implements Initializable {
         final String extentionString = ".xls";
         File file = fileChooserForXls.showSaveDialog(null);
         if (file != null) {
-            String filename = file.getName();
+            String filename = file.getAbsolutePath();
             if (filename.length() <= extentionString.length()
                     || !filename.substring(filename.length() - extentionString.length()).equals(extentionString)) {
                 filename += ".xls";
@@ -267,7 +265,7 @@ public class MainSceneController implements Initializable {
         final String extentionString = ".xls";
         File file = fileChooserForXls.showSaveDialog(null);
         if (file != null) {
-            String filename = file.getName();
+            String filename = file.getAbsolutePath();
             if (filename.length() <= extentionString.length()
                     || !filename.substring(filename.length() - extentionString.length()).equals(extentionString)) {
                 filename += ".xls";
@@ -300,7 +298,7 @@ public class MainSceneController implements Initializable {
         final String extentionString = ".xls";
         File file = fileChooserForXls.showSaveDialog(null);
         if (file != null) {
-            String filename = file.getName();
+            String filename = file.getAbsolutePath();
             if (filename.length() <= extentionString.length()
                     || !filename.substring(filename.length() - extentionString.length()).equals(extentionString)) {
                 filename += ".xls";
@@ -328,7 +326,6 @@ public class MainSceneController implements Initializable {
                         allOfParts.add(new ArrayList<>(partsWaiting));
                     });
                     XlsService.createReportForMonthForManyPerson(column, professors, allOfParts, roots);
-                    setCurrentProfessor(professorsList.get(currentId));
                 } else {
                     showError("Выделена ячейка не с месяцем");
                 }
